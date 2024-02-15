@@ -1,0 +1,10 @@
+default:
+  image: node:16.16.0
+
+deploy-prod:
+  stage: deploy
+  only:
+    - master
+  script:
+    - npm install --global vercel
+    - vercel deploy --prod --token=$VERCEL_TOKEN --yes
