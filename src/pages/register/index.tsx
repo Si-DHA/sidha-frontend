@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 import Image from "next/image";
+import Link from "next/link";
 
 
 export default function RegisterPage() {
@@ -49,10 +50,9 @@ export default function RegisterPage() {
               <input type="file" accept="image/*" placeholder="You can't touch this" className="file-input file-input-bordered w-full max-w-xs m-2" />
 
               <div className="flex flex-col justify-center">
-
-                <button className="btn btn-primary btn-l text-white m-2 p-3 ">Register</button>
+                <button className="btn btn-secondary btn-l text-white m-2 p-3 ">Register</button>
                 <div className="text-slate-500 m-2 p-3 text-center justify-center">
-                  Anda bingung? <a href="/login" className="text-lime-500 ttext-center justify-center">Hubungi Admin</a>
+                  Anda bingung? <Link href="/login" className="text-lime-500 text-center justify-center">Hubungi Admin</Link>
                 </div>
               </div>
             </form>
