@@ -1,4 +1,3 @@
-// api/penawaranHarga.ts
 import { BASE_URL } from '@/app/constant/constant';
 
 export const fetchPenawaranHargaItems = async (idPenawaranHarga: string): Promise<any> => {
@@ -19,6 +18,8 @@ export const fetchPenawaranHargaItems = async (idPenawaranHarga: string): Promis
         throw new Error(error.message);
     }
 };
+
+
 
 export const updatePenawaranHargaItem = async (idPenawaranHargaItem: string, itemData: any): Promise<any> => {
   try {
