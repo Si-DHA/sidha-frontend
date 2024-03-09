@@ -28,7 +28,6 @@ const backdropStyle: CSSProperties = {
 };
 
 const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
-  // Stop scrolling on the main window while the modal is open
   React.useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
