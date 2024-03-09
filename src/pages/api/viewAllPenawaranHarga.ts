@@ -1,17 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { BASE_URL } from '@/app/constant/constant';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
+  if (req.method === 'GET') {
     try {
-      const endpoint = BASE_URL +'penawaran-harga/view-all';
+      
+      const endpoint = 'http://localhost:8080/api/penawaran-harga/view-all';
 
       const response = await fetch(endpoint, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(req.body),
       });
 
       if (!response.ok) {

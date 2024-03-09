@@ -1,10 +1,9 @@
-// pages/api/createPenawaranHarga.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         try {
-            // Specify the URL of your Spring Boot backend endpoint
+
             const backendUrl = 'http://localhost:8080/api/penawaran-harga/create';
             
             // Forward the request to the backend, including the JSON body
