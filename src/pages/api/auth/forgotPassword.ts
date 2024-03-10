@@ -11,12 +11,13 @@ export const forgotPassword = async (email: string): Promise<any> => {
             },
             body: JSON.stringify({ email: email }),
         });
+        var data = await response.json();
         if (response.ok) {
-            return await response.json();
+            return data;
         } else {
-            throw new Error("Email tidak ditemukan");
+            return data["message"];
         }
     } catch (error: any) {
-        throw new Error(error.message);
+        return error.message;
     }
 }
