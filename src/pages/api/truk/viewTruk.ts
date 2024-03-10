@@ -1,8 +1,9 @@
 import { BASE_URL } from '@/app/constant/constant';
+import { UUID } from 'crypto';
 
-export const viewAllTruk = async (): Promise<any> => {
+export const viewTrukById = async (id: UUID): Promise<any> => {
     try {
-        const response = await fetch(BASE_URL+'/truk/view-all', {
+        const response = await fetch(BASE_URL+'/truk/view/'+id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
