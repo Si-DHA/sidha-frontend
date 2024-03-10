@@ -1,5 +1,6 @@
 import Footer from "@/app/components/common/footer";
 import Navbar from "@/app/components/common/navbar";
+import { BASE_URL } from "@/app/constant/constant";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -7,19 +8,21 @@ const inter = Inter({ subsets: ["latin"] });
 import Image from "next/image";
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-
+import Cookies from "js-cookie";
 
 
 
 export default function ProfilePage() {
+  const id = Cookies.get('idUser');
+  console.log(id);
   const [userData, setUserData] = useState(null);
-  const [userId, setUserId] = useState('69eae742-42d7-480f-9995-27d85c7e0370');
+  const [userId, setUserId] = useState(id);
 
   useEffect(() => {
     fetchUser(userId);
   }, [userId]);
   const fetchUser = (id) => {
-    fetch(`http://localhost:8081/api/user/${id}`)
+    fetch(BASE_URL + `/user/${id}`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

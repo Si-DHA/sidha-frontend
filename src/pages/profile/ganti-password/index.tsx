@@ -3,18 +3,20 @@ import FailAlert from "@/app/components/common/FailAlert";
 
 import Footer from "@/app/components/common/footer";
 import Navbar from "@/app/components/common/navbar";
-import { Inter } from "next/font/google";
+import { Cookie, Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 import Image from "next/image";
 import React, { useState, useEffect } from 'react';
-
+import { BASE_URL } from "@/app/constant/constant";
+import Cookies from "js-cookie";
 
 
 
 export default function ProfilePage() {
+  const id = Cookies.get('idUser');
   const [userData, setUserData] = useState(null);
-  const [userId, setUserId] = useState('a5d26ca9-c047-42f1-bb56-6594e8710d6b');
+  const [userId, setUserId] = useState(id);
   const [currentPassword, setcurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [alert, setAlert] = useState(null);
@@ -36,7 +38,7 @@ export default function ProfilePage() {
     fetchUser(userId);
   }, [userId]);
   const fetchUser = (id) => {
-    fetch(`http://localhost:8081/api/user/${id}`)
+    fetch(BASE_URL + `/user/${id}`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -59,7 +61,7 @@ export default function ProfilePage() {
       formData.append('currentPassword', currentPassword);
       formData.append('newPassword', newPassword);
 
-      const response = await fetch(`http://localhost:8081/api/user/change-password/${userId}`, {
+      const response = await fetch(BASE_URL + `/user/change-password/${userId}`, {
         method: 'POST',
         body: formData,
       });
