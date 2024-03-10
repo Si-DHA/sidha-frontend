@@ -44,19 +44,27 @@ const CreateTrukPage = () => {
             console.log(idSopir);
             // Create POST request body
             const requestBody = {
-                licensePlate,
-                merk,
+                // licensePlate,
+                // merk,
                 type,
-                stnkName,
+                // stnkName,
                 expiredKir,
                 panjangBox: parseInt(panjangBox),
                 lebarBox: parseInt(lebarBox),
                 tinggiBox: parseInt(tinggiBox),
                 kubikasiBox: parseInt(kubikasiBox),
-                // idSopir
             };
 
             // Add idSopir to requestBody if it's not null
+            if (licensePlate !== '') {
+                requestBody.licensePlate = licensePlate;
+            }
+            if (merk !== '') {
+                requestBody.merk = merk;
+            }
+            if (stnkName !== '') {
+                requestBody.stnkName = stnkName;
+            }
             if (idSopir !== '0') {
                 requestBody.idSopir = idSopir;
             }
@@ -80,6 +88,9 @@ const CreateTrukPage = () => {
             className={`flex min-h-screen flex-col items-center justify-between`} data-theme="cmyk"
         >
             <Navbar />
+            <div className="flex flex-row">
+                {alert}
+            </div>
             <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">Create</h3>
@@ -98,7 +109,7 @@ const CreateTrukPage = () => {
                         </div> */}
                         <div className="card-body">
                             <h2 className="card-title">Nomor Polisi</h2>
-                            <input id="licensePlate" className="input input-bordered flex items-center gap-2 grow" type="text" placeholder="B 1234 ABC" />
+                            <input required id="licensePlate" className="input input-bordered flex items-center gap-2 grow" type="text" placeholder="B 1234 ABC" />
                             <h2 className="card-title">Tipe</h2>
                             <select id="type" className="input input-bordered flex items-center gap-2 grow">
                                 <option value="CDD">CDD</option>
@@ -126,31 +137,31 @@ const CreateTrukPage = () => {
                                     <tr>
                                         <td>Merk</td>
                                         <td><label className="input input-bordered flex items-center gap-2">
-                                            <input id="merk" type="text" className="grow" placeholder="Mitsubishi Fe 75" />
+                                            <input required id="merk" type="text" className="grow" placeholder="Mitsubishi Fe 75" />
                                         </label></td>
                                     </tr>
                                     <tr>
                                         <td>Kubikasi Box</td>
                                         <td><label className="input input-bordered flex items-center gap-2">
-                                            <input id="kubikasiBox" type="number" className="grow" placeholder="20 (dalam meter kubik)" />
+                                            <input required id="kubikasiBox" type="number" className="grow" placeholder="20 (dalam meter kubik)" />
                                         </label></td>
                                     </tr>
                                     <tr>
                                         <td>Panjang Box</td>
                                         <td><label className="input input-bordered flex items-center gap-2">
-                                            <input id="panjangBox" type="number" className="grow" placeholder="20 (dalam meter)" />
+                                            <input required id="panjangBox" type="number" className="grow" placeholder="20 (dalam meter)" />
                                         </label></td>
                                     </tr>
                                     <tr>
                                         <td>Lebar Box</td>
                                         <td><label className="input input-bordered flex items-center gap-2">
-                                            <input id="lebarBox" type="number" className="grow" placeholder="20 (dalam meter)" />
+                                            <input required id="lebarBox" type="number" className="grow" placeholder="20 (dalam meter)" />
                                         </label></td>
                                     </tr>
                                     <tr>
                                         <td>Tinggi Box</td>
                                         <td><label className="input input-bordered flex items-center gap-2">
-                                            <input id="tinggiBox" type="number" className="grow" placeholder="20 (dalam meter)" />
+                                            <input required id="tinggiBox" type="number" className="grow" placeholder="20 (dalam meter)" />
                                         </label></td>
                                     </tr>
 
@@ -165,13 +176,13 @@ const CreateTrukPage = () => {
                                     <tr>
                                         <td>Masa Berlaku KIR</td>
                                         <td><label className="input input-bordered flex items-center gap-2">
-                                            <input id="expiredKir" type="date" className="grow" placeholder="" />
+                                            <input required id="expiredKir" type="date" className="grow" placeholder="" />
                                         </label></td>
                                     </tr>
                                     <tr>
                                         <td>Nama di STNK</td>
                                         <td><label className="input input-bordered flex items-center gap-2">
-                                            <input id="stnkName" type="text" className="grow" placeholder="John Doe" />
+                                            <input required id="stnkName" type="text" className="grow" placeholder="John Doe" />
                                         </label></td>
                                     </tr>
 
@@ -180,7 +191,7 @@ const CreateTrukPage = () => {
                             </table>
                             <div className="flex flex-row justify-center align-middle">
                                 <button onClick={() => document.getElementById('my_modal_5').showModal()}
-                                    className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow">Create</button>
+                                    className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" type="submit">Create</button>
                             </div>
 
 
