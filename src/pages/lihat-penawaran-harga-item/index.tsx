@@ -3,41 +3,59 @@ import Navbar from "@/app/components/common/navbar";
 import { Inter } from "next/font/google";
 import React, { useEffect, useState } from 'react';
 import { viewAllPenawaranHargaItem } from "../api/penawaran-harga-item/viewAllPenawaranHargaItem";
+import { getPenawaranHargaItemBySource } from "../api/penawaran-harga-item/getPenawaranHargaItemBySource";
 
 const inter = Inter({ subsets: ["latin"] });
 
+interface PenawaranHargaItem {
+    idPenawaranHargaItem: string;
+    source: string;
+    destination: string;
+    cddPrice: number;
+    cddLongPrice: number;
+    wingboxPrice: number;
+    fusoPrice: number;
+}
+
 const LihatPenawaranHargaItemPage = () => {
     const [error, setError] = useState('');
-
-    interface PenawaranHargaItem {
-        idPenawaranHargaItem: string;
-        source: string;
-        destination: string;
-        cddPrice: number;
-        cddLongPrice: number;
-        wingboxPrice: number;
-        fusoPrice: number;
-    }
-
     const [penawaranHargaItemData, setPenawaranHargaItemData] = useState<PenawaranHargaItem[]>([]);
-    const dummyData = [
-        { idPenawaranHargaItem: '1', source: 'Jakarta', destination: 'Bogor', cddPrice: 1000000, cddLongPrice: 2000000, wingboxPrice: 4000000, fusoPrice: 8000000 },
-        // Add more dummy data as needed
-    ];
+    const [selectedSource, setSelectedSource] = useState('');
+    const [allSources, setAllSources] = useState<string[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const penawaranHargaItemDataResponse = await viewAllPenawaranHargaItem();
-                setPenawaranHargaItemData(penawaranHargaItemDataResponse); // Set the data without accessing the 'content' property
-                console.log(penawaranHargaItemDataResponse);
-                console.log(penawaranHargaItemData);
-            } catch (error: any) {
-                setError(error.message);
-            }
-        };
         fetchData(); // Call fetchData function when component mounts
     }, []);
+
+    const fetchData = async () => {
+        try {
+            const penawaranHargaItemDataResponse: PenawaranHargaItem[] = await viewAllPenawaranHargaItem(); // Explicitly define type
+            setPenawaranHargaItemData(penawaranHargaItemDataResponse);
+            
+            // Extract unique sources and update the state
+            const uniqueSourcesSet = new Set(penawaranHargaItemDataResponse.map(item => item.source));
+            const uniqueSourcesArray: string[] = Array.from(uniqueSourcesSet); // Explicitly define type
+            setAllSources(uniqueSourcesArray);
+        } catch (error: any) {
+            setError(error.message);
+        }
+    };
+
+    const handleSearch = async () => {
+        try {
+            if (selectedSource === 'All') {
+                fetchData(); // Fetch all data if "All" is selected
+            } else if (selectedSource) {
+                const penawaranHargaItemDataResponse = await getPenawaranHargaItemBySource(selectedSource);
+                setPenawaranHargaItemData(penawaranHargaItemDataResponse);
+            } else {
+                // Handle no source selected
+                setError('Please select a source.');
+            }
+        } catch (error: any) {
+            setError(error.message);
+        }
+    };
 
     return (
         <main className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk">
@@ -50,22 +68,27 @@ const LihatPenawaranHargaItemPage = () => {
                     </div>
                     <div className="flex justify-between">
                         <div className="join">
-                            <select className="select select-bordered join-item">
+                            <select className="select select-bordered join-item" onChange={(e) => setSelectedSource(e.target.value)} value={selectedSource}>
                                 <option disabled selected>Asal Muat</option>
-                                {penawaranHargaItemData.map((item, index) => (
-                                    <option key={index}>{item.source}</option>
+                                <option value="All">All</option> {/* Add "All" option */}
+                                {allSources.map((source, index) => (
+                                    <option key={index} value={source}>{source}</option>
                                 ))}
                             </select>
                             <div className="indicator">
-                                <button className="btn join-item">Cari</button>
+                                <button className="btn join-item" onClick={handleSearch}>Cari</button>
                             </div>
                         </div>
 
                         <button className="btn" onClick={() => (document.getElementById('baca_ketentuan') as HTMLDialogElement)?.showModal()}>Baca Ketentuan</button>
                         <dialog id="baca_ketentuan" className="modal">
                             <div className="modal-box">
-                                <h3 className="font-bold text-lg">Ketentuan Penawaran</h3>
-                                <p className="py-4">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+                                <h3 className="font-bold text-lg mb-4">Ketentuan Penawaran</h3>
+                                <p>1. Tarif tidak termasuk PPN dan asuransi muatan</p>
+                                <p>2. Tarif belum termasuk muat (bila ada)</p>
+                                <p>3. Kehilangan atau kerusakan akibat force majeur seperti (kebakaran, bencana alam, dll) tidak ditanggung oleh transporter</p>
+                                <p>4. Pembayaran DP uang jalan 60% dan sisa tagihan setelah invoice diterima </p>
+                                <p>5. Multidrop Rp200.000,- per titik</p>
                                 <div className="modal-action">
                                     <form method="dialog">
                                         <button className="btn">Ya, Saya Mengerti</button>
@@ -88,7 +111,7 @@ const LihatPenawaranHargaItemPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {penawaranHargaItemData && penawaranHargaItemData.map((item, index) => (
+                            {penawaranHargaItemData.map((item, index) => (
                                 <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td>{item.idPenawaranHargaItem}</td>
