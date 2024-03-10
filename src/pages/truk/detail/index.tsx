@@ -4,12 +4,13 @@ import { viewTrukById } from "../../api/truk/viewTrukById";
 import { useState, useEffect } from "react";
 
 const TrukDetailPage = () => {
-    const queryParameters = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-    const id = queryParameters?.get("id")
+    const queryParameters = new URLSearchParams(window.location.search)
+    const id = queryParameters.get("id")
     const [error, setError] = useState('');
     const [trukData, setTrukData] = useState(null); // State to hold truck data
 
     useEffect(() => {
+
         const fetchData = async () => {
             try {
                 const trukDataResponse = await viewTrukById(id);
@@ -24,16 +25,10 @@ const TrukDetailPage = () => {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
-        <Navbar />
-        {error ? (
-            <div>Error: {error}</div>
-        ) : trukData ? (
-            <h1>{trukData['licensePlate']}</h1>
-        ) : (
-            <div>Loading...</div>
-        )}
-        <Footer />
-    </main>
+            <Navbar />
+                      
+            <Footer/>
+        </main>
     )
 }
 

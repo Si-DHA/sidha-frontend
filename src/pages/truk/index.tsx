@@ -4,8 +4,6 @@ import DataTable from "@/app/components/common/datatable/DataTable";
 import { viewAllTruk } from "../api/truk/viewAllTruk";
 import React, { useState, useEffect } from "react";
 
-
-
 const TrukPage: React.FC = () => {
     const [error, setError] = useState('');
     const [trukData, setTrukData] = useState([]); // State to hold truck data

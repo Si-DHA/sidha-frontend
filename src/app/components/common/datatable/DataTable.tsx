@@ -64,7 +64,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick }
   const renderTableBody = () => {
     const router = useRouter();
     const handleRowClick = (idTruk) => {
-      router.push(`truk/detail?id=${idTruk}`);
+      router.push(`truk/detail?id=${idTruk}&action=detail`);
     };
 
     return page.map((row, index) => {
