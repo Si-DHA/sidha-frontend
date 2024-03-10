@@ -3,24 +3,44 @@ import Navbar from "@/app/components/common/navbar";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
+
 import Image from "next/image";
-import Link from 'next/link'
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+
+
 
 
 export default function ProfilePage() {
+  const [userData, setUserData] = useState(null);
+  const [userId, setUserId] = useState('a5d26ca9-c047-42f1-bb56-6594e8710d6b');
+
+  useEffect(() => {
+    fetchUser(userId);
+  }, [userId]);
+  const fetchUser = (id) => {
+    fetch(`http://localhost:8081/api/user/${id}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => setUserData(data.content))
+      .catch(error => console.error('Fetch error:', error));
+  };
+
+  if (!userData) {
+    return <div>gada data...</div>;
+  }
+
+
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between ${inter.className}`} data-theme="cmyk"
     >
       <Navbar />
 
-      <div className="flex flex-row">
-        <div role="alert" className="alert alert-warning grow">
-          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-8 w-8" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-          <span className="grow">Segera ganti password Anda !</span>
-        </div>
-
-      </div>
 
 
       <div className="flex flex-row gap-y-12 gap-x-12">
@@ -32,7 +52,7 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className="card-body items-center text-center">
-              <h2 className="card-title">Gabriel Zebaoth Krisopras Putra </h2>
+              <h2 className="card-title">{userData.name} </h2>
               <p>Halo, Gabriel</p>
               <div className="flex flex-col  justify-center flex-wrap gap-y-4">
 
@@ -65,26 +85,31 @@ export default function ProfilePage() {
             <div className="card-body ">
               <h1 className="font-bold">Data Diri</h1>
               <table className="table text-left" >
-                {/* head */}
 
                 <tbody>
-                  {/* row 1 */}
                   <tr>
                     <td>Name</td>
-                    <td>Gabriel jdfjdfjn</td>
+                    <td>{userData.name}</td>
                   </tr>
                   <tr className="">
                     <td>Username</td>
-                    <td>gabiiing13</td>
+                    <td>{userData.username}</td>
                   </tr>
-                  {/* row 3 */}
-                  <tr>
-                    <td>Company Name</td>
-                    <td>PT. GZKP</td>
-                  </tr>
+                  {userData.role === 'KLIEN' && (
+                    <tr>
+                      <td>Company Name</td>
+                      <td>{userData.companyName}</td>
+                    </tr>
+                  )}
+                  {userData.role === 'KARYAWAN' && (
+                    <tr>
+                      <td>Position</td>
+                      <td>{userData.position}</td>
+                    </tr>
+                  )}
                   <tr>
                     <td>Address</td>
-                    <td>Jl. Raya Kediri, Kediri, Jawa Timur</td>
+                    <td>{userData.address}</td>
                   </tr>
                 </tbody>
               </table>
@@ -92,29 +117,20 @@ export default function ProfilePage() {
               <h1 className="font-bold">Kontak</h1>
 
               <table className="table text-left">
-                {/* head */}
 
                 <tbody>
-                  {/* row 1 */}
                   <tr>
                     <td>Email</td>
-                    <td>Gabiiing13@gmail.com</td>
+                    <td>{userData.email}</td>
                   </tr>
                   <tr className="">
                     <td>Phone</td>
-                    <td>0895376699044</td>
+                    <td>{userData.phone}</td>
                   </tr>
-
                 </tbody>
               </table>
-
-
             </div>
-
-
           </div>
-
-
         </div>
       </div>
 
@@ -123,3 +139,4 @@ export default function ProfilePage() {
     </main>
   );
 }
+
