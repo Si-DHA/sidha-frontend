@@ -1,8 +1,8 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const viewAllPenawaranHargaItem = async (): Promise<any> => {
+export const viewAllTruk = async (): Promise<any> => {
     try {
-        const response = await fetch('http://localhost:8080/api/penawaran-harga-item/id-penawaran-harga/view-all', {
+        const response = await fetch(BASE_URL+'/truk/view-all', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -12,7 +12,7 @@ export const viewAllPenawaranHargaItem = async (): Promise<any> => {
         if (response.ok) {
             return await response.json();
         } else {
-            throw new Error('Error while fetching penawaran harga item data');
+            throw new Error('Error while fetching truck data');
         }
     } catch (error: any) {
         throw new Error(error.message);
