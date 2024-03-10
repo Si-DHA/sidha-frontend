@@ -24,6 +24,8 @@ export const loginUser = async (email: string, password: string): Promise<any> =
 };
 
 const setLogin = (data: any) => {
-    Cookies.set('currentUser', data);
+    Cookies.set("idUser", data.content.user.id);
+    Cookies.set("token", data.content.token);
+    Cookies.set("role", data.content.user.role);
     Cookies.set('isLoggedIn', 'true');
 }

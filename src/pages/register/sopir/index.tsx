@@ -2,6 +2,7 @@ import FailAlert from "@/app/components/common/FailAlert";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import Footer from "@/app/components/common/footer";
 import Navbar from "@/app/components/common/navbar";
+import { BASE_URL } from "@/app/constant/constant";
 import { addRequestMeta } from "next/dist/server/request-meta";
 import { Inter } from "next/font/google";
 
@@ -68,7 +69,7 @@ export default function RegisterPage() {
       formData.append('address', address);
       formData.append('phone', phone);
 
-      const response = await fetch('http://localhost:8081/api/auth/register', {
+      const response = await fetch(BASE_URL+'/auth/register', {
         method: 'POST',
         body: formData,
       });

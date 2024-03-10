@@ -7,11 +7,16 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 import Image from "next/image";
 import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie'
+import { BASE_URL } from "@/app/constant/constant";
 
 
 export default function ProfilePage() {
+  const id = Cookies.get('idUser');
+
+  console.log(id);
   const [userData, setUserData] = useState(null);
-  const [userId, setUserId] = useState('e799c811-2876-4f49-912b-169c99b2792a');
+  const [userId, setUserId] = useState(id);
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [position, setPosition] = useState('');
@@ -71,14 +76,6 @@ export default function ProfilePage() {
     setPhone(event.target.value);
   }
 
-  const validatePhone = (phone) => {
-    const phoneRegex = /^[0-9]{10,13}$/;
-    if (!phoneRegex.test(phone)) {
-      return false;
-    } else {
-      return true;
-    }
-  };
 
   const handleUpdateProfile = async (userId) => {
     if (!validate()) {
@@ -102,7 +99,7 @@ export default function ProfilePage() {
   }, [userId]);
 
   const fetchUser = (id) => {
-    fetch(`http://localhost:8081/api/user/${id}`)
+    fetch(BASE_URL + `/user/${id}`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -131,7 +128,7 @@ export default function ProfilePage() {
       formData.append('position', position);
       formData.append('phone', phone);
 
-      const responseUpdate = await fetch(`http://localhost:8081/api/user/edit/${userId}`, {
+      const responseUpdate = await fetch(BASE_URL+`/user/edit/${userId}`, {
         method: 'POST',
         body: formData
       });
