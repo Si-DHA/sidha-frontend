@@ -32,7 +32,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/app/components/common/datatable/DataTable.tsx"  ],
   "exclude": [
     "node_modules"
   ]
