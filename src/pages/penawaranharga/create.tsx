@@ -65,30 +65,34 @@ const CreatePenawaranHarga = () => {
     };
 
     return (
-        <div>
+        <div className="min-h-screen flex flex-col" data-theme="cmyk">
             <Navbar />
-            <main className="container mx-auto p-4">
-                <h1 className="text-2xl font-bold mb-5">Tambah Harga Penawaran</h1>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium mb-1">Nama Perusahaan Klien</label>
-                        <select
-                            className="form-select block w-full"
-                            value={formData.klienId}
-                            name="klienId"
-                            onChange={handleClientChange}
-                            required
-                        >
-                            <option value="">Select a client</option>
-                            {kliens.map((klien) => (
-                                <option key={klien.id} value={klien.id}>{klien.name}</option>
-                            ))}
-                        </select>
+            <main className="flex-1 py-6 px-4 sm:px-6 lg:px-8">
+                <div className="container mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+                    <div className="py-4 px-5 lg:px-6 bg-gray-50 border-b border-gray-200">
+                        <h1 className="text-3xl font-bold text-gray-900">Tambah Harga Penawaran</h1>
                     </div>
-                    <button type="submit" className="btn btn-primary mt-4">
-                        Submit Penawaran Harga
-                    </button>
-                </form>
+                    <form onSubmit={handleSubmit} className="p-5 lg:p-6">
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Nama Perusahaan Klien</label>
+                            <select
+                                className="form-select block w-full mt-1 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 rounded-md"
+                                value={formData.klienId}
+                                name="klienId"
+                                onChange={handleClientChange}
+                                required
+                            >
+                                <option value="">Select a client</option>
+                                {kliens.map((klien) => (
+                                    <option key={klien.id} value={klien.id}>{klien.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <button type="submit" className="btn btn-primary mt-4" style={{ backgroundColor: "#f0f0f0", color: "#000" }}>
+                            Submit Penawaran Harga
+                        </button>
+                    </form>
+                </div>
             </main>
             <Footer />
         </div>

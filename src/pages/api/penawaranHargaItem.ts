@@ -2,7 +2,7 @@ import { BASE_URL } from '@/app/constant/constant';
 
 export const fetchPenawaranHargaItems = async (idPenawaranHarga: string): Promise<any> => {
     try {
-        const response = await fetch(`${BASE_URL}/api/penawaran-harga-item/${idPenawaranHarga}/view-all`, {
+        const response = await fetch(`http://localhost:8080/api/penawaran-harga-item/${idPenawaranHarga}/view-all`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export const fetchPenawaranHargaItems = async (idPenawaranHarga: string): Promis
 
 export const updatePenawaranHargaItem = async (idPenawaranHargaItem: string, itemData: any): Promise<any> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/penawaran-harga-item/update`, {
+    const response = await fetch(`http://localhost:8080/api/penawaran-harga-item/update`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ export const updatePenawaranHargaItem = async (idPenawaranHargaItem: string, ite
 
 export const deletePenawaranHargaItem = async (idPenawaranHargaItem: string): Promise<void> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/penawaran-harga-item/delete/${idPenawaranHargaItem}`, {
+    const response = await fetch(`http://localhost:8080/api/penawaran-harga-item/delete/${idPenawaranHargaItem}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

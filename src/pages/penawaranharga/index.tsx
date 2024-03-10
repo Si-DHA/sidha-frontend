@@ -66,14 +66,13 @@ const PenawaranHargaPage = () => {
         { name: 'Date Updated', selector: row => new Date(row.penawaranHargaUpdatedAt).toLocaleDateString(), sortable: true },
         {
             name: 'Details',
-            cell: (row) => <button onClick={() => router.push(`/penawaranharga/${row.idPenawaranHarga}/details`)}>View Details</button>,
+            cell: (row) => <button onClick={() => router.push(`/penawaranharga/${row.idPenawaranHarga}`)}>View Details</button>,
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
         },
     ];
 
-    // Component returns JSX
     return (
         <main className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk">
             <Navbar />
