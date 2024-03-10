@@ -11,15 +11,15 @@ export const loginUser = async (email: string, password: string): Promise<any> =
             },
             body: JSON.stringify({ email: email, password: password }),
         });
+        var data = await response.json();
         if (response.ok) {
-            var data = await response.json();
             setLogin(data);
             return data;
         } else {
-            return data['message'];
+            throw new Error(data.message);
         }
     } catch (error: any) {
-        return error.message;
+        throw new Error(error.message);
     }
 };
 
