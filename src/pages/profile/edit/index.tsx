@@ -71,6 +71,15 @@ export default function ProfilePage() {
     setPhone(event.target.value);
   }
 
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[0-9]{10,13}$/;
+    if (!phoneRegex.test(phone)) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   const handleUpdateProfile = async (userId) => {
     if (!validate()) {
       setAlert(<FailAlert key={Date.now()} message="Mohon pastikan data diisi dengan benar" />);
