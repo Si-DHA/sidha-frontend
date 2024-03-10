@@ -9,12 +9,11 @@ const DashboardPage = () => {
     var isLoggedIn = Cookies.get('isLoggedIn');
     const router = useRouter();
 
-
     useEffect(() => {
         if (!isLoggedIn) {
             router.push('/login');
         }
-    }, )
+    },)
 
 
     return (
