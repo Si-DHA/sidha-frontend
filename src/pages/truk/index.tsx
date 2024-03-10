@@ -6,18 +6,15 @@ import React, { useState, useEffect } from "react";
 
 
 
-const TrukPage : React.FC = () => {
+const TrukPage: React.FC = () => {
     const [error, setError] = useState('');
     const [trukData, setTrukData] = useState([]); // State to hold truck data
 
     useEffect(() => {
-        // Function to fetch truck data when component mounts
         const fetchData = async () => {
             try {
                 const trukDataResponse = await viewAllTruk();
                 setTrukData(trukDataResponse['content']);
-                console.log(trukDataResponse);
-                console.log(trukData);
             } catch (error: any) {
                 setError(error.message);
             }
@@ -28,12 +25,12 @@ const TrukPage : React.FC = () => {
 
     const columns = [
         {
-          Header: 'License Plate',
-          accessor: 'licensePlate',
+            Header: 'License Plate',
+            accessor: 'licensePlate',
         },
         {
-          Header: 'Merk',
-          accessor: 'merk',
+            Header: 'Merk',
+            accessor: 'merk',
         },
         {
             Header: 'Type',
@@ -48,15 +45,23 @@ const TrukPage : React.FC = () => {
             accessor: 'expiredKir',
         },
         // Add more columns as needed
-      ];
+    ];
+
+    const createTruk = () => {
+        console.log("button clicked")
+        // history.push('/your-next-page'); // Replace '/your-next-page' with the path to your next page
+    };
 
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
             <Navbar />
-            {error && <div>Error: {error}</div>}
             <h1>Truck Data</h1>
-            <DataTable columns={columns} data={trukData} />
+            {error ? (
+                <div>Error: {error}</div>
+            ) : (
+                <DataTable columns={columns} data={trukData} btnText="Create truck" onClick={createTruk}/>
+            )}
             <Footer />
         </main>
     );

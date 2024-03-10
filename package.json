@@ -9,11 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "fortawesome": "^0.0.1-security",
     "js-cookie": "^3.0.5",
     "next": "14.1.0",
     "react": "^18",
     "react-data-table-component": "^7.6.2",
     "react-dom": "^18",
+    "react-fontawesome": "^1.7.1",
+    "react-router-dom": "^6.22.3",
     "react-table": "^7.8.0"
   },
   "devDependencies": {
