@@ -52,8 +52,10 @@ const CreatePenawaranHarga = () => {
             });
 
             if (response.ok) {
+                const responseData = await response.json();
+                const idPenawaranHarga = responseData.idPenawaranHarga; 
                 alert('Penawaran Harga created successfully');
-                router.push('/penawaranharga');
+                router.push(`/penawaranharga/${idPenawaranHarga}/create`); // Use the ID to redirect
             } else {
                 const error = await response.json();
                 alert(`Error: ${error.message}`);
@@ -70,7 +72,7 @@ const CreatePenawaranHarga = () => {
             <main className="flex-1 py-6 px-4 sm:px-6 lg:px-8">
                 <div className="container mx-auto bg-white shadow-md rounded-lg overflow-hidden">
                     <div className="py-4 px-5 lg:px-6 bg-gray-50 border-b border-gray-200">
-                        <h1 className="text-3xl font-bold text-gray-900">Tambah Harga Penawaran</h1>
+                        <h1 className="text-3xl font-bold text-gray-900">Tambah Penawaran Harga</h1>
                     </div>
                     <form onSubmit={handleSubmit} className="p-5 lg:p-6">
                         <div className="mb-4">
@@ -89,7 +91,7 @@ const CreatePenawaranHarga = () => {
                             </select>
                         </div>
                         <button type="submit" className="btn btn-primary mt-4" style={{ backgroundColor: "#f0f0f0", color: "#000" }}>
-                            Submit Penawaran Harga
+                            Tambahkan Rute
                         </button>
                     </form>
                 </div>

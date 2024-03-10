@@ -80,11 +80,11 @@ const PenawaranHargaPage = () => {
                 <div className="container mx-auto">
                     <div className="text-center lg:text-left">
                         <h1 className="text-3xl font-bold">Daftar Penawaran Harga</h1>
-                        <p className="py-6">Here you can view the list of penawaran harga and their details.</p>
+                        <br></br>
                     </div>
                     <div className="flex justify-between mb-4">
                         <button className="btn btn-primary" onClick={() => router.push('/penawaranharga/create')}>
-                            Tambah Penawaran Harga
+                            Tambah Perusahaan
                         </button>
                     </div>
                     <DataTable

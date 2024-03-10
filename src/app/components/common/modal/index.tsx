@@ -1,8 +1,12 @@
 import React, { ReactNode, CSSProperties, MouseEvent } from 'react';
+export { modalStyle, backdropStyle, titleStyle, closeButtonStyle };
+
 
 interface ModalProps {
   children: ReactNode;
   onClose: (event: MouseEvent<HTMLDivElement | HTMLButtonElement>) => void;
+  className?: string;
+
 }
 
 const modalStyle: CSSProperties = {
@@ -15,6 +19,12 @@ const modalStyle: CSSProperties = {
   padding: '20px',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   borderRadius: '8px',
+  width: 'auto', // Allows the modal to size width dynamically up to maxWidth
+  maxWidth: '500px', // Max width to manage modal sizing
+  maxHeight: '80vh', // Reduce the max height to provide padding within the viewport
+  overflowY: 'auto', // Ensure the content can scroll
+  display: 'flex',
+  flexDirection: 'column', // Stack children vertically
 };
 
 const backdropStyle: CSSProperties = {
@@ -26,6 +36,22 @@ const backdropStyle: CSSProperties = {
   zIndex: 500,
   backgroundColor: 'rgba(0, 0, 0, 0.5)',
 };
+
+const titleStyle: CSSProperties = {
+  fontWeight: 'bold',
+  marginBottom: '20px',
+  color: '#1a202c', // Blue-900
+};
+
+const closeButtonStyle: CSSProperties = {
+  backgroundColor: '#f97316', // Orange-600
+  color: 'white',
+  border: 'none',
+  padding: '10px 20px',
+  borderRadius: '8px',
+  cursor: 'pointer',
+};
+
 
 const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
   React.useEffect(() => {
@@ -40,7 +66,7 @@ const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
       <div style={backdropStyle} onClick={onClose} />
       <div style={modalStyle}>
         {children}
-        <button onClick={onClose}>Close</button>
+        <button onClick={onClose}></button>
       </div>
     </>
   );

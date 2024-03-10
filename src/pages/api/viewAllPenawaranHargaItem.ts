@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { idPenawaranHarga } = req.query; // Extracting idPenawaranHarga from the query
+  const { idPenawaranHarga } = req.query; 
 
   if (req.method === 'GET' && idPenawaranHarga) {
     try {
