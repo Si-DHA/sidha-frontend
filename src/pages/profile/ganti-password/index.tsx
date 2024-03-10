@@ -48,7 +48,7 @@ export default function ProfilePage() {
   };
 
   if (!userData) {
-    return <div>gada data...</div>;
+    return <div>Loading...</div>;
   }
 
 

@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react';
 
 export default function ProfilePage() {
   const [userData, setUserData] = useState(null);
-  const [userId, setUserId] = useState('a5d26ca9-c047-42f1-bb56-6594e8710d6b');
+  const [userId, setUserId] = useState('69eae742-42d7-480f-9995-27d85c7e0370');
 
   useEffect(() => {
     fetchUser(userId);
@@ -31,7 +31,7 @@ export default function ProfilePage() {
   };
 
   if (!userData) {
-    return <div>gada data...</div>;
+    return <div>Loading...</div>;
   }
 
 
