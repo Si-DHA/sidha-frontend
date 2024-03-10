@@ -1,9 +1,10 @@
 import { BASE_URL } from '@/app/constant/constant';
+import { UUID } from 'crypto';
 
-export const viewAllTruk = async (): Promise<any> => {
+export const deleteTrukById = async (id: UUID): Promise<any> => {
     try {
-        const response = await fetch(BASE_URL+'/truk/view-all', {
-            method: 'GET',
+        const response = await fetch(BASE_URL+'/truk/delete/'+id, {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
