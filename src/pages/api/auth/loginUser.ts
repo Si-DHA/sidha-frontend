@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 export const loginUser = async (email: string, password: string): Promise<any> => {
     try {
-        const response = await fetch(BASE_URL+'/auth/login', {
+        const response : any = await fetch(BASE_URL+'/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -12,12 +12,18 @@ export const loginUser = async (email: string, password: string): Promise<any> =
             body: JSON.stringify({ email: email, password: password }),
         });
         if (response.ok) {
-            Cookies.set('currentUser', await response.json());
-            return await response.json();
+            var data = await response.json();
+            setLogin(data);
+            return data;
         } else {
-            throw new Error('Email atau password salah');
+            return data['message'];
         }
     } catch (error: any) {
-        throw new Error(error.message);
+        return error.message;
     }
 };
+
+const setLogin = (data: any) => {
+    Cookies.set('currentUser', data);
+    Cookies.set('isLoggedIn', 'true');
+}
