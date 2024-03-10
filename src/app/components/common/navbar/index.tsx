@@ -7,19 +7,40 @@ const LoginButton = () => {
 }
 
 const LogoutButton = () => {
-    Cookies.remove('currentUser');
-    Cookies.remove('isLoggedIn');
-    return <Link className="btn btn-error px-8" href="/">Logout</Link>
+    const handleModal = () => {
+        const modal: any = document.getElementById('my_modal_1');
+        if (modal) {
+            modal.showModal();
+        }
+    }
+
+    const logout = () => {
+        Cookies.remove('currentUser');
+        Cookies.remove('isLoggedIn');
+    }
+    return <div><button className="btn btn-error px-8" onClick={handleModal}>Logout</button><dialog id="my_modal_1" className="modal">
+        <div className="modal-box">
+            <h3 className="font-bold text-lg">Logout</h3>
+            <p className="py-4">Apakah Anda yakin ingin keluar dari akun Anda?</p>
+            <div className="modal-action">
+                <form method="dialog" className='space-x-4'>
+                    {/* if there is a button in form, it will close the modal */}
+                    <button className="btn px-8">Batal</button>
+                    <Link href="/"><button className="btn btn-error px-6" onClick={logout}>Keluar</button></Link>
+                </form>
+            </div>
+        </div>
+    </dialog></div>
 }
 
 const Navbar = () => {
     var button;
     const isLoggedIn = Cookies.get('isLoggedIn');
     if (isLoggedIn) {
-        button = <LogoutButton/>;
+        button = <LogoutButton />;
     }
     else {
-        button = <LoginButton/>;
+        button = <LoginButton />;
     }
     return <div className="navbar bg-base-100">
         <div className="navbar-start">
