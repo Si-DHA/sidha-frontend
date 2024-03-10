@@ -13,17 +13,18 @@ const ForgotPassword = () => {
 
     var isLoggedIn = Cookies.get('isLoggedIn');
 
-    if (isLoggedIn) {
-        useEffect(() => {
+    useEffect(() => {
+        if (isLoggedIn) {
             router.push('/dashboard');
-        }, [])
-    }
+        }
+    },)
+
 
     const handleForgorPassword = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             if (email === '') throw new Error('Email is required')
-            console.log(await forgotPassword(email));
+            await forgotPassword(email);
             setInfo('Reset link has been sent to your email');
         } catch (error: any) {
             setError(error.message);
@@ -37,7 +38,7 @@ const ForgotPassword = () => {
                 <div className="hero-content flex-col lg:flex-row-reverse">
                     <div className="text-center lg:text-left">
                         <h1 className="text-5xl font-bold">Forgot your password?</h1>
-                        <p className="py-6">Don't worry! We got you covered. Just enter your email and we will send you a link to reset your password.</p>
+                        <p className="py-6">Don&apos;t worry! We got you covered. Just enter your email and we will send you a link to reset your password.</p>
                     </div>
                     <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
                         <form className="card-body">
@@ -51,7 +52,7 @@ const ForgotPassword = () => {
                             <div className="form-control mt-6">
                                 <button className="btn btn-primary" onClick={handleForgorPassword}>Send reset link</button>
                             </div>
-                        {info && <div className="card-footer text-green-500 text-center">{info}</div>}
+                            {info && <div className="card-footer text-green-500 text-center">{info}</div>}
                         </form>
                     </div>
 

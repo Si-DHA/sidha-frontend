@@ -16,18 +16,17 @@ const LoginPage = () => {
 
     var isLoggedIn = Cookies.get('isLoggedIn');
 
-    if (isLoggedIn) {
-        useEffect(() => {
+    useEffect(() => {
+        if (isLoggedIn) {
             router.push('/dashboard');
-        }, [])
-    }
+        }
+    }, )
     
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             const userData = await loginUser(email, password);
             router.push('/dashboard');
-            console.log(userData);
         } catch (error: any) {
             setError(error.message);
         }
@@ -57,7 +56,7 @@ const LoginPage = () => {
                                 </label>
                                 <input type="password" placeholder="password" className="input input-bordered" required value={password} onChange={(e) => setPassword(e.target.value)}/>
                                 <label className="label">
-                                    <a href="/forgot-password" className="label-text-alt link link-hover">Forgot password?</a>
+                                    <Link href="/forgot-password" className="label-text-alt link link-hover">Forgot password?</Link>
                                 </label>
                             </div>
                             {error && <div className="text-red-500">{error}</div>}

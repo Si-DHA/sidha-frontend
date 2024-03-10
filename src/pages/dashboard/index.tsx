@@ -9,11 +9,13 @@ const DashboardPage = () => {
     var isLoggedIn = Cookies.get('isLoggedIn');
     const router = useRouter();
 
-    if (!isLoggedIn) {
-        useEffect(() => {
+
+    useEffect(() => {
+        if (!isLoggedIn) {
             router.push('/login');
-        }, [])
-    }
+        }
+    }, )
+
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">

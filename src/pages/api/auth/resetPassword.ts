@@ -9,7 +9,6 @@ export const resetPassword = async (password: string, token: string): Promise<an
             method: "POST",
         });
         var data = await response.json();
-        console.log(data);
         if (response.ok) {
             return data
         } else {

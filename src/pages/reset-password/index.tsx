@@ -15,15 +15,11 @@ const ResetPasswordPage = () => {
 
     var isLoggedIn = Cookies.get('isLoggedIn');
 
-    if (isLoggedIn) {
-        useEffect(() => {
-            router.push('/dashboard');
-        }, [])
-    }
-
     useEffect(() => {
-        console.log('Token:', token);
-    }, [token]);
+        if (isLoggedIn) {
+            router.push('/dashboard');
+        }
+    }, )
 
     const handleResetPassword = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -31,12 +27,10 @@ const ResetPasswordPage = () => {
             if (password === '') throw new Error('Password is required');
             if (password !== confirmPassword) throw new Error('Password does not match');
             setInfo('Password has been reset');
-            console.log('Password:',
-                password, 'Confirm Password', confirmPassword, 'Token:', token);
-            console.log(await resetPassword(password, token as string));
-                // setTimeout(() => {
-            //     router.push('/login');
-            // }, 3000);
+            await resetPassword(password, token as string);
+                setTimeout(() => {
+                router.push('/login');
+            }, 3000);
         } catch (error: any) {
             setError(error.message);
         }
