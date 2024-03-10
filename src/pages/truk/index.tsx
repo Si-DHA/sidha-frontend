@@ -35,6 +35,18 @@ const TrukPage : React.FC = () => {
           Header: 'Merk',
           accessor: 'merk',
         },
+        {
+            Header: 'Type',
+            accessor: 'type',
+        },
+        {
+            Header: 'Kubikasi',
+            accessor: 'kubikasiBox',
+        },
+        {
+            Header: 'Expired KIR',
+            accessor: 'expiredKir',
+        },
         // Add more columns as needed
       ];
 
