@@ -31,7 +31,7 @@ const TrukDetailPage = () => {
 
     const handleDelete = async (id: any) => {
         try {
-            const trukDataResponse = await deleteTrukById(id+'1');
+            const trukDataResponse = await deleteTrukById(id);
             console.log("truk deleted");
             setAlert(<SuccessAlert message="Truck is deleted successfully"/>);
             setTimeout(() => {
@@ -66,7 +66,7 @@ const TrukDetailPage = () => {
                             <h3 className="font-bold text-lg">Delete</h3>
                             <p className="py-4">Are you sure you want to delete this truck data?</p>
                             <div className="modal-action">
-                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Close</button>
+                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
                                 <button className="btn btn-error" onClick={() => handleDelete(id)}>Delete</button>
                             </div>
 
