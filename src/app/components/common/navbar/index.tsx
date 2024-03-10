@@ -1,8 +1,9 @@
+import { WA_URL } from '@/app/constant/constant';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 
 const LoginButton = () => {
-    return <><Link className="btn btn-outline btn-primary px-8" href="login">Login</Link><Link className="btn btn-primary" href="https://wa.me/6285559414940?text=Halo">Whatsapp Kami</Link></>
+    return <><Link className="btn btn-outline btn-primary px-8" href="login">Login</Link><Link className="btn btn-primary" href={WA_URL}>Whatsapp Kami</Link></>
 }
 
 const LogoutButton = () => {
