@@ -1,4 +1,25 @@
+import Cookies from 'js-cookie';
+import Link from 'next/link';
+
+const LoginButton = () => {
+    return <><Link className="btn btn-outline btn-primary px-8" href="login">Login</Link><Link className="btn btn-primary" href="https://wa.me/6285559414940?text=Halo">Whatsapp Kami</Link></>
+}
+
+const LogoutButton = () => {
+    Cookies.remove('currentUser');
+    Cookies.remove('isLoggedIn');
+    return <Link className="btn btn-error px-8" href="/">Logout</Link>
+}
+
 const Navbar = () => {
+    var button;
+    const isLoggedIn = Cookies.get('isLoggedIn');
+    if (isLoggedIn) {
+        button = <LogoutButton/>;
+    }
+    else {
+        button = <LoginButton/>;
+    }
     return <div className="navbar bg-base-100">
         <div className="navbar-start">
             <div className="dropdown">
@@ -10,7 +31,7 @@ const Navbar = () => {
                     <li><a>Tentang Kami</a></li>
                 </ul>
             </div>
-            <a className="btn btn-ghost text-xl" href="/">SiDHA</a>
+            <Link className="btn btn-ghost text-xl" href="/">SiDHA</Link>
         </div>
         <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal px-1">
@@ -19,10 +40,10 @@ const Navbar = () => {
             </ul>
         </div>
         <div className="navbar-end space-x-4">
-            <a className="btn btn-outline btn-primary px-8" href="login">Login</a>
-            <a className="btn btn-primary">Whatsapp Kami</a>
+            {button}
         </div>
     </div>
 }
 
 export default Navbar
+
