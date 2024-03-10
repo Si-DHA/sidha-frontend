@@ -17,8 +17,6 @@
     "react": "^18",
     "react-data-table-component": "^7.6.2",
     "react-dom": "^18",
-    "react-fontawesome": "^1.7.1",
-    "react-router-dom": "^6.22.3",
     "react-table": "^7.8.0"
   },
   "devDependencies": {
