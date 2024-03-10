@@ -1,14 +1,23 @@
 import Navbar from "@/app/components/common/navbar";
 import Footer from "@/app/components/common/footer";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { forgotPassword } from "../api/auth/forgotPassword";
+import Cookies from 'js-cookie';
 
 const ForgotPassword = () => {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [info, setInfo] = useState('');
+
+    var isLoggedIn = Cookies.get('isLoggedIn');
+
+    if (isLoggedIn) {
+        useEffect(() => {
+            router.push('/dashboard');
+        }, [])
+    }
 
     const handleForgorPassword = async (e: React.FormEvent) => {
         e.preventDefault();

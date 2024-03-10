@@ -3,6 +3,7 @@ import Navbar from "@/app/components/common/navbar";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { resetPassword } from "../api/auth/resetPassword";
+import Cookies from 'js-cookie';
 
 const ResetPasswordPage = () => {
     const router = useRouter();
@@ -11,6 +12,14 @@ const ResetPasswordPage = () => {
     const [error, setError] = useState('');
     const [info, setInfo] = useState('');
     const { token } = router.query;
+
+    var isLoggedIn = Cookies.get('isLoggedIn');
+
+    if (isLoggedIn) {
+        useEffect(() => {
+            router.push('/dashboard');
+        }, [])
+    }
 
     useEffect(() => {
         console.log('Token:', token);

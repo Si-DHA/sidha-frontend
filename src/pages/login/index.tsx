@@ -1,10 +1,11 @@
 import Footer from "@/app/components/common/footer";
 import Navbar from "@/app/components/common/navbar";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loginUser } from "../api/auth/loginUser";
 import { WA_URL } from "@/app/constant/constant";
 import Link from "next/link";
+import Cookies from 'js-cookie';
 
 
 const LoginPage = () => {
@@ -12,6 +13,14 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
+    var isLoggedIn = Cookies.get('isLoggedIn');
+
+    if (isLoggedIn) {
+        useEffect(() => {
+            router.push('/dashboard');
+        }, [])
+    }
     
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
