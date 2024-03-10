@@ -15,9 +15,9 @@ export const forgotPassword = async (email: string): Promise<any> => {
         if (response.ok) {
             return data;
         } else {
-            return data["message"];
+            throw new Error(data.message)
         }
     } catch (error: any) {
-        return error.message;
+        throw new Error(error.message)
     }
 }
