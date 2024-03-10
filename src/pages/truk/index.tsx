@@ -3,8 +3,10 @@ import Navbar from "@/app/components/common/navbar";
 import DataTable from "@/app/components/common/datatable/DataTable";
 import { viewAllTruk } from "../api/truk/viewAllTruk";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 const TrukPage: React.FC = () => {
+    const router = useRouter();
     const [error, setError] = useState('');
     const [trukData, setTrukData] = useState([]); // State to hold truck data
 
@@ -46,19 +48,18 @@ const TrukPage: React.FC = () => {
     ];
 
     const createTruk = () => {
-        console.log("button clicked")
-        // history.push('/your-next-page'); // Replace '/your-next-page' with the path to your next page
+        router.push('/truk/create'); // Replace '/your-next-page' with the path to your next page
     };
 
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
             <Navbar />
-            <h1>Truck Data</h1>
+            <h1 className="card-title">List Truk DHA</h1>
             {error ? (
                 <div>{error}</div>
             ) : (
-                <DataTable columns={columns} data={trukData} btnText="Create truck" onClick={createTruk}/>
+                <DataTable columns={columns} data={trukData} btnText="Create truck" onClick={createTruk} />
             )}
             <Footer />
         </main>

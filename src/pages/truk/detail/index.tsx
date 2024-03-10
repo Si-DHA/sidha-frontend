@@ -9,8 +9,8 @@ import { useRouter } from "next/router";
 
 const TrukDetailPage = () => {
     const queryParameters = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-    const router = useRouter();
     const id = queryParameters?.get("id");
+    const router = useRouter();
     const [error, setError] = useState('');
     const [trukData, setTrukData] = useState(null); // State to hold truck data
     const [alert, setAlert] = useState(null);
@@ -49,7 +49,7 @@ const TrukDetailPage = () => {
     };
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
+        <main className="flex min-h-screen flex-col items-center justify-between" data-theme="cmyk">
             <Navbar />
             <div className="flex flex-row">
                 {alert}
@@ -60,7 +60,6 @@ const TrukDetailPage = () => {
                 <p>Loading..</p>
             ) : (
                 <div className="flex flex-row gap-y-12 gap-x-12">
-                    {/* <button className="btn" onClick={() => document.getElementById('my_modal_5').showModal()}>open modal</button> */}
                     <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                         <div className="modal-box">
                             <h3 className="font-bold text-lg">Delete</h3>
@@ -76,7 +75,9 @@ const TrukDetailPage = () => {
                     <div className="flex flex-col grow justify-center align-center ">
                         <div className="card w-96 bg-base-100 shadow-md">
                             <div className="card-body items-center text-center">
-                                <h2 style={{ marginBottom: '15px' }} className="card-title">{trukData['licensePlate']} </h2>
+                                <h2 className="card-title">{trukData['licensePlate']} </h2>
+                                <h2 className="card-title">{trukData['type']}</h2>
+                                <p style={{ marginBottom: '15px' }}>Sopir: {trukData['sopir'] ? trukData['sopir']['name'] : '-'}</p>
                                 <div className="flex flex-col justify-center gap-y-4">
                                     <div className="flex justify-center gap-x-4">
                                         <div className="card-actions" text-xs>
@@ -115,10 +116,10 @@ const TrukDetailPage = () => {
                                             <td>ID</td>
                                             <td>{trukData['idTruk']}</td>
                                         </tr>
-                                        <tr>
+                                        {/* <tr>
                                             <td>Tipe</td>
                                             <td>{trukData['type']}</td>
-                                        </tr>
+                                        </tr> */}
                                         <tr>
                                             <td>Merk</td>
                                             <td>{trukData['merk']}</td>
