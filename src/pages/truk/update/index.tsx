@@ -85,7 +85,7 @@ const UpdateTrukPage = () => {
             setTimeout(() => {
                 router.push(`/truk/detail?id=${id}`);
             }, 3000);
-            
+
         } catch (error) {
             setAlert(<FailAlert message={error.message || 'Failed to update truck'} />);
             setTimeout(() => {
@@ -131,10 +131,10 @@ const UpdateTrukPage = () => {
                         <div className="flex flex-col grow justify-center align-center ">
                             <div className="card w-96 bg-base-100 shadow-md">
                                 <div className="card-body">
-                                    <h2 className="card-title">Nomor Polisi</h2>
+                                    <h1 className="font-bold">Nomor Polisi</h1>
                                     <input required value={trukData['licensePlate']} onChange={(e) => setTrukData({ ...trukData, licensePlate: e.target.value })}
                                         id="licensePlate" className="input input-bordered flex items-center gap-2 grow" type="text" placeholder="B 1234 ABC" />
-                                    <h2 className="card-title">Tipe</h2>
+                                    <h1 className="font-bold">Tipe Truk</h1>
                                     <select
                                         value={trukData['type']}
                                         onChange={(e) => setTrukData({ ...trukData, type: e.target.value })}
@@ -144,7 +144,7 @@ const UpdateTrukPage = () => {
                                         <option value="Fuso">Fuso</option>
                                         <option value="Wingbox">Wingbox</option>
                                     </select>
-                                    <h2 className="card-title">Sopir</h2>
+                                    <h1 className="font-bold">Sopir</h1>
                                     <select id="idSopir" className="input input-bordered flex items-center gap-2 grow" value={trukData && trukData['sopir'] ? trukData['sopir']['id'] : '0'} onChange={(e) => setTrukData({ ...trukData, sopir: e.target.value })}>
                                         <option value='0'>-</option>
                                         {trukData['sopir'] !== null && (
