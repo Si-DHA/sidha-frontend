@@ -32,7 +32,6 @@ const TrukDetailPage = () => {
     const handleDelete = async (id: any) => {
         try {
             const trukDataResponse = await deleteTrukById(id);
-            console.log("truk deleted");
             setAlert(<SuccessAlert message="Truck is deleted successfully" />);
             setTimeout(() => {
                 router.push(`/truk`); // Redirect to /truk after 3000ms
@@ -45,8 +44,13 @@ const TrukDetailPage = () => {
         }
     };
     const handleUpdate = (id: any) => {
-        console.log("update " + id)
+        router.push(`/truk/update?id=${id}`);
     };
+    const formatDate = (dateTimeString: any) => {
+        const date = new Date(dateTimeString); // Convert datetime string to Date object
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return date.toLocaleDateString('en-GB', options);
+    }
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="cmyk">
@@ -116,10 +120,6 @@ const TrukDetailPage = () => {
                                             <td>ID</td>
                                             <td>{trukData['idTruk']}</td>
                                         </tr>
-                                        {/* <tr>
-                                            <td>Tipe</td>
-                                            <td>{trukData['type']}</td>
-                                        </tr> */}
                                         <tr>
                                             <td>Merk</td>
                                             <td>{trukData['merk']}</td>
@@ -142,7 +142,7 @@ const TrukDetailPage = () => {
                                     <tbody>
                                         <tr>
                                             <td>Masa Berlaku KIR</td>
-                                            <td>{trukData['expiredKir']}</td>
+                                            <td>{formatDate(trukData['expiredKir'])}</td>
                                         </tr>
                                         <tr>
                                             <td>Nama di STNK</td>
