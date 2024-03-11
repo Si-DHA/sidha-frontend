@@ -32,8 +32,7 @@ const TrukDetailPage = () => {
     const handleDelete = async (id: any) => {
         try {
             const trukDataResponse = await deleteTrukById(id);
-            console.log("truk deleted");
-            setAlert(<SuccessAlert message="Truck is deleted successfully"/>);
+            setAlert(<SuccessAlert message="Truck is deleted successfully" />);
             setTimeout(() => {
                 router.push(`/truk`); // Redirect to /truk after 3000ms
             }, 3000);
@@ -45,8 +44,13 @@ const TrukDetailPage = () => {
         }
     };
     const handleUpdate = (id: any) => {
-        console.log("update " + id)
+        router.push(`/truk/update?id=${id}`);
     };
+    const formatDate = (dateTimeString: any) => {
+        const date = new Date(dateTimeString); // Convert datetime string to Date object
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return date.toLocaleDateString('en-GB', options);
+    }
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="cmyk">
@@ -66,7 +70,7 @@ const TrukDetailPage = () => {
                             <p className="py-4">Are you sure you want to delete this truck data?</p>
                             <div className="modal-action">
                                 <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
-                                <button className="btn btn-error" onClick={() => handleDelete(id)}>Delete</button>
+                                <button className="btn btn-error" onClick={() => { handleDelete(id); document.getElementById('my_modal_5').close(); }}>Delete</button>
                             </div>
 
                         </div>
@@ -116,10 +120,6 @@ const TrukDetailPage = () => {
                                             <td>ID</td>
                                             <td>{trukData['idTruk']}</td>
                                         </tr>
-                                        {/* <tr>
-                                            <td>Tipe</td>
-                                            <td>{trukData['type']}</td>
-                                        </tr> */}
                                         <tr>
                                             <td>Merk</td>
                                             <td>{trukData['merk']}</td>
@@ -142,7 +142,7 @@ const TrukDetailPage = () => {
                                     <tbody>
                                         <tr>
                                             <td>Masa Berlaku KIR</td>
-                                            <td>{trukData['expiredKir']}</td>
+                                            <td>{formatDate(trukData['expiredKir'])}</td>
                                         </tr>
                                         <tr>
                                             <td>Nama di STNK</td>
