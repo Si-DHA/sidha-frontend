@@ -1,9 +1,10 @@
 // Assuming this is also located in a similar place as the update function
+import { BASE_URL } from '@/app/constant/constant';
+
 export const deletePenawaranHargaItem = async (idPenawaranHargaItem: string): Promise<void> => {
     try {
-        const response = await fetch(`http://localhost:8080/api/penawaran-harga-item/delete/${idPenawaranHargaItem}`, {
+        const response = await fetch(BASE_URL + `/penawaran-harga-item/delete/${idPenawaranHargaItem}`, {
             method: 'DELETE',
-            // If your backend does not expect a JSON body for DELETE requests, you might not need this header.
             headers: {
                 'Accept': 'application/json',
             },

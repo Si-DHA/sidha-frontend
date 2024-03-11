@@ -2,17 +2,17 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { BASE_URL } from '@/app/constant/constant';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method === 'POST') {
+    const { idPenawaranHargaItem } = req.query;
+    if (req.method === 'GET' && idPenawaranHargaItem) {
         try {
-            const backendUrl = BASE_URL+'/penawaran-harga/create';
+            const backendUrl = BASE_URL + `/penawaran-harga-item/${idPenawaranHargaItem}`;
             
             // Forward the request to the backend, including the JSON body
             const backendRes = await fetch(backendUrl, {
-                method: 'POST',
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(req.body),
             });
 
             // Check if the backend response is OK (status code in the range 200-299)

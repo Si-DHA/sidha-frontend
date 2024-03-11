@@ -1,9 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { BASE_URL } from '@/app/constant/constant';
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         try {
-            const response = await fetch('http://localhost:8080/api/penawaran-harga-item/create', {
+            const response = await fetch(BASE_URL+'/penawaran-harga-item/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

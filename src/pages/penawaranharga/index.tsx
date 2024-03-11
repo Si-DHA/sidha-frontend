@@ -103,6 +103,7 @@ const PenawaranHargaPage = () => {
                         loading={loading}
                         NoDataComponent={CustomNoDataComponent}
                         btnText="Tambah Nama Klien" onClick={() => router.push('/penawaranharga/create')}
+                        type='penawaranHarga'
                     />
                 </div>
             </div>

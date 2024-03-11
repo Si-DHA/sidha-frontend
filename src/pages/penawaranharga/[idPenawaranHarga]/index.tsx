@@ -5,9 +5,10 @@ import Footer from '@/app/components/common/footer';
 import DataTable from "@/app/components/common/datatable/DataTable";
 import { FiEdit, FiSave, FiTrash2 } from 'react-icons/fi';
 import { deletePenawaranHargaItem } from '@/pages/api/deletePenawaranHargaItem';
+import { updatePenawaranHargaItem } from '@/pages/api/updatePenawaranHargaItem';
 
 interface PenawaranHargaItem {
-  id: string;
+  idPenawaranHargaItem: string;
   source: string;
   destination: string;
   cddPrice: number;
@@ -61,58 +62,56 @@ const PenawaranHargaItemPage = () => {
   }, [idPenawaranHarga]);
 
   const formatCurrency = (value: number) => {
-  return `Rp${new Intl.NumberFormat('id-ID').format(value)}`;
-};
+    return `Rp${new Intl.NumberFormat('id-ID').format(value)}`;
+  };
 
   const handleEditSaveClick = async (item: PenawaranHargaItem) => {
     if (item.isEditing) {
       const bodyData = {
-        id: item.id,
+        idPenawaranHargaItem: item.idPenawaranHargaItem,
         cddPrice: item.cddPrice,
         cddLongPrice: item.cddLongPrice,
         wingboxPrice: item.wingboxPrice,
         fusoPrice: item.fusoPrice,
       };
       try {
-        const response = await fetch('/api/updatePenawaranHargaItem', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(bodyData),
-        });
-  
+        const response = await updatePenawaranHargaItem(bodyData);
+
         if (!response.ok) {
           throw new Error('Failed to update the item.');
         }
-  
+
         await fetchItems(); // Re-fetch items to update the list
-        toggleEdit(item.id); // Exit editing mode for the item
       } catch (error) {
         console.error('Failed to update item:', error instanceof Error ? error.message : 'An unknown error occurred');
+      } finally {
+        toggleEdit(item.idPenawaranHargaItem); // Exit editing mode for the item regardless of success or failure
       }
     }
   };
-  
+
+
   const handleDeleteClick = async (itemId: string) => {
     try {
       // Directly calling the delete function with the itemId
       await deletePenawaranHargaItem(itemId);
-  
+
       // Filter out the deleted item from the list
       setItems(items.filter(item => item.id !== itemId));
-      setIsDeleteModalVisible(false); // Close the modal on successful deletion
+      setIsDeleteModalVisible(false);
+      await fetchItems();
+      // Close the modal on successful deletion
     } catch (error) {
       console.error('Failed to delete item:', error instanceof Error ? error.message : 'An unknown error occurred');
     }
   };
-  
+
   const toggleEdit = (itemId: string) => {
     console.log(`Toggling edit mode for item ${itemId}`);
 
     setItems(currentItems =>
       currentItems.map(item =>
-        item.id === itemId ? { ...item, isEditing: !item.isEditing } : item
+        item.idPenawaranHargaItem === itemId ? { ...item, isEditing: !item.isEditing } : item
       )
     );
   };
@@ -150,7 +149,7 @@ const PenawaranHargaItemPage = () => {
   }, [idPenawaranHarga]);
 
 
-  const columns= [
+  const columns = [
     {
       Header: 'Asal',
       accessor: 'source',
@@ -223,10 +222,10 @@ const PenawaranHargaItemPage = () => {
             {item.isEditing ? (
               <FiSave onClick={() => handleEditSaveClick(item)} style={{ cursor: 'pointer', marginRight: '10px' }} />
             ) : (
-              <FiEdit onClick={() => toggleEdit(item.id)} style={{ cursor: 'pointer', marginRight: '10px' }} />
+              <FiEdit onClick={() => toggleEdit(item.idPenawaranHargaItem)} style={{ cursor: 'pointer', marginRight: '10px' }} />
             )}
             <FiTrash2 onClick={() => {
-              setItemToDelete(item.id);
+              setItemToDelete(item.idPenawaranHargaItem);
               setIsDeleteModalVisible(true);
             }} style={{ cursor: 'pointer' }} />
           </>
@@ -244,21 +243,22 @@ const PenawaranHargaItemPage = () => {
       <div className="flex-1 py-6 px-4">
         <div className="container mx-auto">
           <h1 className="text-3xl font-bold">Daftar Penawaran Harga </h1>
-          
+
           <DataTable
             columns={columns}
             data={items}
             progressPending={loading}
             noDataComponent={<CustomNoDataComponent />}
-            btnText="Tambah Rute" 
+            btnText="Tambah Rute"
             onClick={() => router.push(`/penawaranharga/${idPenawaranHarga}/create`)}
+            type='penawaranHargaItem'
           />
           <button
-              className="btn btn-outlined-alt-danger"
-              onClick={() => router.push(`/penawaranharga`)}
-            >
-              Kembali
-            </button>
+            className="btn btn-outlined-alt-danger"
+            onClick={() => router.push(`/penawaranharga`)}
+          >
+            Kembali
+          </button>
         </div>
       </div>
       <Footer />
@@ -274,4 +274,3 @@ const PenawaranHargaItemPage = () => {
 };
 
 export default PenawaranHargaItemPage;
-

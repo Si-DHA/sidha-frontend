@@ -1,10 +1,11 @@
+import { BASE_URL } from '@/app/constant/constant';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
       
-      const endpoint = 'http://localhost:8080/api/penawaran-harga/view-all';
+      const endpoint = BASE_URL + `/penawaran-harga/view-all`;
 
       const response = await fetch(endpoint, {
         method: 'GET',

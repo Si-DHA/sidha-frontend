@@ -1,9 +1,11 @@
 // pages/api/proxyKlien.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { BASE_URL } from '@/app/constant/constant';
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const backendResponse = await fetch('http://localhost:8080/api/user/klien');
+    const backendResponse = await fetch(BASE_URL + `/user/klien`);
     const data = await backendResponse.json();
 
     if (!backendResponse.ok) {
