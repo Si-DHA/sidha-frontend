@@ -3,9 +3,6 @@ import { useRouter } from 'next/router';
 import Navbar from '@/app/components/common/navbar';
 import Footer from '@/app/components/common/footer';
 import DataTable from "@/app/components/common/datatable/DataTable";
-// import { Inter } from "next/font/google";
-
-// const inter = Inter({ subsets: ["latin"] });
 
 interface PenawaranHargaRow {
     klienId: string;
@@ -61,28 +58,29 @@ const PenawaranHargaPage = () => {
 
     const columns = useMemo(() => [
         {
-            Header: 'Client Name',
+            Header: 'Nama Perusahaan',
             accessor: 'klienName',
+            Cell: ({ value }) => <span className="font-bold">{value}</span>, 
         },
         {
-            Header: 'Date Created',
+            Header: 'Tanggal Pembuatan',
             accessor: 'penawaranHargaCreatedAt',
             Cell: ({ value }) => new Date(value).toLocaleDateString(),
         },
+        // {
+        //     Header: 'Date Updated',
+        //     accessor: 'penawaranHargaUpdatedAt',
+        //     Cell: ({ value }) => new Date(value).toLocaleDateString(),
+        // },
         {
-            Header: 'Date Updated',
-            accessor: 'penawaranHargaUpdatedAt',
-            Cell: ({ value }) => new Date(value).toLocaleDateString(),
-        },
-        {
-            Header: 'Details',
+            Header: 'Rute',
             accessor: 'idPenawaranHarga',
             Cell: ({ value }) => (
                 <button
                     onClick={() => router.replace(`/penawaranharga/${value}`)}
                     className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                    View Details
+                    Lihat Daftar Rute
                 </button>
             ),
         }

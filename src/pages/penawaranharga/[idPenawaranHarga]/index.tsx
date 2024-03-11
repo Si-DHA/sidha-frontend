@@ -117,9 +117,11 @@ const PenawaranHargaItemPage = () => {
   };
 
   const handlePriceChange = (itemId: string, priceType: keyof PenawaranHargaItem, newValue: number) => {
+    const updatedValue = Math.max(0, newValue);
+    
     setItems(currentItems =>
       currentItems.map(item =>
-        item.id === itemId ? { ...item, [priceType]: newValue } : item
+        item.id === itemId ? { ...item, [priceType]: updatedValue } : item
       )
     );
   };
@@ -167,6 +169,7 @@ const PenawaranHargaItemPage = () => {
           defaultValue={row.original.cddPrice}
           onBlur={(e) => handlePriceChange(row.original.id, 'cddPrice', parseFloat(e.target.value))}
           style={{ width: '100px' }}
+          min="0"
         />
       ) : formatCurrency(row.original.cddPrice),
     },
@@ -180,6 +183,7 @@ const PenawaranHargaItemPage = () => {
           defaultValue={row.original.cddLongPrice}
           onBlur={(e) => handlePriceChange(row.original.id, 'cddLongPrice', parseFloat(e.target.value))}
           style={{ width: '100px' }}
+          min="0"
         />
       ) : formatCurrency(row.original.cddLongPrice),
     },
@@ -194,6 +198,7 @@ const PenawaranHargaItemPage = () => {
           defaultValue={row.original.wingboxPrice}
           onBlur={(e) => handlePriceChange(row.original.id, 'wingboxPrice', parseFloat(e.target.value))}
           style={{ width: '100px' }}
+          min="0"
         />
       ) : formatCurrency(row.original.wingboxPrice),
     },
@@ -208,33 +213,47 @@ const PenawaranHargaItemPage = () => {
           defaultValue={row.original.fusoPrice}
           onBlur={(e) => handlePriceChange(row.original.id, 'fusoPrice', parseFloat(e.target.value))}
           style={{ width: '100px' }}
+          min="0"
         />
       ) : formatCurrency(row.original.fusoPrice),
     },
 
     {
-      Header: 'Actions',
-      accessor: 'actions', // This is not tied to a specific field in your data
+      Header: 'Ubah/Hapus',
+      accessor: 'actions',
       Cell: ({ row }) => {
         const item = row.original;
         return (
-          <>
+          <div className="flex items-center justify-center space-x-2">
             {item.isEditing ? (
-              <FiSave onClick={() => handleEditSaveClick(item)} style={{ cursor: 'pointer', marginRight: '10px' }} />
+              <FiSave
+                onClick={() => handleEditSaveClick(item)}
+                className="cursor-pointer text-lg hover:text-blue-500" 
+                style={{ fontSize: '1.5rem' }}
+              />
             ) : (
-              <FiEdit onClick={() => toggleEdit(item.idPenawaranHargaItem)} style={{ cursor: 'pointer', marginRight: '10px' }} />
+              <FiEdit
+                onClick={() => toggleEdit(item.idPenawaranHargaItem)}
+                className="cursor-pointer text-lg hover:text-green-500"
+                style={{ fontSize: '1.5rem' }} // Make icon bigger
+              />
             )}
-            <FiTrash2 onClick={() => {
-              setItemToDelete(item.idPenawaranHargaItem);
-              setIsDeleteModalVisible(true);
-            }} style={{ cursor: 'pointer' }} />
-          </>
+            <FiTrash2
+              onClick={() => {
+                setItemToDelete(item.idPenawaranHargaItem);
+                setIsDeleteModalVisible(true);
+              }}
+              className="cursor-pointer text-lg hover:text-red-500"
+              style={{ fontSize: '1.5rem' }} 
+            />
+          </div>
         );
       },
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
     }
+    
   ];
 
   return (
@@ -242,8 +261,8 @@ const PenawaranHargaItemPage = () => {
       <Navbar />
       <div className="flex-1 py-6 px-4">
         <div className="container mx-auto">
-          <h1 className="text-3xl font-bold">Daftar Penawaran Harga </h1>
-
+          <h1 className="text-3xl font-bold mt-1 mb-5">Daftar Rute Penawaran</h1>
+          
           <DataTable
             columns={columns}
             data={items}
@@ -263,12 +282,26 @@ const PenawaranHargaItemPage = () => {
       </div>
       <Footer />
       {isDeleteModalVisible && (
-        <div>
-          <p>Are you sure you want to delete this item?</p>
-          <button onClick={() => itemToDelete && handleDeleteClick(itemToDelete)}>Yes</button>
-          <button onClick={() => setIsDeleteModalVisible(false)}>No</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="mx-auto max-w-sm rounded-lg bg-white p-5 shadow-lg">
+            <h2 className="text-xl font-semibold text-gray-800">Delete Confirmation</h2>
+            <p className="mt-2 text-gray-600">Apakah Anda yakin ingin menghapus rute ini?</p>
+            <div className="flex justify-end mt-4 space-x-3">
+              <button
+                className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                onClick={() => itemToDelete && handleDeleteClick(itemToDelete)}>
+                Yes
+              </button>
+              <button
+                className="px-4 py-2 rounded bg-gray-300 text-gray-700 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50"
+                onClick={() => setIsDeleteModalVisible(false)}>
+                No
+              </button>
+            </div>
+          </div>
         </div>
       )}
+
     </main>
   );
 };
