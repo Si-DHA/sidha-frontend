@@ -261,7 +261,8 @@ const PenawaranHargaItemPage = () => {
       <Navbar />
       <div className="flex-1 py-6 px-4">
         <div className="container mx-auto">
-          <h1 className="text-3xl font-bold mt-1 mb-5">Daftar Rute Penawaran</h1>
+        <h1 className="text-3xl font-bold mt-1 mb-5" style={{ color: '#2d3254' }}>Daftar Rute Penawaran</h1>
+
           
           <DataTable
             columns={columns}

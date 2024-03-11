@@ -16,7 +16,7 @@ interface PenawaranHargaRow {
 interface Klien {
     penawaranHarga: any;
     id: string;
-    name: string;
+    companyName: string;
 }
 
 const CustomNoDataComponent = () => (
@@ -44,7 +44,7 @@ const PenawaranHargaPage = () => {
 
                 const mergedData = clientsArray.map((klien: Klien) => ({
                     klienId: klien.id,
-                    klienName: klien.name,
+                    klienName: klien.companyName,
                     penawaranHargaCreatedAt: klien.penawaranHarga.penawaranHargaCreatedAt,
                     penawaranHargaUpdatedAt: klien.penawaranHarga.penawaranHargaUpdatedAt,
                     idPenawaranHarga: klien.penawaranHarga.idPenawaranHarga,

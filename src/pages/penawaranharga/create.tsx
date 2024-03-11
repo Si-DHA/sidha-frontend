@@ -8,7 +8,7 @@ import FailAlert from "@/app/components/common/FailAlert";
 
 interface Klien {
     id: string;
-    name: string;
+    companyName: string;
 }
 
 interface FormData {
@@ -94,7 +94,7 @@ const CreatePenawaranHarga = () => {
                             >
                                 <option value="">Select a client</option>
                                 {kliens.map((klien) => (
-                                    <option key={klien.id} value={klien.id}>{klien.name}</option>
+                                    <option key={klien.id} value={klien.id}>{klien.companyName}</option>
                                 ))}
                             </select>
                         </div>
