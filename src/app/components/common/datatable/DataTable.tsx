@@ -7,9 +7,12 @@ import { useRouter } from "next/router";
 interface DataTableProps {
   data: any[];
   columns: any[];
+  btnText: string;
+  onClick: () => void;
+  type: string;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick }) => {
+const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, type }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -74,13 +77,14 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick }
           className="hover"
           {...row.getRowProps()}
           style={{ borderBottom: '1px solid black' }}
-          onClick={() => handleRowClick(row.original.idTruk)}
+          onClick={type === 'truk' ? () => handleRowClick(row.original.idTruk) : undefined}
           key={index}>
           <td style={{ textAlign: 'center' }}>{index + 1}</td> {/* Add table cell for numbering */}
           {row.cells.map((cell) => {
             if (cell.column.id === 'expiredKir') { // Replace 'datetimeColumn' with the actual ID of your datetime column
               const date = new Date(cell.value); // Convert datetime string to Date object
-              const formattedDate = date.toLocaleDateString(); // Format date to string (e.g., 'MM/DD/YYYY')
+              const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+              const formattedDate = date.toLocaleDateString('en-GB', options); // Format date to string (e.g., 'MM/DD/YYYY')
               return <td style={{ textAlign: 'center' }} {...cell.getCellProps()}>{formattedDate}</td>; // Render formatted date
             } else {
               return <td style={{ textAlign: 'center' }}{...cell.getCellProps()}>{cell.render('Cell')}</td>; // Render other cells as usual

@@ -59,7 +59,7 @@ const TrukPage: React.FC = () => {
             {error ? (
                 <div>{error}</div>
             ) : (
-                <DataTable columns={columns} data={trukData} btnText="Create truck" onClick={createTruk} />
+                <DataTable columns={columns} data={trukData} btnText="Create truck" onClick={createTruk} type="truk"/>
             )}
             <Footer />
         </main>
