@@ -60,7 +60,7 @@ const ResetPasswordPage = () => {
                         </div>
                         {error && <div className="text-red-500">{error}</div>}
                         <div className="form-control mt-6">
-                            <button className="btn btn-primary" onClick={handleResetPassword}>Send reset link</button>
+                            <button className="btn btn-primary" onClick={handleResetPassword}>Submit</button>
                         </div>
                         {info && <div className="card-footer text-green-500 text-center">{info}</div>}
                     </form>

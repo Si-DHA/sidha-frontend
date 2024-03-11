@@ -1,8 +1,8 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const viewAllTruk = async (): Promise<any> => {
+export const viewSopirNoTruk = async (): Promise<any> => {
     try {
-        const response = await fetch(BASE_URL+'/truk/view-all', {
+        const response = await fetch(BASE_URL+'/user/sopir-no-truk', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

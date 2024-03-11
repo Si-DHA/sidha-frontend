@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 const successAlert = ({ message }) => {
   const [showAlert, setShowAlert] = useState(true);
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowAlert(false);
     }, 3000);
-
     return () => clearTimeout(timer);
   }, []);
 

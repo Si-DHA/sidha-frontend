@@ -1,13 +1,14 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const viewAllTruk = async (): Promise<any> => {
+export const updateTruk = async (requestBody: JSON): Promise<any> => {
     try {
-        const response = await fetch(BASE_URL+'/truk/view-all', {
-            method: 'GET',
+        const response = await fetch(BASE_URL+'/truk/update', {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-            }
+            },
+            body: JSON.stringify(requestBody),
         });
 
         const responseData = await response.json();

@@ -3,21 +3,18 @@ import Navbar from "@/app/components/common/navbar";
 import DataTable from "@/app/components/common/datatable/DataTable";
 import { viewAllTruk } from "../api/truk/viewAllTruk";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
-
-
-const TrukPage : React.FC = () => {
+const TrukPage: React.FC = () => {
+    const router = useRouter();
     const [error, setError] = useState('');
     const [trukData, setTrukData] = useState([]); // State to hold truck data
 
     useEffect(() => {
-        // Function to fetch truck data when component mounts
         const fetchData = async () => {
             try {
                 const trukDataResponse = await viewAllTruk();
                 setTrukData(trukDataResponse['content']);
-                console.log(trukDataResponse);
-                console.log(trukData);
             } catch (error: any) {
                 setError(error.message);
             }
@@ -28,12 +25,12 @@ const TrukPage : React.FC = () => {
 
     const columns = [
         {
-          Header: 'License Plate',
-          accessor: 'licensePlate',
+            Header: 'License Plate',
+            accessor: 'licensePlate',
         },
         {
-          Header: 'Merk',
-          accessor: 'merk',
+            Header: 'Merk',
+            accessor: 'merk',
         },
         {
             Header: 'Type',
@@ -48,15 +45,22 @@ const TrukPage : React.FC = () => {
             accessor: 'expiredKir',
         },
         // Add more columns as needed
-      ];
+    ];
+
+    const createTruk = () => {
+        router.push('/truk/create'); // Replace '/your-next-page' with the path to your next page
+    };
 
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
             <Navbar />
-            {error && <div>Error: {error}</div>}
-            <h1>Truck Data</h1>
-            <DataTable columns={columns} data={trukData} />
+            <h1 className="card-title">List Truk DHA</h1>
+            {error ? (
+                <div>{error}</div>
+            ) : (
+                <DataTable columns={columns} data={trukData} btnText="Create truck" onClick={createTruk} type="truk"/>
+            )}
             <Footer />
         </main>
     );
