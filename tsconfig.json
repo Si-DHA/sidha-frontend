@@ -5,6 +5,11 @@
       "dom.iterable",
       "esnext"
     ],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -31,8 +36,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
+    ".next/types/**/*.ts", 
+    "src/app/components/common/datatable/DataTable.tsx"  ],
   "exclude": [
     "node_modules"
   ]

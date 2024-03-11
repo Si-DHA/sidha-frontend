@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from '@/app/components/common/navbar';
 import Footer from '@/app/components/common/footer';
-import DataTable, { TableColumn } from 'react-data-table-component';
-import { Inter } from "next/font/google";
+import DataTable from "@/app/components/common/datatable/DataTable";
+// import { Inter } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 interface PenawaranHargaRow {
     klienId: string;
@@ -59,46 +59,50 @@ const PenawaranHargaPage = () => {
             .finally(() => setLoading(false));
     }, []);
 
-    // Define columns outside useEffect
-    const columns: TableColumn<PenawaranHargaRow>[] = [
-        { name: 'Client Name', selector: row => row.klienName || 'No Client', sortable: true },
-        { name: 'Date Created', selector: row => new Date(row.penawaranHargaCreatedAt).toLocaleDateString(), sortable: true },
-        { name: 'Date Updated', selector: row => new Date(row.penawaranHargaUpdatedAt).toLocaleDateString(), sortable: true },
+    const columns = useMemo(() => [
         {
-            name: 'Details',
-            cell: (row) => <button onClick={() => router.push(`/penawaranharga/${row.idPenawaranHarga}`)}>View Details</button>,
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
+            Header: 'Client Name',
+            accessor: 'klienName',
         },
-    ];
+        {
+            Header: 'Date Created',
+            accessor: 'penawaranHargaCreatedAt',
+            Cell: ({ value }) => new Date(value).toLocaleDateString(),
+        },
+        {
+            Header: 'Date Updated',
+            accessor: 'penawaranHargaUpdatedAt',
+            Cell: ({ value }) => new Date(value).toLocaleDateString(),
+        },
+        {
+            Header: 'Details',
+            accessor: 'idPenawaranHarga',
+            Cell: ({ value }) => (
+                <button
+                    onClick={() => router.replace(`/penawaranharga/${value}`)}
+                    className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                    View Details
+                </button>
+            ),
+        }
+    ], [router]);
 
     return (
-        <main className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk">
+        <main className={`flex min-h-screen flex-col`} data-theme="cmyk">
             <Navbar />
             <div className="flex-1 py-6 px-4">
                 <div className="container mx-auto">
                     <div className="text-center lg:text-left">
                         <h1 className="text-3xl font-bold">Daftar Penawaran Harga</h1>
-                        <br></br>
-                    </div>
-                    <div className="flex justify-between mb-4">
-                        <button className="btn btn-primary" onClick={() => router.push('/penawaranharga/create')}>
-                            Tambah Perusahaan
-                        </button>
+                        <br />
                     </div>
                     <DataTable
-                        columns={columns}
                         data={penawaranHarga}
-                        progressPending={loading}
-                        noDataComponent={<CustomNoDataComponent />}
-                        customStyles={{
-                            headCells: {
-                                style: {
-                                    backgroundColor: "#f0f0f0",
-                                },
-                            },
-                        }}
+                        columns={columns}
+                        loading={loading}
+                        NoDataComponent={CustomNoDataComponent}
+                        btnText="Tambah Nama Klien" onClick={() => router.push('/penawaranharga/create')}
                     />
                 </div>
             </div>

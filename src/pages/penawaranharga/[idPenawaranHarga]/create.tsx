@@ -1,7 +1,10 @@
-
+import Footer from "@/app/components/common/footer";
+import Navbar from "@/app/components/common/navbar";
 import React, { ChangeEvent, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Modal from '@/app/components/common/modal';
+import SuccessAlert from "@/app/components/common/SuccessAlert";
+import FailAlert from "@/app/components/common/FailAlert";
+// import Modal from '@/app/components/common/modal';
 
 
 interface Client {
@@ -33,6 +36,8 @@ const CreatePenawaranHargaItemPage = () => {
         wingboxPrice: '',
         fusoPrice: '',
     });
+    const [alert, setAlert] = useState<React.ReactNode>(null);
+
 
     useEffect(() => {
         // Ensure idPenawaranHarga is not an array or undefined before making the fetch call
@@ -82,6 +87,10 @@ const CreatePenawaranHargaItemPage = () => {
         }));
     };
 
+    const handleBack = () => {
+        router.push(`/penawaranharga/${idPenawaranHarga}`)
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -106,9 +115,11 @@ const CreatePenawaranHargaItemPage = () => {
 
             // Redirect to the Penawaran Harga details page
             router.push(`/penawaranharga/${idPenawaranHarga}`);
+            setAlert(<SuccessAlert message="Penawaran Harga Item is created successfully" />);
+
         } catch (error) {
             console.error('Error creating Penawaran Harga Item:', error);
-            // Implement appropriate error handling here
+            setAlert(<FailAlert message={error.message || 'Failed to create Penawaran Harga Item'} />);
         }
     };
 
@@ -117,63 +128,134 @@ const CreatePenawaranHargaItemPage = () => {
     };
 
     return (
-        <Modal onClose={handleClose}>
-            <div className="flex flex-col justify-center items-center p-4">
-    <div className="card max-w-md bg-base-50 shadow-xl">
-            
-                    <form onSubmit={handleSubmit} className="card-body">
-                        <input type="hidden" name="idKlien" value={formData.idKlien} />
-                        <div className="form-control">
-                            <label htmlFor="source" className="label">
-                                <span className="label-text">Source:</span>
-                            </label>
-                            <input id="source" name="source" value={formData.source} onChange={handleChange} required className="input input-bordered" />
-                        </div>
-                        <div className="form-control">
-                            <label htmlFor="destination" className="label">
-                                <span className="label-text">Destination:</span>
-                            </label>
-                            <input id="destination" name="destination" value={formData.destination} onChange={handleChange} required className="input input-bordered" />
-                        </div>
+        <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-grow container mx-auto p-4">
+                {alert}
 
-                        <div className="form-control">
-                            <label htmlFor="cddPrice" className="label">
-                                <span className="label-text">Harga CDD:</span>
-                            </label>
-                            <input id="cddPrice" name="cddPrice" value={formData.cddPrice} onChange={handleChange} required className="input input-bordered" />
-                        </div>
+                <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <h1 className="block text-gray-700 font-bold mb-2 text-xl mb-4">Tambah Rute</h1>
 
-                        <div className="form-control">
-                            <label htmlFor="cddLongPrice" className="label">
-                                <span className="label-text">Harga CDD Long:</span>
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <label htmlFor="source" className="block text-gray-700 text-sm font-semibold mb-2">
+                                Pilih Kota Asal
                             </label>
-                            <input id="cddLongPrice" name="cddLongPrice" value={formData.cddLongPrice} onChange={handleChange} required className="input input-bordered" />
+                            <input
+                                id="source"
+                                name="source"
+                                value={formData.source}
+                                onChange={handleChange}
+                                required
+                                className="w-full p-2 border border-gray-300 rounded"
+                            >
+                                {/* Map through your options here */}
+                            </input>
                         </div>
 
-                        <div className="form-control">
-                            <label htmlFor="wingboxPrice" className="label">
-                                <span className="label-text">Harga Wingbox:</span>
+                        <div className="mb-4">
+                            <label htmlFor="destination" className="block text-gray-700 text-sm font-semibold mb-2">
+                                Pilih Kota Tujuan
                             </label>
-                            <input id="wingboxPrice" name="wingboxPrice" value={formData.wingboxPrice} onChange={handleChange} required className="input input-bordered" />
+                            <input
+                                id="destination"
+                                name="destination"
+                                value={formData.destination}
+                                onChange={handleChange}
+                                required
+                                className="w-full p-2 border border-gray-300 rounded"
+                            >
+                            </input>
                         </div>
 
-                        <div className="form-control">
-                            <label htmlFor="fusoPrice" className="label">
-                                <span className="label-text">Harga Fuso:</span>
-                            </label>
-                            <input id="fusoPrice" name="fusoPrice" value={formData.fusoPrice} onChange={handleChange} required className="input input-bordered" />
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label htmlFor="cddPrice" className="block text-gray-700 text-sm font-semibold mb-2">
+                                    Harga CDD
+                                </label>
+                                <input
+                                    id="cddPrice"
+                                    name="cddPrice"
+                                    type="number"
+                                    min="0"
+                                    value={formData.cddPrice}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
+
+                            <div>
+                                <label htmlFor="cddLongPrice" className="block text-gray-700 text-sm font-semibold mb-2">
+                                    Harga CDD Long
+                                </label>
+                                <input
+                                    id="cddLongPrice"
+                                    name="cddLongPrice"
+                                    type="number"
+                                    min="0"
+                                    value={formData.cddLongPrice}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
                         </div>
 
+                        <div className="grid grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label htmlFor="wingboxPrice" className="block text-gray-700 text-sm font-semibold mb-2">
+                                    Harga Wingbox
+                                </label>
+                                <input
+                                    id="wingboxPrice"
+                                    name="wingboxPrice"
+                                    type="number"
+                                    min="0"
+                                    value={formData.wingboxPrice}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
 
-                        {/* Submit and Close buttons */}
-                        <div className="form-control mt-4">
-                            <button type="submit" className="btn btn-primary">Simpan</button>
-                            <button type="button" onClick={handleClose} className="btn btn-ghost ml-2">Close</button>
+                            <div>
+                                <label htmlFor="fusoPrice" className="block text-gray-700 text-sm font-semibold mb-2">
+                                    Harga Fuso
+                                </label>
+                                <input
+                                    id="fusoPrice"
+                                    name="fusoPrice"
+                                    type="number"
+                                    min="0"
+                                    value={formData.fusoPrice}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between items-center mt-6">
+                            <button 
+                                type="button"
+                                onClick={handleBack}
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            >
+                                Kembali
+                            </button>
+                            <button 
+                                type="submit"
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            >
+                                Tambah Rute
+                            </button>
                         </div>
                     </form>
                 </div>
-            </div>
-        </Modal>
+            </main>
+            <Footer />
+        </div>
     );
 };
 
