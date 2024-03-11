@@ -4,7 +4,7 @@ import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { viewAllSopir } from "../../api/truk/viewAllSopir";
+import { viewSopirNoTruk } from "../../api/truk/viewSopirNoTruk";
 import { createTruk } from "../../api/truk/createTruk";
 
 const CreateTrukPage = () => {
@@ -17,7 +17,7 @@ const CreateTrukPage = () => {
 
         const fetchData = async () => {
             try {
-                const sopirDataResponse = await viewAllSopir();
+                const sopirDataResponse = await viewSopirNoTruk();
                 setSopirData(sopirDataResponse['content']);
             } catch (error: any) {
                 setError(error.message);
@@ -41,7 +41,7 @@ const CreateTrukPage = () => {
             const tinggiBox = document.getElementById('tinggiBox').value;
             const kubikasiBox = document.getElementById('kubikasiBox').value;
             const idSopir = document.getElementById('idSopir').value;
-            console.log(idSopir);
+
             // Create POST request body
             const requestBody = {
                 type,
@@ -66,12 +66,10 @@ const CreateTrukPage = () => {
                 requestBody.idSopir = idSopir;
             }
             const trukDataResponse = await createTruk(requestBody);
-            console.log("truk created");
             setAlert(<SuccessAlert message="Truck is created successfully" />);
             setTimeout(() => {
                 router.push(`/truk`); // Redirect to /truk after 3000ms
             }, 3000);
-            console.log(requestBody);
         } catch (error) {
             setAlert(<FailAlert message={error.message || 'Failed to create truck'} />);
             setTimeout(() => {
