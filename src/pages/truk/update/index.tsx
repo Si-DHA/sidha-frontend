@@ -85,7 +85,6 @@ const UpdateTrukPage = () => {
             setTimeout(() => {
                 router.push(`/truk/detail?id=${id}`);
             }, 3000);
-
         } catch (error) {
             setAlert(<FailAlert message={error.message || 'Failed to update truck'} />);
             setTimeout(() => {
