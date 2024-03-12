@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const SuccessAlert = ({ message }) => {
+const SuccessAlert = ({ message }:any) => {
   const [showAlert, setShowAlert] = useState(true);
   useEffect(() => {
     const timer = setTimeout(() => {

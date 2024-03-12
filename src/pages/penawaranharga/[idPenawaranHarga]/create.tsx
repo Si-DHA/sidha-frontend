@@ -117,7 +117,7 @@ const CreatePenawaranHargaItemPage = () => {
             router.push(`/penawaranharga/${idPenawaranHarga}`);
             setAlert(<SuccessAlert message="Penawaran Harga Item is created successfully" />);
 
-        } catch (error) {
+        } catch (error:any) {
             console.error('Error creating Penawaran Harga Item:', error);
             setAlert(<FailAlert message={error.message || 'Failed to create Penawaran Harga Item'} />);
         }

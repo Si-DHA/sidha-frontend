@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const FailAlert = ({ message }) => {
+const FailAlert = ({ message } : any) => {
   const [showAlert, setShowAlert] = useState(true);
 
   useEffect(() => {
