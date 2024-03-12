@@ -1,24 +1,29 @@
 import { WA_URL } from '@/app/constant/constant';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const LoginButton = () => {
     return <><Link className="btn btn-outline btn-primary px-8" href="login">Login</Link><Link className="btn btn-primary" href={WA_URL}>Whatsapp Kami</Link></>
 }
 
 const LogoutButton = () => {
+    const modal: any = document.getElementById('my_modal_1');
     const handleModal = () => {
-        const modal: any = document.getElementById('my_modal_1');
         if (modal) {
             modal.showModal();
         }
     }
 
     const logout = () => {
-        Cookies.remove('currentUser');
+        Cookies.remove('idUser');
+        Cookies.remove('token');
+        Cookies.remove('role');
         Cookies.remove('isLoggedIn');
+        modal.close()
     }
-    return <div><button className="btn btn-error px-8" onClick={handleModal}>Logout</button><dialog id="my_modal_1" className="modal">
+    return <div><button className="btn btn-error px-8" onClick={handleModal}>Logout</button>
+    <dialog id="my_modal_1" className="modal">
         <div className="modal-box">
             <h3 className="font-bold text-lg">Logout</h3>
             <p className="py-4">Apakah Anda yakin ingin keluar dari akun Anda?</p>
@@ -34,16 +39,25 @@ const LogoutButton = () => {
 }
 
 const Navbar = () => {
-    var button;
-    const isLoggedIn = Cookies.get('isLoggedIn');
-    var userRole;
-    if (isLoggedIn) {
-        button = <LogoutButton />;
-        userRole = Cookies.get('role');
-    }
-    else {
-        button = <LoginButton />;
-    }
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userRole, setUserRole] = useState('');
+    const [button, setButton] = useState(<LoginButton />);
+
+    useEffect(() => {
+        const loggedIn = Cookies.get('isLoggedIn');
+        const role = Cookies.get('role');
+        console.log(role);
+        if (loggedIn) {
+            setIsLoggedIn(true);
+            setUserRole(role || '');
+            setButton(<LogoutButton />);
+        } else {
+            setIsLoggedIn(false);
+            setUserRole('');
+            setButton(<LoginButton />);
+        }
+    }, []);
+    
     return <div className="navbar bg-base-100">
         <div className="navbar-start">
             <div className="dropdown">
@@ -55,7 +69,7 @@ const Navbar = () => {
                         <li><a href="/register">Daftar Akun</a></li>
                         <li><a href="/truk">Data Truk</a></li>
                     </ul>
-                    
+
                 ) : (
                     <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                         <li><a>Armada Kami</a></li>

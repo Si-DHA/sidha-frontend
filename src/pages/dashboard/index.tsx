@@ -2,18 +2,20 @@ import Footer from "@/app/components/common/footer"
 import Navbar from "@/app/components/common/navbar"
 import Cookies from 'js-cookie';
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const DashboardPage = () => {
 
     var isLoggedIn = Cookies.get('isLoggedIn');
-    var role = Cookies.get('role');
+    const [userRole, setUserRole] = useState('');
     const router = useRouter();
 
     useEffect(() => {
         if (!isLoggedIn) {
             router.push('/login');
         }
+        const role = Cookies.get('role');
+        setUserRole(role || '');
     },)
 
 
@@ -23,7 +25,7 @@ const DashboardPage = () => {
             <div className="hero min-h-screen bg-base-200">
                 <div className="hero-content flex-col lg:flex-row-reverse">
                     <div className="text-center lg:text-left">
-                        <h1 className="text-5xl font-bold">Selamat datang di dashboard {role}!</h1>
+                        <h1 className="text-5xl font-bold">Selamat datang di dashboard {userRole}!</h1>
                         <p className="py-6">Anda dapat mengakses berbagai fitur yang tersedia di dashboard ini. Silahkan pilih menu yang Anda inginkan.</p>
                     </div>
                 </div>
