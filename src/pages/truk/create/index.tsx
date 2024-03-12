@@ -103,16 +103,16 @@ const CreateTrukPage = () => {
                         {/* <div className="avatar justify-center">
                         </div> */}
                         <div className="card-body">
-                            <h2 className="card-title">Nomor Polisi</h2>
+                            <h1 className="font-bold">Nomor Polisi</h1>
                             <input required id="licensePlate" className="input input-bordered flex items-center gap-2 grow" type="text" placeholder="B 1234 ABC" />
-                            <h2 className="card-title">Tipe</h2>
+                            <h1 className="font-bold">Tipe Truk</h1>
                             <select id="type" className="input input-bordered flex items-center gap-2 grow">
                                 <option value="CDD">CDD</option>
                                 <option value="CDL">CDL</option>
                                 <option value="Fuso">Fuso</option>
                                 <option value="Wingbox">Wingbox</option>
                             </select>
-                            <h2 className="card-title">Sopir</h2>
+                            <h1 className="font-bold">Sopir</h1>
                             <select id="idSopir" className="input input-bordered flex items-center gap-2 grow">
                                 <option value='0'>-</option>
                                 {sopirData.map((sopir) => (
