@@ -19,9 +19,14 @@ export default function ProfilePage() {
   const [userId, setUserId] = useState(id);
   const [currentPassword, setcurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [alert, setAlert] = useState(null);
-
   const [statusCode, setStatusCode] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(showPassword => !showPassword);
+  };
 
   const handlecurrentPasswordChange = (event) => {
     setcurrentPassword(event.target.value);
@@ -33,6 +38,10 @@ export default function ProfilePage() {
   const handleChangePassword = async (userId) => {
     await updatePassword(currentPassword, newPassword, userId);
   };
+
+  const handleConfirmNewPasswordChange = (event) => {
+    setConfirmNewPassword(event.target.value);
+  }
 
   useEffect(() => {
     fetchUser(userId);
@@ -57,6 +66,14 @@ export default function ProfilePage() {
 
   async function updatePassword(currentPassword: string, newPassword: string, userId: string) {
     try {
+      if (currentPassword === '' || newPassword === '') {
+        setAlert(<FailAlert key={Date.now()} message="Password cannot be empty" />);
+        return;
+      }
+      if (newPassword !== confirmNewPassword) {
+        setAlert(<FailAlert key={Date.now()} message="New password doesn't match" />);
+        return;
+      }
       const formData = new FormData();
       formData.append('currentPassword', currentPassword);
       formData.append('newPassword', newPassword);
@@ -137,7 +154,7 @@ export default function ProfilePage() {
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4 opacity-70"><title>key-variant</title><path d="M22,18V22H18V19H15V16H12L9.74,13.74C9.19,13.91 8.61,14 8,14A6,6 0 0,1 2,8A6,6 0 0,1 8,2A6,6 0 0,1 14,8C14,8.61 13.91,9.19 13.74,9.74L22,18M7,5A2,2 0 0,0 5,7A2,2 0 0,0 7,9A2,2 0 0,0 9,7A2,2 0 0,0 7,5Z" /></svg>
 
                         <input
-                          type="password"
+                          type={showPassword ? "text" : "password"}
                           className="grow"
                           placeholder="Password lama"
                           value={currentPassword}
@@ -152,7 +169,7 @@ export default function ProfilePage() {
                     <td><label className="input input-bordered flex items-center gap-2 ">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4 opacity-70"><title>key-variant</title><path d="M22,18V22H18V19H15V16H12L9.74,13.74C9.19,13.91 8.61,14 8,14A6,6 0 0,1 2,8A6,6 0 0,1 8,2A6,6 0 0,1 14,8C14,8.61 13.91,9.19 13.74,9.74L22,18M7,5A2,2 0 0,0 5,7A2,2 0 0,0 7,9A2,2 0 0,0 9,7A2,2 0 0,0 7,5Z" /></svg>
                       <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         className="grow"
                         placeholder="Password baru"
                         value={newPassword}
@@ -162,8 +179,29 @@ export default function ProfilePage() {
                     </label></td>
                   </tr>
 
+                  <tr>
+                    <td>Konfirmasi Password Baru</td>
+                    <td><label className="input input-bordered flex items-center gap-2 ">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4 opacity-70"><title>key-variant</title><path d="M22,18V22H18V19H15V16H12L9.74,13.74C9.19,13.91 8.61,14 8,14A6,6 0 0,1 2,8A6,6 0 0,1 8,2A6,6 0 0,1 14,8C14,8.61 13.91,9.19 13.74,9.74L22,18M7,5A2,2 0 0,0 5,7A2,2 0 0,0 7,9A2,2 0 0,0 9,7A2,2 0 0,0 7,5Z" /></svg>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        className="grow"
+                        placeholder="Konfrimasi password baru"
+                        value={confirmNewPassword}
+                        onChange={handleConfirmNewPasswordChange}
+
+                      />
+                    </label></td>
+                  </tr>
+
                 </tbody>
               </table>
+              <div className="form-contro flex flex-row justify-end gap-x-4">
+                <label className="cursor-pointer label gap-x-4">
+                  <span className="label-text">Tampilkan Password</span>
+                  <input type="checkbox" checked={showPassword} onChange={togglePasswordVisibility} className="checkbox checkbox-error" />
+                </label>
+              </div>
               <div className="flex flex-row justify-center align-middle">
                 <button className="btn btn-sm sm:btn-sm md:btn-s lg:btn-md flex text-sm " onClick={() => handleChangePassword(userId)}>Ganti Password</button>
 
