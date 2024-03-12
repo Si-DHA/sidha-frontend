@@ -56,7 +56,6 @@ export default function ProfilePage() {
             </div>
             <div className="card-body items-center text-center">
               <h2 className="card-title">{userData.name} </h2>
-              <p>Halo, Gabriel</p>
               <div className="flex flex-col  justify-center flex-wrap gap-y-4">
 
                 <div className="card-actions justify-center" text-xs>
