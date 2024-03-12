@@ -14,7 +14,9 @@ const TrukPage: React.FC = () => {
         const fetchData = async () => {
             try {
                 const trukDataResponse = await viewAllTruk();
-                setTrukData(trukDataResponse['content']);
+                if (trukDataResponse) {
+                    setTrukData(trukDataResponse['content']);
+                }
             } catch (error: any) {
                 setError(error.message);
             }
@@ -44,7 +46,6 @@ const TrukPage: React.FC = () => {
             Header: 'Expired KIR',
             accessor: 'expiredKir',
         },
-        // Add more columns as needed
     ];
 
     const createTruk = () => {
@@ -59,8 +60,13 @@ const TrukPage: React.FC = () => {
             {error ? (
                 <div>{error}</div>
             ) : (
-                <DataTable columns={columns} data={trukData} btnText="Create truck" onClick={createTruk} type="truk"/>
-            )}
+                <>
+                    {trukData ? ( // Check if trukData is empty
+                        <DataTable columns={columns} data={trukData} btnText="Create truck" onClick={createTruk} type="truk" />
+                    ) : (
+                        <DataTable columns={columns} data={[]} btnText="Create truck" onClick={createTruk} type="truk" />
+                    )}
+                </>)}
             <Footer />
         </main>
     );
