@@ -66,6 +66,10 @@ export default function ProfilePage() {
 
   async function updatePassword(currentPassword: string, newPassword: string, userId: string) {
     try {
+      if (currentPassword === '' || newPassword === '') {
+        setAlert(<FailAlert key={Date.now()} message="Password cannot be empty" />);
+        return;
+      }
       if (newPassword !== confirmNewPassword) {
         setAlert(<FailAlert key={Date.now()} message="New password doesn't match" />);
         return;
