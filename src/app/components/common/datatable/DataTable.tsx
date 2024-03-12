@@ -44,10 +44,10 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
 
   const renderTableHeader = () => {
     return headerGroups.map((headerGroup) => (
-      <tr {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: '#f2f2f2' }}>
+      <tr key={index} {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: '#f2f2f2' }}>
         <th style={{ textAlign: 'center' }}>No</th> {/* Add table header for numbering */}
         {headerGroup.headers.map((column) => (
-          <th {...column.getHeaderProps(column.getSortByToggleProps())} style={{ textAlign: 'center' }}>
+          <th key={index} {...column.getHeaderProps(column.getSortByToggleProps())} style={{ textAlign: 'center' }}>
             {column.render('Header')}
             {column.isSorted ? ( // Check if the column is sorted
               column.isSortedDesc ? ( // Check if the column is sorted in descending order
@@ -64,7 +64,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
     ));
   };
 
-  const renderTableBody = () => {
+  const RenderTableBody = () => {
     const router = useRouter();
     const handleRowClick = (idTruk: any) => {
       router.push(`truk/detail?id=${idTruk}`);
@@ -85,9 +85,9 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
               const date = new Date(cell.value); // Convert datetime string to Date object
               const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
               const formattedDate = date.toLocaleDateString('en-GB', options); // Format date to string (e.g., 'MM/DD/YYYY')
-              return <td style={{ textAlign: 'center' }} {...cell.getCellProps()}>{formattedDate}</td>; // Render formatted date
+              return <td key={index} style={{ textAlign: 'center' }} {...cell.getCellProps()}>{formattedDate}</td>; // Render formatted date
             } else {
-              return <td style={{ textAlign: 'center' }}{...cell.getCellProps()}>{cell.render('Cell')}</td>; // Render other cells as usual
+              return <td key={index} style={{ textAlign: 'center' }}{...cell.getCellProps()}>{cell.render('Cell')}</td>; // Render other cells as usual
             }
           })}
         </tr>
@@ -126,7 +126,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
       </div>
       <table className="table table-xs" {...getTableProps()} style={{ borderCollapse: 'separate', width: '100%', borderSpacing: '10 10px', marginBottom: '20px' }}>
         <thead>{renderTableHeader()}</thead>
-        <tbody {...getTableBodyProps()}>{renderTableBody()}</tbody>
+        <tbody {...getTableBodyProps()}>{RenderTableBody()}</tbody>
       </table>
       {/* Pagination */}
       <div style={{ float: 'left' }}>

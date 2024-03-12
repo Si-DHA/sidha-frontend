@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const successAlert = ({ message }) => {
+const SuccessAlert = ({ message }) => {
   const [showAlert, setShowAlert] = useState(true);
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -19,4 +19,4 @@ const successAlert = ({ message }) => {
   );
 };
 
-export default successAlert;
+export default SuccessAlert;

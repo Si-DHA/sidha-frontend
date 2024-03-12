@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const failAlert = ({ message }) => {
+const FailAlert = ({ message }) => {
   const [showAlert, setShowAlert] = useState(true);
 
   useEffect(() => {
@@ -21,4 +21,4 @@ const failAlert = ({ message }) => {
   );
 };
 
-export default failAlert;
+export default FailAlert;
