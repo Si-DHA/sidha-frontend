@@ -116,20 +116,26 @@ export default function RegisterPage() {
 
         </div>
         <div className="flex flex-row align-middle mx-auto justify-between items-center mt-10 pb-12 gap-x-20">
+          
           <div className="flex flex-col justify-center my-auto gap-2 m-4 p-4 md:block hidden">
             <Image src="/register_asset.png" alt="Image" width={500} height={500} />
           </div>
+
+
           <div className="flex flex-col">
             <form onSubmit={handleSubmit} className="">
               <label className="input input-bordered flex items-center gap-2 m-2 p-3">
                 <input type="text" className="grow" placeholder="Full Name" value={name} onChange={handleNameChange} required />
               </label>
+
               <label className="input input-bordered flex items-center gap-2 m-2 p-3">
                 <input type="email" className="grow" placeholder="Email" value={email} onChange={handleEmailChange} required />
               </label>
+
               <label className="input input-bordered flex items-center gap-2 m-2 p-3">
                 <input type="text" className="grow" placeholder="Address" value={address} onChange={handleAddressChange} required />
               </label>
+
               <label className="input input-bordered flex items-center gap-2 m-2 p-3">
                 <input type="text" className="grow" placeholder="Phone" value={phone} min={10} max={13} onChange={handlePhoneChange} required />
               </label>
