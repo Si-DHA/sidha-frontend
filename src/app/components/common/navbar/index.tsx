@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const LoginButton = () => {
-    return <><Link className="btn btn-outline btn-primary px-8" href="login">Login</Link><Link className="btn btn-primary" href={WA_URL}>Whatsapp Kami</Link></>
+    return <><Link className="btn btn-outline btn-primary px-8" href="/login">Login</Link><Link className="btn btn-primary" href={WA_URL}>Whatsapp Kami</Link></>
 }
 
 const LogoutButton = () => {
@@ -28,7 +28,7 @@ const LogoutButton = () => {
         modal.close()
     }
     return <div className='flex flex-none gap-2'>
-        <Link className="btn btn-ghost" href="dashboard">Dashboard</Link>
+        <Link className="btn btn-ghost" href="/dashboard">Dashboard</Link>
         <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
