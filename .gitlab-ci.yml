@@ -1,5 +1,5 @@
 default:
-  image: node:16.16.0
+  image: node:18-apline
 
 deploy-prod:
   stage: deploy
