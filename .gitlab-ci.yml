@@ -6,7 +6,6 @@ deploy-prod:
   only:
     - master
   script:
-    - npm install next@14
     - npm install --global vercel
     - npm run build --no-lint
     - vercel deploy --prod --token=$VERCEL_TOKEN --yes
