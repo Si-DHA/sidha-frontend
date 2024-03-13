@@ -1,4 +1,5 @@
 import { WA_URL } from '@/app/constant/constant';
+import { checkIfAuthenticated } from '@/app/utils/checkIfAuthenticated';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -8,12 +9,16 @@ const LoginButton = () => {
 }
 
 const LogoutButton = () => {
-    const modal: any = document.getElementById('my_modal_1');
+
+    const [modal, setModal]:any = useState(null);
     const handleModal = () => {
-        if (modal) {
-            modal.showModal();
-        }
+        modal.showModal()
     }
+    
+    useEffect(() => {
+        setModal(document.getElementById('my_modal_1'));
+        
+    }, [])
 
     const logout = () => {
         Cookies.remove('idUser');
@@ -38,29 +43,28 @@ const LogoutButton = () => {
                 </li>
                 <li><button className='text-error' onClick={handleModal}>Logout</button></li>
             </ul>
-        </div>
-        <dialog id="my_modal_1" className="modal">
-            <div className="modal-box">
-                <h3 className="font-bold text-lg">Logout</h3>
-                <p className="py-4">Apakah Anda yakin ingin keluar dari akun Anda?</p>
-                <div className="modal-action">
-                    <form method="dialog" className='space-x-4'>
-                        {/* if there is a button in form, it will close the modal */}
-                        <button className="btn px-8">Batal</button>
-                        <Link href="/"><button className="btn btn-error px-6" onClick={logout}>Keluar</button></Link>
-                    </form>
+            <dialog id="my_modal_1" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Logout</h3>
+                    <p className="py-4">Apakah Anda yakin ingin keluar dari akun Anda?</p>
+                    <div className="modal-action">
+                        <form method="dialog" className='space-x-4'>
+                            {/* if there is a button in form, it will close the modal */}
+                            <button className="btn px-8">Batal</button>
+                            <Link href="/"><button className="btn btn-error px-6" onClick={logout}>Keluar</button></Link>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </dialog></div>
+            </dialog>
+        </div>
+    </div>
 }
 
 const Navbar = () => {
     const [button, setButton] = useState(<LoginButton />);
 
     useEffect(() => {
-        const loggedIn = Cookies.get('isLoggedIn');
-        const role = Cookies.get('role');
-        console.log(role);
+        const loggedIn = checkIfAuthenticated();
         if (loggedIn) {
             setButton(<LogoutButton />);
         } else {
@@ -70,10 +74,10 @@ const Navbar = () => {
 
     return <div className="navbar bg-base-100 w-full">
         <div className="flex-none lg:hidden">
-        <label htmlFor="my-drawer-3" aria-label="open sidebar" className="btn btn-square btn-ghost">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-6 h-6 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        </label>
-      </div> 
+            <label htmlFor="my-drawer-3" aria-label="open sidebar" className="btn btn-square btn-ghost">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-6 h-6 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </label>
+        </div>
         <div className="navbar-start">
             {/* <div className="dropdown">
                 <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
