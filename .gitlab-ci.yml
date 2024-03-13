@@ -6,6 +6,7 @@ deploy-prod:
   only:
     - master
   script:
+    - npm install -g npm@latest
     - npm install next
     - npm install --global vercel
     - npm run build -- --no-lint
