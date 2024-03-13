@@ -13,10 +13,6 @@ import { useRouter } from "next/router";
 import Drawer from "@/app/components/common/drawer";
 
 
-
-
-
-
 export default function ProfilePage() {
   const id = Cookies.get('idUser');
   console.log(id);
