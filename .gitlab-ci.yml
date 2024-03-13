@@ -1,13 +1,12 @@
 default:
-  image: node:18-apline
+  image: node:16.16.0
 
 deploy-prod:
   stage: deploy
   only:
     - master
   script:
-    - npm install -g npm@latest
-    - npm install next
+    - npm install next@14
     - npm install --global vercel
-    - npm run build -- --no-lint
+    - npm run build --no-lint
     - vercel deploy --prod --token=$VERCEL_TOKEN --yes
