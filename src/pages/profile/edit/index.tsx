@@ -128,7 +128,7 @@ export default function ProfilePage() {
       formData.append('position', position);
       formData.append('phone', phone);
 
-      const responseUpdate = await fetch(BASE_URL+`/user/edit/${userId}`, {
+      const responseUpdate = await fetch(BASE_URL + `/user/edit/${userId}`, {
         method: 'POST',
         body: formData
       });
@@ -168,7 +168,6 @@ export default function ProfilePage() {
             </div>
             <div className="card-body items-center text-center">
               <h2 className="card-title">{userData.name} </h2>
-              <p>Halo, Gabriel</p>
               <div className="flex flex-col  justify-center flex-wrap gap-y-4">
 
                 <label className="form-control w-full max-w-xs">
@@ -201,7 +200,6 @@ export default function ProfilePage() {
                   <tr>
                     <td>Name</td>
                     <td><label className="input input-bordered flex items-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>
                       <input type="text" className="grow" placeholder="Isi nama lengkap anda" value={name} onChange={handleNameChange} />
                     </label></td>
                   </tr>
@@ -221,7 +219,6 @@ export default function ProfilePage() {
                     <tr>
                       <td>Position</td>
                       <td><label className="input input-bordered flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>
                         <input type="text" className="grow" placeholder="Isi jabatan Anda" value={position} onChange={handlePositionChange} />
                       </label></td>
                     </tr>
@@ -231,7 +228,6 @@ export default function ProfilePage() {
                   <tr>
                     <td>Address</td>
                     <td> <label className="input input-bordered flex items-center gap-2 ">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>
                       <input type="text" className="grow" placeholder="Isi alamat lengkap Anda" value={address} onChange={handleAddressChange} />
                     </label></td>
                   </tr>
@@ -253,10 +249,7 @@ export default function ProfilePage() {
                     <td>Phone</td>
                     <td>
                       <label className="input input-bordered flex items-center gap-2 ">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
-                          <path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" />
-                        </svg>
-
+                  
                         <input type="text" className="grow" placeholder="Isi nomor Whatsapp Anda" value={phone} onChange={handlePhoneChange} minLength={11} maxLength={13} />
                       </label>
                     </td>
