@@ -81,12 +81,12 @@ const UpdateTrukPage = () => {
             }
 
             const trukDataResponse = await updateTruk(requestBody);
-            setAlert(<SuccessAlert message="Truck is updated successfully" />);
+            setAlert(<SuccessAlert message="Data truk berhasil diperbarui" />);
             setTimeout(() => {
                 router.push(`/truk/detail?id=${id}`);
             }, 3000);
         } catch (error) {
-            setAlert(<FailAlert message={error.message || 'Failed to update truck'} />);
+            setAlert(<FailAlert message={error.message || "Gagal memperbarui data truk"} />);
             setTimeout(() => {
                 setAlert(null);
             }, 3000);
@@ -117,7 +117,7 @@ const UpdateTrukPage = () => {
                 <div>
                     <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                         <div className="modal-box">
-                            <h3 className="font-bold text-lg">Create</h3>
+                            <h3 className="font-bold text-lg">Update</h3>
                             <p className="py-4">Are you sure your data is correct?</p>
                             <div className="modal-action">
                                 <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>

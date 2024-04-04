@@ -27,7 +27,7 @@ const TrukPage: React.FC = () => {
 
     const columns = [
         {
-            Header: 'License Plate',
+            Header: 'Nomor Plat',
             accessor: 'licensePlate',
         },
         {
@@ -35,7 +35,7 @@ const TrukPage: React.FC = () => {
             accessor: 'merk',
         },
         {
-            Header: 'Type',
+            Header: 'Tipe',
             accessor: 'type',
         },
         {
@@ -62,9 +62,9 @@ const TrukPage: React.FC = () => {
             ) : (
                 <>
                     {trukData ? ( // Check if trukData is empty
-                        <DataTable columns={columns} data={trukData} btnText="Create truck" onClick={createTruk} type="truk" />
+                        <DataTable columns={columns} data={trukData} btnText="Tambah truk" onClick={createTruk} type="truk" />
                     ) : (
-                        <DataTable columns={columns} data={[]} btnText="Create truck" onClick={createTruk} type="truk" />
+                        <DataTable columns={columns} data={[]} btnText="Tambah truk" onClick={createTruk} type="truk" />
                     )}
                 </>)}
             <Footer />
