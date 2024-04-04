@@ -28,7 +28,7 @@ const TrukPage: React.FC = () => {
 
     const columns = [
         {
-            Header: 'License Plate',
+            Header: 'Nomor Polisi',
             accessor: 'licensePlate',
         },
         {
@@ -36,7 +36,7 @@ const TrukPage: React.FC = () => {
             accessor: 'merk',
         },
         {
-            Header: 'Type',
+            Header: 'Tipe',
             accessor: 'type',
         },
         {
@@ -55,23 +55,19 @@ const TrukPage: React.FC = () => {
 
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between " data-theme="winter">
-            <Drawer userRole="ADMIN">
-                <div className="flex flex row justify-center">
-                    <h1 className="card-title">List Truk DHA</h1>
-                </div>
-
-                {error ? (
-                    <div>{error}</div>
-                ) : (
-                    <>
-                        {trukData ? ( // Check if trukData is empty
-                            <DataTable columns={columns} data={trukData} btnText="Create truck" onClick={createTruk} type="truk" />
-                        ) : (
-                            <DataTable columns={columns} data={[]} btnText="Create truck" onClick={createTruk} type="truk" />
-                        )}
-                    </>)}
-            </Drawer>
+        <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
+            <Navbar />
+            <h1 className="card-title">List Truk DHA</h1>
+            {error ? (
+                <div>{error}</div>
+            ) : (
+                <>
+                    {trukData ? ( // Check if trukData is empty
+                        <DataTable columns={columns} data={trukData} btnText="Tambah truk" onClick={createTruk} type="truk" />
+                    ) : (
+                        <DataTable columns={columns} data={[]} btnText="Tambah truk" onClick={createTruk} type="truk" />
+                    )}
+                </>)}
             <Footer />
 
         </main>
