@@ -4,6 +4,7 @@ import DataTable from "@/app/components/common/datatable/DataTable";
 import { viewAllTruk } from "../api/truk/viewAllTruk";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Drawer from "@/app/components/common/drawer";
 
 const TrukPage: React.FC = () => {
     const router = useRouter();
@@ -68,6 +69,7 @@ const TrukPage: React.FC = () => {
                     )}
                 </>)}
             <Footer />
+
         </main>
     );
 }

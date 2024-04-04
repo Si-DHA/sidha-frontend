@@ -5,6 +5,9 @@ import Footer from '@/app/components/common/footer';
 import { useRouter } from 'next/router';
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
+import Cookies from "js-cookie";
+import Drawer from "@/app/components/common/drawer";
+
 
 interface Klien {
     id: string;
@@ -22,8 +25,20 @@ const CreatePenawaranHarga = () => {
         klienId: '',
     });
 
-    const router = useRouter();
     const [alert, setAlert] = useState<React.ReactNode>(null);
+
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        setUserRole(role || '');
+    },)
+
 
     useEffect(() => {
         fetch('/api/proxyKlien')
@@ -47,7 +62,7 @@ const CreatePenawaranHarga = () => {
         const payload = {
             idKlien: formData.klienId,
         };
-  
+
         try {
             const response = await fetch('/api/createPenawaranHarga', {
                 method: 'POST',
@@ -59,7 +74,7 @@ const CreatePenawaranHarga = () => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const idPenawaranHarga = responseData.idPenawaranHarga; 
+                const idPenawaranHarga = responseData.idPenawaranHarga;
                 setAlert(<SuccessAlert message="Penawaran Harga berhasil dibuat." />);
                 router.push(`/penawaranharga/${idPenawaranHarga}/create`);
             } else {
@@ -74,10 +89,10 @@ const CreatePenawaranHarga = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col" data-theme="cmyk">
-            <Navbar />
+        <div className="min-h-screen flex flex-col" data-theme="winter">
+            <Drawer userRole={userRole}>
             <main className="flex-1 py-6 px-4 sm:px-6 lg:px-8">
-            {alert} {/* Render alert message */}
+                {alert} {/* Render alert message */}
                 <div className="container mx-auto bg-white shadow-md rounded-lg overflow-hidden">
                     <div className="py-4 px-5 lg:px-6 bg-gray-50 border-b border-gray-200">
                         <h1 className="text-3xl font-bold text-gray-900">Tambah Penawaran Harga</h1>
@@ -102,11 +117,12 @@ const CreatePenawaranHarga = () => {
                             Simpan Perusahaan
                         </button>
                         <button type="button" className="btn btn-danger mt-4 mx-2" onClick={handleBack}>
-                        Kembali
-                    </button>
+                            Kembali
+                        </button>
                     </form>
                 </div>
             </main>
+            </Drawer>
             <Footer />
         </div>
     );

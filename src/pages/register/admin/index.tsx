@@ -108,7 +108,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="text-slate-500 text-l text-center font-italic">
-            Please ensure that you fill in the admin's identity correctly
+            Please ensure that you fill in the admin identity correctly
           </div>
           <div>
             {alert}

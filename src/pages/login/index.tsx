@@ -13,6 +13,11 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     var isLoggedIn = Cookies.get('isLoggedIn');
 
@@ -20,8 +25,8 @@ const LoginPage = () => {
         if (isLoggedIn) {
             router.push('/dashboard');
         }
-    }, )
-    
+    },)
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -54,9 +59,10 @@ const LoginPage = () => {
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
-                                <input type="password" placeholder="password" className="input input-bordered" required value={password} onChange={(e) => setPassword(e.target.value)}/>
+                                <input type={showPassword ? 'text' : 'password'} placeholder="password" className="input input-bordered" required value={password} onChange={(e) => setPassword(e.target.value)} />
                                 <label className="label">
                                     <Link href="/forgot-password" className="label-text-alt link link-hover">Forgot password?</Link>
+                                    <button type="button" className="label-text-alt " onClick={togglePasswordVisibility}>{showPassword ? 'Hide' : 'Show'}</button>
                                 </label>
                             </div>
                             {error && <div className="text-red-500">{error}</div>}
