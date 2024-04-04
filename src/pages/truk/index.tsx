@@ -27,7 +27,7 @@ const TrukPage: React.FC = () => {
 
     const columns = [
         {
-            Header: 'Nomor Plat',
+            Header: 'Nomor Polisi',
             accessor: 'licensePlate',
         },
         {
