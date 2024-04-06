@@ -1,6 +1,8 @@
+import { BASE_URL } from "@/app/constant/constant";
+
 export const getPenawaranHargaItemBySource = async (source: string): Promise<any> => {
     try {
-        const response = await fetch(`http://localhost:8080/api/penawaran-harga-item/source/${source}/view-all`, {
+        const response = await fetch(BASE_URL+`/penawaran-harga-item/source/${source}/view-all`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

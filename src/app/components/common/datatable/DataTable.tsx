@@ -7,8 +7,8 @@ import { useRouter } from "next/router";
 interface DataTableProps {
   data: any[];
   columns: any[];
-  btnText: string;
-  onClick: () => void;
+  btnText?: string;
+  onClick?: () => void;
   type: string;
 }
 
@@ -43,11 +43,11 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
   );
 
   const renderTableHeader = () => {
-    return headerGroups.map((headerGroup) => (
-      <tr {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: '#f2f2f2' }}>
+    return headerGroups.map((headerGroup, index) => (
+      <tr {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: '#f2f2f2' }} key={index} >
         <th style={{ textAlign: 'center' }}>No</th> {/* Add table header for numbering */}
         {headerGroup.headers.map((column) => (
-          <th {...column.getHeaderProps(column.getSortByToggleProps())} style={{ textAlign: 'center' }}>
+          <th {...column.getHeaderProps(column.getSortByToggleProps())} style={{ textAlign: 'center' }} key={index} >
             {column.render('Header')}
             {column.isSorted ? ( // Check if the column is sorted
               column.isSortedDesc ? ( // Check if the column is sorted in descending order
@@ -64,13 +64,13 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
     ));
   };
 
-  const renderTableBody = () => {
+  const RenderTableBody = () => {
     const router = useRouter();
     const handleRowClick = (idTruk: any) => {
       router.push(`truk/detail?id=${idTruk}`);
     };
 
-    return page.map((row, index) => {
+    return page.map((row:any, index) => {
       prepareRow(row);
       return (
         <tr
@@ -80,14 +80,14 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
           onClick={type === 'truk' ? () => handleRowClick(row.original.idTruk) : undefined}
           key={index}>
           <td style={{ textAlign: 'center' }}>{index + 1}</td> {/* Add table cell for numbering */}
-          {row.cells.map((cell) => {
+          {row.cells.map((cell:any, index:any) => {
             if (cell.column.id === 'expiredKir') { // Replace 'datetimeColumn' with the actual ID of your datetime column
               const date = new Date(cell.value); // Convert datetime string to Date object
-              const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+              const options :any= { day: '2-digit', month: '2-digit', year: 'numeric' };
               const formattedDate = date.toLocaleDateString('en-GB', options); // Format date to string (e.g., 'MM/DD/YYYY')
-              return <td style={{ textAlign: 'center' }} {...cell.getCellProps()}>{formattedDate}</td>; // Render formatted date
+              return <td style={{ textAlign: 'center' }} {...cell.getCellProps()} key={index} >{formattedDate}</td>; // Render formatted date
             } else {
-              return <td style={{ textAlign: 'center' }}{...cell.getCellProps()}>{cell.render('Cell')}</td>; // Render other cells as usual
+              return <td style={{ textAlign: 'center' }}{...cell.getCellProps()} key={index} >{cell.render('Cell')}</td>; // Render other cells as usual
             }
           })}
         </tr>
@@ -103,7 +103,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
           <input
             value={globalFilter || ''}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Search..."
+            placeholder="Cari..."
             style={{
               padding: '0.5rem 1rem',
               border: '1px solid #ccc',
@@ -121,28 +121,30 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
           </span>
         </div>
       </div>
-      <div style={{ float: 'right', marginBottom: '15px' }}>
-        <button className="btn btn-primary" onClick={onClick}>{btnText}</button>
-      </div>
+      {btnText && onClick &&
+        <div style={{ float: 'right', marginBottom: '15px' }}>
+          <button className="btn btn-primary" onClick={onClick}>{btnText}</button>
+        </div>
+      }
       <table className="table table-xs" {...getTableProps()} style={{ borderCollapse: 'separate', width: '100%', borderSpacing: '10 10px', marginBottom: '20px' }}>
         <thead>{renderTableHeader()}</thead>
-        <tbody {...getTableBodyProps()}>{renderTableBody()}</tbody>
+        <tbody {...getTableBodyProps()}>{RenderTableBody()}</tbody>
       </table>
       {/* Pagination */}
       <div style={{ float: 'left' }}>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
         </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+        <button onClick={() => previousPage()} disabled={!canPreviousPage} style={{ paddingLeft: '5px' }}>
           {'<'}
         </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
+        <button onClick={() => nextPage()} disabled={!canNextPage} style={{ paddingLeft: '5px' }}>
           {'>'}
         </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} style={{ paddingLeft: '5px' }}>
           {'>>'}
         </button>{' '}
-        <span>
+        <span style={{ paddingLeft: '5px' }}>
           Page{' '}
           <strong>
             {pageIndex + 1} of {pageOptions.length}

@@ -66,12 +66,12 @@ const CreateTrukPage = () => {
                 requestBody.idSopir = idSopir;
             }
             const trukDataResponse = await createTruk(requestBody);
-            setAlert(<SuccessAlert message="Truck is created successfully" />);
+            setAlert(<SuccessAlert message="Data truk berhasil ditambahkan" />);
             setTimeout(() => {
                 router.push(`/truk`); // Redirect to /truk after 3000ms
             }, 3000);
         } catch (error) {
-            setAlert(<FailAlert message={error.message || 'Failed to create truck'} />);
+            setAlert(<FailAlert message={error.message || "Gagal menambah data truk"} />);
             setTimeout(() => {
                 setAlert(null);
             }, 3000);

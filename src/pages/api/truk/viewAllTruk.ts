@@ -15,7 +15,7 @@ export const viewAllTruk = async (): Promise<any> => {
         if (response.ok) {
             return responseData;
         } else {
-            throw new Error(responseData.message);
+            return [];
         }
     } catch (error: any) {
         throw new Error(error.message);

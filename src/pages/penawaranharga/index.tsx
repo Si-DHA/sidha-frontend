@@ -3,6 +3,10 @@ import { useRouter } from 'next/router';
 import Navbar from '@/app/components/common/navbar';
 import Footer from '@/app/components/common/footer';
 import DataTable from "@/app/components/common/datatable/DataTable";
+import Cookies from "js-cookie";
+import Drawer from "@/app/components/common/drawer";
+
+
 
 interface PenawaranHargaRow {
     klienId: string;
@@ -29,6 +33,19 @@ const PenawaranHargaPage = () => {
     const [penawaranHarga, setPenawaranHarga] = useState<PenawaranHargaRow[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+
+  
+    useEffect(() => {
+      if (!isLoggedIn) {
+        router.push('/login');
+      }
+      const role = Cookies.get('role');
+      setUserRole(role || '');
+    },)
+  
 
     useEffect(() => {
         const fetchPenawaranHarga = '/api/viewAllPenawaranHarga';
@@ -60,7 +77,7 @@ const PenawaranHargaPage = () => {
         {
             Header: 'Nama Perusahaan',
             accessor: 'klienName',
-            Cell: ({ value }) => <span className="font-bold">{value}</span>, 
+            Cell: ({ value }) => <span className="font-bold">{value}</span>,
         },
         {
             Header: 'Tanggal Pembuatan',
@@ -87,8 +104,8 @@ const PenawaranHargaPage = () => {
     ], [router]);
 
     return (
-        <main className={`flex min-h-screen flex-col`} data-theme="cmyk">
-            <Navbar />
+        <main className={`flex min-h-screen flex-col`} data-theme="winter">
+            <Drawer userRole='userRole'>
             <div className="flex-1 py-6 px-4">
                 <div className="container mx-auto">
                     <div className="text-center lg:text-left">
@@ -105,6 +122,7 @@ const PenawaranHargaPage = () => {
                     />
                 </div>
             </div>
+            </Drawer>
             <Footer />
         </main>
     );
