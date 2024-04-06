@@ -9,6 +9,10 @@ import { updatePenawaranHargaItem } from '@/pages/api/updatePenawaranHargaItem';
 import Cookies from "js-cookie";
 import Drawer from "@/app/components/common/drawer";
 
+interface Klien {
+  id: string;
+  companyName: string;
+}
 
 interface PenawaranHargaItem {
   idPenawaranHargaItem: string;
@@ -28,6 +32,8 @@ const CustomNoDataComponent = () => (
 );
 
 const PenawaranHargaItemPage = () => {
+  const [kliens, setKliens] = useState<Klien[]>([]);
+  const [companyName, setCompanyName] = useState('');
   const [items, setItems] = useState<PenawaranHargaItem[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -37,6 +43,31 @@ const PenawaranHargaItemPage = () => {
 
   var isLoggedIn = Cookies.get('isLoggedIn');
   const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    const fetchKliens = async () => {
+      try {
+        const response = await fetch('/api/proxyKlien');
+        if (!response.ok) {
+          throw new Error('Failed to fetch kliens');
+        }
+        const { content } = await response.json();
+        setKliens(content);
+  
+        // Cari companyName menggunakan idPenawaranHarga
+        const currentKlien = content.find(klien =>
+          klien.penawaranHarga && klien.penawaranHarga.idPenawaranHarga === idPenawaranHarga
+        );
+        if (currentKlien && currentKlien.companyName) {
+          setCompanyName(currentKlien.companyName);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchKliens();
+  }, [idPenawaranHarga]);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -275,7 +306,7 @@ const PenawaranHargaItemPage = () => {
       <Drawer userRole={userRole}>
       <div className="flex-1 py-6 px-4">
         <div className="container mx-auto">
-          <h1 className="text-3xl font-bold mt-1 mb-5" style={{ color: '#2d3254' }}>Daftar Rute Penawaran</h1>
+          <h1 className="text-3xl font-bold mt-1 mb-5" style={{ color: '#2d3254' }}>Daftar Rute Penawaran {companyName} </h1>
 
 
           <DataTable
