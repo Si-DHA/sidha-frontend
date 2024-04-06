@@ -4,7 +4,9 @@ import React, { ChangeEvent, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
-// import Modal from '@/app/components/common/modal';
+import Cookies from "js-cookie";
+import Drawer from "@/app/components/common/drawer";
+
 
 
 interface Client {
@@ -37,6 +39,17 @@ const CreatePenawaranHargaItemPage = () => {
         fusoPrice: '',
     });
     const [alert, setAlert] = useState<React.ReactNode>(null);
+
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        setUserRole(role || '');
+    },)
 
 
     useEffect(() => {
@@ -117,7 +130,7 @@ const CreatePenawaranHargaItemPage = () => {
             router.push(`/penawaranharga/${idPenawaranHarga}`);
             setAlert(<SuccessAlert message="Penawaran Harga Item is created successfully" />);
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error creating Penawaran Harga Item:', error);
             setAlert(<FailAlert message={error.message || 'Failed to create Penawaran Harga Item'} />);
         }
@@ -129,131 +142,133 @@ const CreatePenawaranHargaItemPage = () => {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-grow container mx-auto p-4">
-                {alert}
+            <Drawer userRole={userRole}>
+                <main className="flex-grow container mx-auto p-4">
+                    {alert}
 
-                <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                    <h1 className="block text-gray-700 font-bold mb-2 text-xl mb-4">Tambah Rute</h1>
+                    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                        <h1 className="block text-gray-700 font-bold mb-2 text-xl mb-4">Tambah Rute</h1>
 
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-4">
-                            <label htmlFor="source" className="block text-gray-700 text-sm font-semibold mb-2">
-                                Pilih Kota Asal
-                            </label>
-                            <input
-                                id="source"
-                                name="source"
-                                value={formData.source}
-                                onChange={handleChange}
-                                required
-                                className="w-full p-2 border border-gray-300 rounded"
-                            >
-                                {/* Map through your options here */}
-                            </input>
-                        </div>
-
-                        <div className="mb-4">
-                            <label htmlFor="destination" className="block text-gray-700 text-sm font-semibold mb-2">
-                                Pilih Kota Tujuan
-                            </label>
-                            <input
-                                id="destination"
-                                name="destination"
-                                value={formData.destination}
-                                onChange={handleChange}
-                                required
-                                className="w-full p-2 border border-gray-300 rounded"
-                            >
-                            </input>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label htmlFor="cddPrice" className="block text-gray-700 text-sm font-semibold mb-2">
-                                    Harga CDD
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-4">
+                                <label htmlFor="source" className="block text-gray-700 text-sm font-semibold mb-2">
+                                    Pilih Kota Asal
                                 </label>
                                 <input
-                                    id="cddPrice"
-                                    name="cddPrice"
-                                    type="number"
-                                    min="0"
-                                    value={formData.cddPrice}
+                                    id="source"
+                                    name="source"
+                                    value={formData.source}
                                     onChange={handleChange}
                                     required
                                     className="w-full p-2 border border-gray-300 rounded"
-                                />
+                                >
+                                    {/* Map through your options here */}
+                                </input>
                             </div>
 
-                            <div>
-                                <label htmlFor="cddLongPrice" className="block text-gray-700 text-sm font-semibold mb-2">
-                                    Harga CDD Long
+                            <div className="mb-4">
+                                <label htmlFor="destination" className="block text-gray-700 text-sm font-semibold mb-2">
+                                    Pilih Kota Tujuan
                                 </label>
                                 <input
-                                    id="cddLongPrice"
-                                    name="cddLongPrice"
-                                    type="number"
-                                    min="0"
-                                    value={formData.cddLongPrice}
+                                    id="destination"
+                                    name="destination"
+                                    value={formData.destination}
                                     onChange={handleChange}
                                     required
                                     className="w-full p-2 border border-gray-300 rounded"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4 mb-6">
-                            <div>
-                                <label htmlFor="wingboxPrice" className="block text-gray-700 text-sm font-semibold mb-2">
-                                    Harga Wingbox
-                                </label>
-                                <input
-                                    id="wingboxPrice"
-                                    name="wingboxPrice"
-                                    type="number"
-                                    min="0"
-                                    value={formData.wingboxPrice}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                />
+                                >
+                                </input>
                             </div>
 
-                            <div>
-                                <label htmlFor="fusoPrice" className="block text-gray-700 text-sm font-semibold mb-2">
-                                    Harga Fuso
-                                </label>
-                                <input
-                                    id="fusoPrice"
-                                    name="fusoPrice"
-                                    type="number"
-                                    min="0"
-                                    value={formData.fusoPrice}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                />
-                            </div>
-                        </div>
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label htmlFor="cddPrice" className="block text-gray-700 text-sm font-semibold mb-2">
+                                        Harga CDD
+                                    </label>
+                                    <input
+                                        id="cddPrice"
+                                        name="cddPrice"
+                                        type="number"
+                                        min="0"
+                                        value={formData.cddPrice}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                    />
+                                </div>
 
-                        <div className="flex justify-between items-center mt-6">
-                            <button 
-                                type="button"
-                                onClick={handleBack}
-                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            >
-                                Kembali
-                            </button>
-                            <button 
-                                type="submit"
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            >
-                                Tambah Rute
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </main>
+                                <div>
+                                    <label htmlFor="cddLongPrice" className="block text-gray-700 text-sm font-semibold mb-2">
+                                        Harga CDD Long
+                                    </label>
+                                    <input
+                                        id="cddLongPrice"
+                                        name="cddLongPrice"
+                                        type="number"
+                                        min="0"
+                                        value={formData.cddLongPrice}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 mb-6">
+                                <div>
+                                    <label htmlFor="wingboxPrice" className="block text-gray-700 text-sm font-semibold mb-2">
+                                        Harga Wingbox
+                                    </label>
+                                    <input
+                                        id="wingboxPrice"
+                                        name="wingboxPrice"
+                                        type="number"
+                                        min="0"
+                                        value={formData.wingboxPrice}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="fusoPrice" className="block text-gray-700 text-sm font-semibold mb-2">
+                                        Harga Fuso
+                                    </label>
+                                    <input
+                                        id="fusoPrice"
+                                        name="fusoPrice"
+                                        type="number"
+                                        min="0"
+                                        value={formData.fusoPrice}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex justify-between items-center mt-6">
+                                <button
+                                    type="button"
+                                    onClick={handleBack}
+                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                >
+                                    Kembali
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                >
+                                    Tambah Rute
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </main>
+            </Drawer>
+
             <Footer />
         </div>
     );

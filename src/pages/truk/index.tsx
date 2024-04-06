@@ -4,6 +4,7 @@ import DataTable from "@/app/components/common/datatable/DataTable";
 import { viewAllTruk } from "../api/truk/viewAllTruk";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Drawer from "@/app/components/common/drawer";
 
 const TrukPage: React.FC = () => {
     const router = useRouter();
@@ -14,7 +15,9 @@ const TrukPage: React.FC = () => {
         const fetchData = async () => {
             try {
                 const trukDataResponse = await viewAllTruk();
-                setTrukData(trukDataResponse['content']);
+                if (trukDataResponse) {
+                    setTrukData(trukDataResponse['content']);
+                }
             } catch (error: any) {
                 setError(error.message);
             }
@@ -25,7 +28,7 @@ const TrukPage: React.FC = () => {
 
     const columns = [
         {
-            Header: 'License Plate',
+            Header: 'Nomor Polisi',
             accessor: 'licensePlate',
         },
         {
@@ -33,7 +36,7 @@ const TrukPage: React.FC = () => {
             accessor: 'merk',
         },
         {
-            Header: 'Type',
+            Header: 'Tipe',
             accessor: 'type',
         },
         {
@@ -44,7 +47,6 @@ const TrukPage: React.FC = () => {
             Header: 'Expired KIR',
             accessor: 'expiredKir',
         },
-        // Add more columns as needed
     ];
 
     const createTruk = () => {
@@ -59,9 +61,15 @@ const TrukPage: React.FC = () => {
             {error ? (
                 <div>{error}</div>
             ) : (
-                <DataTable columns={columns} data={trukData} btnText="Create truck" onClick={createTruk} type="truk"/>
-            )}
+                <>
+                    {trukData ? ( // Check if trukData is empty
+                        <DataTable columns={columns} data={trukData} btnText="Tambah truk" onClick={createTruk} type="truk" />
+                    ) : (
+                        <DataTable columns={columns} data={[]} btnText="Tambah truk" onClick={createTruk} type="truk" />
+                    )}
+                </>)}
             <Footer />
+
         </main>
     );
 }
