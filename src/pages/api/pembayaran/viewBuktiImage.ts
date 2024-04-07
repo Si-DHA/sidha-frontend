@@ -1,6 +1,6 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const viewBukti = async (idInvoice: String, isPelunasan: boolean): Promise<any> => {
+export const viewBuktiImage = async (idInvoice: String, isPelunasan: boolean): Promise<any> => {
     try {
         const url = `${BASE_URL}/invoice/get-bukti?idInvoice=${idInvoice}&isPelunasan=${isPelunasan}`;
         const response = await fetch(url, {
