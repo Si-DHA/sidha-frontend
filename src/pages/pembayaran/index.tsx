@@ -4,7 +4,6 @@ import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
 import { BASE_URL } from '@/app/constant/constant';
 import { viewBuktiImage } from "../api/pembayaran/viewBuktiImage";
-import { uploadBuktiImage } from "../api/pembayaran/uploadBuktiImage";
 import { viewInvoice } from "../api/invoice/viewInvoice";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
