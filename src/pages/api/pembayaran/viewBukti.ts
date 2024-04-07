@@ -1,9 +1,9 @@
 import { BASE_URL } from '@/app/constant/constant';
-import { UUID } from 'crypto';
 
-export const viewBukti = async (id: UUID): Promise<any> => {
+export const viewBukti = async (idInvoice: String, isPelunasan: boolean): Promise<any> => {
     try {
-        const response = await fetch(BASE_URL+'/kontrak/doc/'+id, {
+        const url = `${BASE_URL}/invoice/get-bukti?idInvoice=${idInvoice}&isPelunasan=${isPelunasan}`;
+        const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -11,11 +11,7 @@ export const viewBukti = async (id: UUID): Promise<any> => {
             }
         });
 
-        const responseData = await response.arrayBuffer();
-
-        if (response.ok) {
-            return responseData;
-        }
+        return response.blob();
     } catch (error: any) {
         throw new Error(error.message);
     }
