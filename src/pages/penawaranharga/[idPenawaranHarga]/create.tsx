@@ -4,10 +4,10 @@ import React, { ChangeEvent, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
+import indonesianCities from "@/app/components/common/data/indonesianCities.js";
 import Cookies from "js-cookie";
 import Drawer from "@/app/components/common/drawer";
-
-
+import Select from 'react-select';
 
 interface Client {
     id: string;
@@ -25,6 +25,8 @@ interface FormData {
     wingboxPrice: string;
     fusoPrice: string;
 }
+
+const cityOptions = indonesianCities.map(city => ({ label: city, value: city }));
 
 const CreatePenawaranHargaItemPage = () => {
     const router = useRouter();
@@ -86,12 +88,15 @@ const CreatePenawaranHargaItemPage = () => {
                     }
                 })
                 .catch(error => {
-                    // Handle any errors that occur during the fetch call
                     console.error('Error fetching clients:', error);
                 });
         }
-    }, [idPenawaranHarga]); // This will re-run when idPenawaranHarga changes      
+    }, [idPenawaranHarga]);  
 
+    const handleCityChange = (selectedOption, actionMeta) => {
+        setFormData({ ...formData, [actionMeta.name]: selectedOption.value });
+      };
+      
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -151,34 +156,31 @@ const CreatePenawaranHargaItemPage = () => {
 
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">
-                                <label htmlFor="source" className="block text-gray-700 text-sm font-semibold mb-2">
+                                <label className="block text-gray-700 text-sm font-semibold mb-2">
                                     Pilih Kota Asal
                                 </label>
-                                <input
-                                    id="source"
+                                <Select
                                     name="source"
-                                    value={formData.source}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                >
-                                    {/* Map through your options here */}
-                                </input>
+                                    options={cityOptions}
+                                    onChange={handleCityChange}                                    className="basic-single"
+                                    classNamePrefix="select"
+                                    placeholder="Select Source City"
+                                />
+
                             </div>
 
                             <div className="mb-4">
-                                <label htmlFor="destination" className="block text-gray-700 text-sm font-semibold mb-2">
+                                <label className="block text-gray-700 text-sm font-semibold mb-2">
                                     Pilih Kota Tujuan
                                 </label>
-                                <input
-                                    id="destination"
+                                <Select
                                     name="destination"
-                                    value={formData.destination}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                >
-                                </input>
+                                    options={cityOptions}
+                                    onChange={handleCityChange}
+                                    className="basic-single"
+                                    classNamePrefix="select"
+                                    placeholder="Select Destination City"
+                                />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4 mb-4">

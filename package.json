@@ -12,15 +12,24 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "fortawesome": "^0.0.1-security",
+    "isomorphic-unfetch": "^4.0.2",
     "js-cookie": "^3.0.5",
     "next": "14.1.0",
+<<<<<<< HEAD
     "pdf-lib": "^1.17.1",
+=======
+    "node-fetch": "^3.3.2",
+>>>>>>> a751ca8735413494ca3782b968e4e88e9f739385
     "react": "^18.2.0",
     "react-data-table-component": "^7.6.2",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",
+<<<<<<< HEAD
     "react-pdf": "^7.7.1",
     "react-pdf-js": "^5.1.0",
+=======
+    "react-select": "^5.8.0",
+>>>>>>> a751ca8735413494ca3782b968e4e88e9f739385
     "react-table": "^7.8.0"
   },
   "devDependencies": {
