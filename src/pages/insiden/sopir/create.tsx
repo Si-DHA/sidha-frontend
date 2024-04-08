@@ -135,50 +135,67 @@
 
 // Next.js page for Sopir to create an Insiden
 // Next.js page for Sopir to create an Insiden
-
 import { useState } from 'react';
-import axios from 'axios';
 import Cookies from 'js-cookie';
+import { createInsiden } from '@/pages/api/insiden/createInsiden'
+import Navbar from "@/app/components/common/navbar";
+import Footer from "@/app/components/common/footer";
 
-export default function CreateInsidenPage() {
-  const [kategori, setKategori] = useState('');
-  const [lokasi, setLokasi] = useState('');
-  const [keterangan, setKeterangan] = useState('');
-  const [buktiFoto, setBuktiFoto] = useState<File | null>(null);
+const CreateInsidenPage = () => {
+    const sopirId = Cookies.get('idUser');
+    const [kategori, setKategori] = useState('');
+    const [lokasi, setLokasi] = useState('');
+    const [keterangan, setKeterangan] = useState('');
+    const [buktiFoto, setBuktiFoto] = useState(null);
+    const [error, setError] = useState('');
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!sopirId) {
+            setError('Invalid User');
+            return;
+        }
+        try {
+            const response = await createInsiden(sopirId, kategori, lokasi, keterangan, buktiFoto);
+            console.log('Insiden created', response);
+            // Redirect or show success message
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
-    const formData = new FormData();
-    formData.append('kategori', kategori);
-    formData.append('lokasi', lokasi);
-    formData.append('keterangan', keterangan);
-    // We assume buktiFoto is a file input in your form
-    if (buktiFoto) {
-      formData.append('buktiFoto', buktiFoto);
-    }
+    const handleFileChange = (e) => {
+        setBuktiFoto(e.target.files[0]);
+    };
 
-    try {
-      const response = await axios.post('/api/insiden/createInsiden', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(response.data);
-      // Handle success, maybe set some state to show a success message
-    } catch (error) {
-      console.error('There was an error!', error);
-      // Handle error, maybe set some state to show an error message
-    }
-  };
+    return (
+        <div>
+            <Navbar />
+            <main className="container mx-auto p-4">
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label>Kategori:</label>
+                        <input type="text" value={kategori} onChange={(e) => setKategori(e.target.value)} required />
+                    </div>
+                    <div>
+                        <label>Lokasi:</label>
+                        <input type="text" value={lokasi} onChange={(e) => setLokasi(e.target.value)} required />
+                    </div>
+                    <div>
+                        <label>Keterangan:</label>
+                        <textarea value={keterangan} onChange={(e) => setKeterangan(e.target.value)} required />
+                    </div>
+                    <div>
+                        <label>Bukti Foto:</label>
+                        <input type="file" onChange={handleFileChange} required />
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+                {error && <p>{error}</p>}
+            </main>
+            <Footer />
+        </div>
+    );
+};
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" placeholder="Kategori" value={kategori} onChange={(e) => setKategori(e.target.value)} required />
-      <input type="text" placeholder="Lokasi" value={lokasi} onChange={(e) => setLokasi(e.target.value)} required />
-      <input type="text" placeholder="Keterangan" value={keterangan} onChange={(e) => setKeterangan(e.target.value)} required />
-      <input type="file" onChange={(e) => setBuktiFoto(e.target.files ? e.target.files[0] : null)} />
-      <button type="submit">Submit Insiden</button>
-    </form>
-  );
-}
+export default CreateInsidenPage;

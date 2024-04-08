@@ -1,33 +1,26 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { BASE_URL } from '@/app/constant/constant';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'POST') {
+export const createInsiden = async (sopirId: string, kategori: string, lokasi: string, keterangan: string, buktiFoto: File): Promise<any> => {
+    const formData = new FormData();
+    formData.append('sopirId', sopirId);
+    formData.append('kategori', kategori);
+    formData.append('lokasi', lokasi);
+    formData.append('keterangan', keterangan);
+    formData.append('buktiFoto', buktiFoto);
+
     try {
-      const backendUrl = 'http://localhost:8080/api/insiden/create';
-      
-      const response = await fetch(backendUrl, {
-        method: 'POST',
-        headers: {
-          // Add any necessary headers
-        },
-        body: req.body, // Assuming the body has the form data in the correct format
-      });
+        const response = await fetch(`${BASE_URL}/insiden/create`, {
+            method: 'POST',
+            body: formData,
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        res.status(response.status).json(errorData);
-      } else {
-        const data = await response.json();
-        res.status(200).json(data);
-      }
-    } catch (error) {
-      res.status(500).json({ message: 'Internal server error' });
+        const responseData = await response.json();
+        if (response.ok) {
+            return responseData;
+        } else {
+            throw new Error(responseData.message || 'Failed to create insiden');
+        }
+    } catch (error: any) {
+        throw new Error(error.message);
     }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
 };
-
-export default handler;
-
