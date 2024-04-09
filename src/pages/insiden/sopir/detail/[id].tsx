@@ -15,6 +15,7 @@ const InsidenDetailPage = () => {
   const [insiden, setInsiden] = useState(null);
   const [buktiFotoUrl, setBuktiFotoUrl] = useState(null);
   const [alert, setAlert] = useState(null);
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -33,6 +34,10 @@ const InsidenDetailPage = () => {
     }
   }, [id]);
 
+  const toggleDeleteConfirmModal = () => {
+    setShowDeleteConfirmModal(!showDeleteConfirmModal);
+  };
+
   const handleDelete = async () => {
     if (!id) {
       setAlert(<FailAlert message="No incident ID provided for deletion." />);
@@ -48,13 +53,24 @@ const InsidenDetailPage = () => {
       console.error('Error deleting the incident:', error);
       setAlert(<FailAlert message="Error deleting the incident." />);
     }
+    finally {
+      toggleDeleteConfirmModal(); // Close the modal
+    }
   };
 
   const deleteButton = insiden && insiden.status === 'PENDING' ? (
-    <button onClick={handleDelete} className="btn btn-error">
-      Delete Incident
+    <button onClick={toggleDeleteConfirmModal} className="btn btn-error">
+      Hapus Laporan
     </button>
   ) : null;
+
+
+  const updateButton = insiden && insiden.status === 'PENDING' ? (
+    <button onClick={() => router.push(`/insiden/sopir/update/${id}`)} className="btn btn-primary">
+      Update Laporan
+    </button>
+  ) : null;
+
 
   if (!insiden) return <div>Loading...</div>;
 
@@ -65,11 +81,28 @@ const InsidenDetailPage = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">Insiden Detail</h3>
-            <p className="mt-1 max-w-2xl text-sm text-gray-500">Details regarding the incident report.</p>
+            <h3 className="text-lg leading-6 font-medium text-gray-900">Laporan Insiden</h3>
+            <p className="mt-1 max-w-2xl text-sm text-gray-500">Details Laporan Insiden Anda</p>
           </div>
           <div className="border-t border-gray-200">
             <dl>
+              {insiden.createdAt && (
+                <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-gray-500">Tanggal Laporan</dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {
+                      new Date(insiden.updatedAt || insiden.createdAt).toLocaleString('id-ID', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })
+                    }
+                  </dd>
+                </div>
+
+              )}
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Kategori</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.kategori}</dd>
@@ -102,11 +135,36 @@ const InsidenDetailPage = () => {
               )}
             </dl>
           </div>
-          <div className="px-4 py-5 sm:px-6">
-           {deleteButton} 
+          <div className="px-4 py-5 sm:px-6 flex justify-between">
+            <button
+              onClick={() => router.push('/insiden/sopir')}
+              className="btn btn-secondary"
+            >
+              Kembali
+            </button>
+            <div className="flex space-x-4">
+              {updateButton}
+              {deleteButton}
+            </div>
           </div>
         </div>
       </div>
+      {showDeleteConfirmModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
+            <h3 className="text-lg font-medium">Konfirmasi Penghapusan</h3>
+            <p>Apakah Anda yakin ingin menghapus laporan ini?</p>
+            <div className="flex justify-end mt-4">
+              <button onClick={toggleDeleteConfirmModal} className="btn btn-secondary mr-2">
+                Cancel
+              </button>
+              <button onClick={handleDelete} className="btn btn-error">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </main>

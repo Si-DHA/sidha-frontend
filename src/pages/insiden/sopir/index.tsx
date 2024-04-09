@@ -26,30 +26,36 @@ const IndexPage = () => {
 
     useEffect(() => {
         if (sopirId) {
-          getInsidensBySopir(sopirId)
-            .then(data => {
-              const activeInsidens = data.filter(insiden => !insiden.deleted);
-              setInsidens(activeInsidens);
-              setLoading(false);
-            })
-            .catch(error => {
-              console.error('Fetching error:', error);
-              setLoading(false);
-            });
+            getInsidensBySopir(sopirId)
+                .then(data => {
+                    const activeInsidens = data.filter(insiden => !insiden.deleted);
+                    setInsidens(activeInsidens);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    console.error('Fetching error:', error);
+                    setLoading(false);
+                });
         } else {
-          router.push('/login');
+            router.push('/login');
         }
-      }, [sopirId, router]);
-      
+    }, [sopirId, router]);
+
 
     const columns = [
         {
-            Header: 'Date Created',
-            accessor: 'createdAt',
-            Cell: ({ value }) => new Date(value).toLocaleDateString(),
+            Header: 'Tanggal Pembuatan',
+            accessor: row => new Date(row.updatedAt || row.createdAt).toLocaleString('id-ID', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+            }),
+            Cell: ({ value }) => value,
         },
         {
-            Header: 'Category',
+            Header: 'Kategori',
             accessor: 'kategori',
         },
         {
@@ -74,17 +80,20 @@ const IndexPage = () => {
         <>
             <Navbar />
             <div className="container mx-auto p-4">
-                <h2 className="text-2xl font-semibold">Insiden Anda</h2>
+                <h2 className="text-2xl font-bold mb-2">Laporan Insiden Anda</h2>
                 <DataTable
                     data={insidens}
                     columns={columns}
                     loading={loading}
                     NoDataComponent={CustomNoDataComponent}
+                    btnText="Buat Laporan" onClick={() => router.push(`/insiden/sopir/create`)}
+                    type='insiden'
                 />
             </div>
             <Footer />
         </>
     );
+    
 };
 
 export default IndexPage;

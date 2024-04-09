@@ -5,7 +5,7 @@ import Navbar from "@/app/components/common/navbar";
 import Footer from "@/app/components/common/footer";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
-import router from 'next/router';
+import { useRouter } from 'next/router';
 
 const CreateInsidenPage = () => {
     const sopirId = Cookies.get('idUser');
@@ -15,6 +15,7 @@ const CreateInsidenPage = () => {
     const [buktiFoto, setBuktiFoto] = useState(null);
     const [error, setError] = useState('');
     const [alert, setAlert] = useState<React.ReactNode>(null);
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,6 +28,7 @@ const CreateInsidenPage = () => {
             console.log('Insiden created', response);
 
             setAlert(<SuccessAlert message="Insiden is created successfully" />);
+            router.push(`/insiden/sopir/detail/${response.id}`);
             // Redirect or show success message
         } catch (error) {
             setError(error.message);
@@ -54,8 +56,8 @@ const CreateInsidenPage = () => {
                             className="w-full mt-1 p-2 border-2 rounded-md"
                         >
                             <option value="">Pilih Kategori</option>
-                            <option value="pencurian barang">Pencurian Barang</option>
-                            <option value="alamat ilang">Alamat Ilang</option>
+                            <option value="Pencurian Barang">Pencurian Barang</option>
+                            <option value="Alamat Hilang">Alamat Hilang</option>
                         </select>
                     </div>
                     <div className="mb-4">
