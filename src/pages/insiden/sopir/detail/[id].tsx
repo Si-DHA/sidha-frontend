@@ -2,51 +2,115 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getInsidenById } from '@/pages/api/insiden/getInsidenById'
 import { getBuktiFoto } from '@/pages/api/insiden/getBuktiFoto'
+import { deleteInsiden } from '@/pages/api/insiden/deleteInsiden'
 import Image from 'next/image';
 import Navbar from "@/app/components/common/navbar";
 import Footer from "@/app/components/common/footer";
+import SuccessAlert from '@/app/components/common/SuccessAlert';
+import FailAlert from '@/app/components/common/FailAlert';
 
 const InsidenDetailPage = () => {
-    const router = useRouter();
-    const { id } = router.query;
-    const [insiden, setInsiden] = useState(null);
-    const [buktiFotoUrl, setBuktiFotoUrl] = useState(null);
+  const router = useRouter();
+  const { id } = router.query;
+  const [insiden, setInsiden] = useState(null);
+  const [buktiFotoUrl, setBuktiFotoUrl] = useState(null);
+  const [alert, setAlert] = useState(null);
 
-    useEffect(() => {
-        if (id) {
-            getInsidenById(id as string)
-                .then(data => {
-                    setInsiden(data);
-                    if (data.buktiFoto && data.buktiFoto.id) {
-                        getBuktiFoto(insiden.id)
-                            .then(blob => {
-                                setBuktiFotoUrl(URL.createObjectURL(blob));
-                            })
-                            .catch(console.error);
-                    }
-                })
-                .catch(console.error);
-        }
-    }, [id]);
+  useEffect(() => {
+    if (id) {
+      getInsidenById(id as string)
+        .then(data => {
+          setInsiden(data);
+          if (data.buktiFoto && data.buktiFoto.id) {
+            getBuktiFoto(data.id)
+              .then(blob => {
+                setBuktiFotoUrl(URL.createObjectURL(blob));
+              })
+              .catch(console.error);
+          }
+        })
+        .catch(console.error);
+    }
+  }, [id]);
 
-    if (!insiden) return <p>Loading...</p>;
+  const handleDelete = async () => {
+    if (!id) {
+      setAlert(<FailAlert message="No incident ID provided for deletion." />);
+      return;
+    }
+    try {
+      await deleteInsiden(id.toString());
+      setAlert(<SuccessAlert message="Incident deleted successfully" />);
+      setTimeout(() => {
+        router.push('/insiden/sopir');
+      }, 3000);
+    } catch (error) {
+      console.error('Error deleting the incident:', error);
+      setAlert(<FailAlert message="Error deleting the incident." />);
+    }
+  };
 
-    return (
-      
-        <div>
-            <h1>Insiden Detail</h1>
-            <p>Kategori: {insiden.kategori}</p>
-            <p>Lokasi: {insiden.lokasi}</p>
-            <p>Keterangan: {insiden.keterangan}</p>
-            <p>Status: {insiden.status}</p>
-            {buktiFotoUrl && (
-                <div>
-                    <h2>Bukti Foto:</h2>
-                    <Image src={buktiFotoUrl} alt="Bukti Foto" width={500} height={300} />
+  const deleteButton = insiden && insiden.status === 'PENDING' ? (
+    <button onClick={handleDelete} className="btn btn-error">
+      Delete Incident
+    </button>
+  ) : null;
+
+  if (!insiden) return <div>Loading...</div>;
+
+  return (
+    <main className="flex flex-col min-h-screen">
+      <Navbar />
+      {alert}
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+          <div className="px-4 py-5 sm:px-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">Insiden Detail</h3>
+            <p className="mt-1 max-w-2xl text-sm text-gray-500">Details regarding the incident report.</p>
+          </div>
+          <div className="border-t border-gray-200">
+            <dl>
+              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Kategori</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.kategori}</dd>
+              </div>
+              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Lokasi</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.lokasi}</dd>
+              </div>
+              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Keterangan</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.keterangan}</dd>
+              </div>
+              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Status</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.status}</dd>
+              </div>
+              {buktiFotoUrl && (
+                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-gray-500">Bukti Foto</dt>
+                  <dd className="mt-1 sm:mt-0 sm:col-span-2">
+                    <img
+                      src={buktiFotoUrl}
+                      width={300}
+                      className="rounded-lg"
+                      alt="Bukti Foto"
+                      style={{ maxWidth: '100%', height: 'auto' }}
+                    />
+                  </dd>
                 </div>
-            )}
+              )}
+            </dl>
+          </div>
+          <div className="px-4 py-5 sm:px-6">
+           {deleteButton} 
+          </div>
         </div>
-    );
+      </div>
+
+      <Footer />
+    </main>
+  );
 };
 
 export default InsidenDetailPage;

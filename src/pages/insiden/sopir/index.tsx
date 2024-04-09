@@ -26,19 +26,21 @@ const IndexPage = () => {
 
     useEffect(() => {
         if (sopirId) {
-            getInsidensBySopir(sopirId)
-                .then(data => {
-                    setInsidens(data);
-                    setLoading(false);
-                })
-                .catch(error => {
-                    console.error('Fetching error:', error);
-                    setLoading(false);
-                });
+          getInsidensBySopir(sopirId)
+            .then(data => {
+              const activeInsidens = data.filter(insiden => !insiden.deleted);
+              setInsidens(activeInsidens);
+              setLoading(false);
+            })
+            .catch(error => {
+              console.error('Fetching error:', error);
+              setLoading(false);
+            });
         } else {
-            router.push('/login');
+          router.push('/login');
         }
-    }, [sopirId, router]);
+      }, [sopirId, router]);
+      
 
     const columns = [
         {
@@ -49,6 +51,10 @@ const IndexPage = () => {
         {
             Header: 'Category',
             accessor: 'kategori',
+        },
+        {
+            Header: 'Status',
+            accessor: 'status',
         },
         {
             Header: 'Actions',
