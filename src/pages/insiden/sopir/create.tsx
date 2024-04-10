@@ -6,6 +6,7 @@ import Footer from "@/app/components/common/footer";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
 import { useRouter } from 'next/router';
+import Drawer from "@/app/components/common/drawer";
 
 const CreateInsidenPage = () => {
     const sopirId = Cookies.get('idUser');
@@ -41,7 +42,7 @@ const CreateInsidenPage = () => {
 
     return (
         <>
-            <Navbar />
+            <Drawer userRole='userRole'>
             <main className="container mx-auto p-4">
                 <h2 className="text-2xl font-bold text-center my-6">Lapor Insiden</h2>
                 {alert}
@@ -103,6 +104,7 @@ const CreateInsidenPage = () => {
                     {error && <p className="text-red-500 text-xs italic mt-4">{error}</p>}
                 </form>
             </main>
+            </Drawer>
             <Footer />
         </>
     );

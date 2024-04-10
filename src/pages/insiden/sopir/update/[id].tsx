@@ -7,6 +7,7 @@ import Navbar from '@/app/components/common/navbar';
 import Footer from '@/app/components/common/footer';
 import SuccessAlert from '@/app/components/common/SuccessAlert';
 import FailAlert from '@/app/components/common/FailAlert';
+import Drawer from "@/app/components/common/drawer";
 
 const UpdateInsidenPage = () => {
   const router = useRouter();
@@ -71,7 +72,7 @@ const UpdateInsidenPage = () => {
 
   return (
     <>
-      <Navbar />
+      <Drawer userRole='userRole'>
       <main className="container mx-auto p-4">
         <h2 className="text-2xl font-bold text-center my-6">Update Insiden</h2>
         {alert}
@@ -134,6 +135,7 @@ const UpdateInsidenPage = () => {
           </button>
         </form>
       </main>
+      </Drawer>
       <Footer />
     </>
   );

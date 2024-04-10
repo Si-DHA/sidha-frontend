@@ -7,7 +7,7 @@ import Footer from '@/app/components/common/footer';
 import SuccessAlert from '@/app/components/common/SuccessAlert';
 import FailAlert from '@/app/components/common/FailAlert';
 import { getBuktiFoto } from '@/pages/api/insiden/getBuktiFoto'
-import { InsidenStatus } from '@/pages/api/insiden/updateStatus';
+import Drawer from "@/app/components/common/drawer";
 
 const KaryawanInsidenDetailPage = () => {
     const router = useRouter();
@@ -61,7 +61,7 @@ const KaryawanInsidenDetailPage = () => {
 
     return (
         <>
-            <Navbar />
+            <Drawer userRole='userRole'>
             <main className="container mx-auto p-4">
                 {alert}
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -151,6 +151,7 @@ const KaryawanInsidenDetailPage = () => {
                     </div>
                 </div>
             </main>
+            </Drawer>
             <Footer />
         </>
     );

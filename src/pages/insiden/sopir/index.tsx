@@ -5,6 +5,7 @@ import Navbar from '@/app/components/common/navbar';
 import Footer from '@/app/components/common/footer';
 import DataTable from '@/app/components/common/datatable/DataTable';
 import { getInsidensBySopir } from '@/pages/api/insiden/getInsidensBySopir';
+import Drawer from '@/app/components/common/drawer';
 
 interface InsidenRow {
     id: string;
@@ -78,7 +79,7 @@ const IndexPage = () => {
 
     return (
         <>
-            <Navbar />
+            <Drawer userRole='userRole'>
             <div className="container mx-auto p-4">
                 <h2 className="text-2xl font-bold mb-2">Laporan Insiden Anda</h2>
                 <DataTable
@@ -90,6 +91,7 @@ const IndexPage = () => {
                     type='insiden'
                 />
             </div>
+            </Drawer>
             <Footer />
         </>
     );

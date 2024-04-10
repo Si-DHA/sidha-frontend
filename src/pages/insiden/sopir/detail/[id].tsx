@@ -8,6 +8,7 @@ import Navbar from "@/app/components/common/navbar";
 import Footer from "@/app/components/common/footer";
 import SuccessAlert from '@/app/components/common/SuccessAlert';
 import FailAlert from '@/app/components/common/FailAlert';
+import Drawer from "@/app/components/common/drawer";
 
 const InsidenDetailPage = () => {
   const router = useRouter();
@@ -76,7 +77,7 @@ const InsidenDetailPage = () => {
 
   return (
     <main className="flex flex-col min-h-screen">
-      <Navbar />
+      <Drawer userRole='userRole'>
       {alert}
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -165,7 +166,7 @@ const InsidenDetailPage = () => {
           </div>
         </div>
       )}
-
+      </Drawer>
       <Footer />
     </main>
   );
