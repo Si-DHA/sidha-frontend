@@ -55,7 +55,6 @@ const CreatePenawaranHargaItemPage = () => {
 
 
     useEffect(() => {
-        // Ensure idPenawaranHarga is not an array or undefined before making the fetch call
         if (typeof idPenawaranHarga === 'string') {
             fetch('/api/proxyKlien')
                 .then(response => {

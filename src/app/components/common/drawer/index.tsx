@@ -91,6 +91,14 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                   </ul>
                 </li>
 
+                <li>
+                  <h2 className="menu-title text-neutral"><a>Daftar Laporan Insiden</a></h2>
+                  <ul>
+                    <li><Link href="/insiden/karyawan">Lihat Laporan</Link></li>
+
+                  </ul>
+                </li>
+
               </ul>
             </ul>
           </div>
@@ -112,6 +120,9 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
               <ul className="menu bg-base-200 w-56 rounded-box">
                 <li>
                 <h2 className="menu-title text-neutral"><Link href="/truk">Daftar Truk</Link></h2>
+                </li>
+                <li>
+                <h2 className="menu-title text-neutral"><Link href="/insiden/sopir">Laporkan Insiden</Link></h2>
                 </li>
               </ul>
             </ul>
