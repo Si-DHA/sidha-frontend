@@ -7,8 +7,8 @@ import { useRouter } from "next/router";
 interface DataTableProps {
   data: any[];
   columns: any[];
-  btnText: string;
-  onClick: () => void;
+  btnText?: string;
+  onClick?: () => void;
   type: string;
 }
 
@@ -113,7 +113,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
           <input
             value={globalFilter || ''}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Search..."
+            placeholder="Cari..."
             style={{
               padding: '0.5rem 1rem',
               border: '1px solid #ccc',
@@ -131,9 +131,11 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
           </span>
         </div>
       </div>
-      <div style={{ float: 'right', marginBottom: '15px' }}>
-        <button className="btn btn-primary" onClick={onClick}>{btnText}</button>
-      </div>
+      {btnText && onClick &&
+        <div style={{ float: 'right', marginBottom: '15px' }}>
+          <button className="btn btn-primary" onClick={onClick}>{btnText}</button>
+        </div>
+      }
       <table className="table table-xs" {...getTableProps()} style={{ borderCollapse: 'separate', width: '100%', borderSpacing: '10 10px', marginBottom: '20px' }}>
         <thead>{renderTableHeader()}</thead>
         <tbody {...getTableBodyProps()}>{RenderTableBody()}</tbody>
@@ -143,16 +145,16 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
         </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+        <button onClick={() => previousPage()} disabled={!canPreviousPage} style={{ paddingLeft: '5px' }}>
           {'<'}
         </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
+        <button onClick={() => nextPage()} disabled={!canNextPage} style={{ paddingLeft: '5px' }}>
           {'>'}
         </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} style={{ paddingLeft: '5px' }}>
           {'>>'}
         </button>{' '}
-        <span>
+        <span style={{ paddingLeft: '5px' }}>
           Page{' '}
           <strong>
             {pageIndex + 1} of {pageOptions.length}

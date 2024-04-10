@@ -12,6 +12,16 @@ const ResetPasswordPage = () => {
     const [error, setError] = useState('');
     const [info, setInfo] = useState('');
     const { token } = router.query;
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
 
     var isLoggedIn = Cookies.get('isLoggedIn');
 
@@ -19,16 +29,16 @@ const ResetPasswordPage = () => {
         if (isLoggedIn) {
             router.push('/dashboard');
         }
-    }, )
+    },)
 
     const handleResetPassword = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             if (password === '') throw new Error('Password is required');
             if (password !== confirmPassword) throw new Error('Password does not match');
-            setInfo('Password has been reset');
             await resetPassword(password, token as string);
-                setTimeout(() => {
+            setInfo('Password has been reset');
+            setTimeout(() => {
                 router.push('/login');
             }, 3000);
         } catch (error: any) {
@@ -50,13 +60,21 @@ const ResetPasswordPage = () => {
                             <label className="label">
                                 <span className="label-text">Password</span>
                             </label>
-                            <input type="password" placeholder="password" className="input input-bordered" required value={password} onChange={e => setPassword(e.target.value)} />
+                            <input type={showPassword ? 'text' : 'password'} placeholder="password" className="input input-bordered" required value={password} onChange={e => setPassword(e.target.value)} />
+                            <div className="label">
+                                <span className="label-text-alt"></span>
+                                <button type="button" className="label-text-alt " onClick={togglePasswordVisibility}>{showPassword ? 'Hide' : 'Show'}</button>
+                            </div>
                         </div>
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Confirm Password</span>
                             </label>
-                            <input type="password" placeholder="confirm password" className="input input-bordered" required value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                            <input type={showConfirmPassword ? 'text' : 'password'} placeholder="confirm password" className="input input-bordered" required value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                            <div className="label">
+                                <span className="label-text-alt"></span>
+                                <button type="button" className="label-text-alt " onClick={toggleConfirmPasswordVisibility}>{showConfirmPassword ? 'Hide' : 'Show'}</button>
+                            </div>
                         </div>
                         {error && <div className="text-red-500">{error}</div>}
                         <div className="form-control mt-6">

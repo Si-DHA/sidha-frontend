@@ -6,6 +6,13 @@ import DataTable from "@/app/components/common/datatable/DataTable";
 import { FiEdit, FiSave, FiTrash2 } from 'react-icons/fi';
 import { deletePenawaranHargaItem } from '@/pages/api/deletePenawaranHargaItem';
 import { updatePenawaranHargaItem } from '@/pages/api/updatePenawaranHargaItem';
+import Cookies from "js-cookie";
+import Drawer from "@/app/components/common/drawer";
+
+interface Klien {
+  id: string;
+  companyName: string;
+}
 
 interface PenawaranHargaItem {
   idPenawaranHargaItem: string;
@@ -25,12 +32,50 @@ const CustomNoDataComponent = () => (
 );
 
 const PenawaranHargaItemPage = () => {
+  const [kliens, setKliens] = useState<Klien[]>([]);
+  const [companyName, setCompanyName] = useState('');
   const [items, setItems] = useState<PenawaranHargaItem[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { idPenawaranHarga } = router.query;
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+
+  var isLoggedIn = Cookies.get('isLoggedIn');
+  const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    const fetchKliens = async () => {
+      try {
+        const response = await fetch('/api/proxyKlien');
+        if (!response.ok) {
+          throw new Error('Failed to fetch kliens');
+        }
+        const { content } = await response.json();
+        setKliens(content);
+  
+        // Cari companyName menggunakan idPenawaranHarga
+        const currentKlien = content.find(klien =>
+          klien.penawaranHarga && klien.penawaranHarga.idPenawaranHarga === idPenawaranHarga
+        );
+        if (currentKlien && currentKlien.companyName) {
+          setCompanyName(currentKlien.companyName);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchKliens();
+  }, [idPenawaranHarga]);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/login');
+    }
+    const role = Cookies.get('role');
+    setUserRole(role || '');
+  },)
 
   const handleBack = () => {
     router.push('/penawaranharga');
@@ -118,7 +163,7 @@ const PenawaranHargaItemPage = () => {
 
   const handlePriceChange = (itemId: string, priceType: keyof PenawaranHargaItem, newValue: number) => {
     const updatedValue = Math.max(0, newValue);
-    
+
     setItems(currentItems =>
       currentItems.map(item =>
         item.id === itemId ? { ...item, [priceType]: updatedValue } : item
@@ -228,7 +273,7 @@ const PenawaranHargaItemPage = () => {
             {item.isEditing ? (
               <FiSave
                 onClick={() => handleEditSaveClick(item)}
-                className="cursor-pointer text-lg hover:text-blue-500" 
+                className="cursor-pointer text-lg hover:text-blue-500"
                 style={{ fontSize: '1.5rem' }}
               />
             ) : (
@@ -244,7 +289,7 @@ const PenawaranHargaItemPage = () => {
                 setIsDeleteModalVisible(true);
               }}
               className="cursor-pointer text-lg hover:text-red-500"
-              style={{ fontSize: '1.5rem' }} 
+              style={{ fontSize: '1.5rem' }}
             />
           </div>
         );
@@ -253,17 +298,17 @@ const PenawaranHargaItemPage = () => {
       allowOverflow: true,
       button: true,
     }
-    
+
   ];
 
   return (
-    <main className="flex min-h-screen flex-col">
-      <Navbar />
+    <main className="flex min-h-screen flex-col " data-theme="winter">
+      <Drawer userRole={userRole}>
       <div className="flex-1 py-6 px-4">
         <div className="container mx-auto">
-        <h1 className="text-3xl font-bold mt-1 mb-5" style={{ color: '#2d3254' }}>Daftar Rute Penawaran</h1>
+          <h1 className="text-3xl font-bold mt-1 mb-5" style={{ color: '#2d3254' }}>Daftar Rute Penawaran {companyName} </h1>
 
-          
+
           <DataTable
             columns={columns}
             data={items}
@@ -302,6 +347,8 @@ const PenawaranHargaItemPage = () => {
           </div>
         </div>
       )}
+        </Drawer>
+     
 
     </main>
   );

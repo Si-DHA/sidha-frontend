@@ -4,6 +4,10 @@ import { Inter } from "next/font/google";
 import React, { useEffect, useState } from 'react';
 import { viewAllPenawaranHargaItem } from "../api/penawaran-harga-item/viewAllPenawaranHargaItem";
 import { getPenawaranHargaItemBySource } from "../api/penawaran-harga-item/getPenawaranHargaItemBySource";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
+import Drawer from "@/app/components/common/drawer";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +27,19 @@ const LihatPenawaranHargaItemPage = () => {
     const [selectedSource, setSelectedSource] = useState('');
     const [allSources, setAllSources] = useState<string[]>([]);
 
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        setUserRole(role || '');
+    },)
+
+
     useEffect(() => {
         fetchData(); // Call fetchData function when component mounts
     }, []);
@@ -31,7 +48,7 @@ const LihatPenawaranHargaItemPage = () => {
         try {
             const penawaranHargaItemDataResponse: PenawaranHargaItem[] = await viewAllPenawaranHargaItem(); // Explicitly define type
             setPenawaranHargaItemData(penawaranHargaItemDataResponse);
-            
+
             // Extract unique sources and update the state
             const uniqueSourcesSet = new Set(penawaranHargaItemDataResponse.map(item => item.source));
             const uniqueSourcesArray: string[] = Array.from(uniqueSourcesSet); // Explicitly define type
@@ -59,74 +76,75 @@ const LihatPenawaranHargaItemPage = () => {
 
     return (
         <main className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk">
-            <Navbar />
-            <div className="flex-1 py-6 px-4">
-                <div className="container mx-auto">
-                    <div className="text-center lg:text-left">
-                        <h1 className="text-3xl font-bold">Daftar Penawaran Harga Item</h1>
-                        <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                    </div>
-                    <div className="flex justify-between">
-                        <div className="join">
-                            <select className="select select-bordered join-item" onChange={(e) => setSelectedSource(e.target.value)} value={selectedSource}>
-                                <option disabled selected>Asal Muat</option>
-                                <option value="All">All</option> {/* Add "All" option */}
-                                {allSources.map((source, index) => (
-                                    <option key={index} value={source}>{source}</option>
-                                ))}
-                            </select>
-                            <div className="indicator">
-                                <button className="btn join-item" onClick={handleSearch}>Cari</button>
-                            </div>
+            <Drawer userRole={userRole}>
+                <div className="flex-1 py-6 px-4">
+                    <div className="container mx-auto">
+                        <div className="text-center lg:text-left">
+                            <h1 className="text-3xl font-bold">Daftar Penawaran Harga Item</h1>
+                            <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
                         </div>
-
-                        <button className="btn" onClick={() => (document.getElementById('baca_ketentuan') as HTMLDialogElement)?.showModal()}>Baca Ketentuan</button>
-                        <dialog id="baca_ketentuan" className="modal">
-                            <div className="modal-box">
-                                <h3 className="font-bold text-lg mb-4">Ketentuan Penawaran</h3>
-                                <p>1. Tarif tidak termasuk PPN dan asuransi muatan</p>
-                                <p>2. Tarif belum termasuk muat (bila ada)</p>
-                                <p>3. Kehilangan atau kerusakan akibat force majeur seperti (kebakaran, bencana alam, dll) tidak ditanggung oleh transporter</p>
-                                <p>4. Pembayaran DP uang jalan 60% dan sisa tagihan setelah invoice diterima </p>
-                                <p>5. Multidrop Rp200.000,- per titik</p>
-                                <div className="modal-action">
-                                    <form method="dialog">
-                                        <button className="btn">Ya, Saya Mengerti</button>
-                                    </form>
+                        <div className="flex justify-between">
+                            <div className="join">
+                                <select className="select select-bordered join-item" onChange={(e) => setSelectedSource(e.target.value)} value={selectedSource}>
+                                    <option disabled selected>Asal Muat</option>
+                                    <option value="All">All</option> {/* Add "All" option */}
+                                    {allSources.map((source, index) => (
+                                        <option key={index} value={source}>{source}</option>
+                                    ))}
+                                </select>
+                                <div className="indicator">
+                                    <button className="btn join-item" onClick={handleSearch}>Cari</button>
                                 </div>
                             </div>
-                        </dialog>
-                    </div>
-                    <table className="table table-zebra table-fixed">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>ID</th>
-                                <th>Asal Muat</th>
-                                <th>Tujuan</th>
-                                <th>CDD</th>
-                                <th>CDD Long</th>
-                                <th>Wingbox</th>
-                                <th>Fuso</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {penawaranHargaItemData.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{item.idPenawaranHargaItem}</td>
-                                    <td>{item.source}</td>
-                                    <td>{item.destination}</td>
-                                    <td>{item.cddPrice}</td>
-                                    <td>{item.cddLongPrice}</td>
-                                    <td>{item.wingboxPrice}</td>
-                                    <td>{item.fusoPrice}</td>
+
+                            <button className="btn" onClick={() => (document.getElementById('baca_ketentuan') as HTMLDialogElement)?.showModal()}>Baca Ketentuan</button>
+                            <dialog id="baca_ketentuan" className="modal">
+                                <div className="modal-box">
+                                    <h3 className="font-bold text-lg mb-4">Ketentuan Penawaran</h3>
+                                    <p>1. Tarif tidak termasuk PPN dan asuransi muatan</p>
+                                    <p>2. Tarif belum termasuk muat (bila ada)</p>
+                                    <p>3. Kehilangan atau kerusakan akibat force majeur seperti (kebakaran, bencana alam, dll) tidak ditanggung oleh transporter</p>
+                                    <p>4. Pembayaran DP uang jalan 60% dan sisa tagihan setelah invoice diterima </p>
+                                    <p>5. Multidrop Rp200.000,- per titik</p>
+                                    <div className="modal-action">
+                                        <form method="dialog">
+                                            <button className="btn">Ya, Saya Mengerti</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </dialog>
+                        </div>
+                        <table className="table table-zebra table-fixed">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>ID</th>
+                                    <th>Asal Muat</th>
+                                    <th>Tujuan</th>
+                                    <th>CDD</th>
+                                    <th>CDD Long</th>
+                                    <th>Wingbox</th>
+                                    <th>Fuso</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {penawaranHargaItemData.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.idPenawaranHargaItem}</td>
+                                        <td>{item.source}</td>
+                                        <td>{item.destination}</td>
+                                        <td>{item.cddPrice}</td>
+                                        <td>{item.cddLongPrice}</td>
+                                        <td>{item.wingboxPrice}</td>
+                                        <td>{item.fusoPrice}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            </Drawer>
             <Footer />
         </main>
     );
