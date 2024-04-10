@@ -1,51 +1,44 @@
-import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
-import { BASE_URL } from "@/app/constant/constant";
+import React, { useEffect } from 'react'
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { viewUserById } from '@/pages/api/user/viewUserById';
+import Navbar from '@/app/components/common/navbar';
 import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
-
+import Footer from "@/app/components/common/footer";
 import Image from "next/image";
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
 import Cookies from "js-cookie";
 
 
 
-export default function ProfilePage() {
-  const id = Cookies.get('idUser');
-  console.log(id);
+const inter = Inter({ subsets: ["latin"] });
+export default function UserDetailPage() {
+  const queryParameters = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const id = queryParameters?.get("id");
+  const router = useRouter();
+  const [error, setError] = useState('');
   const [userData, setUserData] = useState(null);
-  const [userId, setUserId] = useState(id);
 
   useEffect(() => {
-    fetchUser(userId);
-  }, [userId]);
-  const fetchUser = (id : any) => {
-    fetch(BASE_URL + `/user/${id}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => setUserData(data.content))
-      .catch(error => console.error('Fetch error:', error));
-  };
+    const fetchData = async () => {
+      try {
+        const userDataResponse = await viewUserById(id);
+        setUserData(userDataResponse['content']);
+      } catch (error: any) {
+        setError(error.message);
+      }
+    }
+    fetchData();
+  }, [])
 
   if (!userData) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
-
-
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between ${inter.className}`} data-theme="cmyk"
     >
       <Navbar />
-
-
-
       <div className="flex flex-row gap-y-12 gap-x-12">
         <div className="flex flex-col grow justify-center align-center ">
           <div className="card w-96 bg-base-100 shadow-md">
@@ -71,7 +64,7 @@ export default function ProfilePage() {
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
                     </svg>
-                    <Link href="/profile/ganti-password">Ganti Password</Link>
+                    <Link href="/profile/ganti-password">Hapus Akun</Link>
 
                   </button>
                 </div>
@@ -139,6 +132,5 @@ export default function ProfilePage() {
 
       <Footer />
     </main>
-  );
+  )
 }
-

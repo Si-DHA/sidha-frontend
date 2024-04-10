@@ -16,6 +16,14 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.pdf$/,
+      use: 'raw-loader',
+    });
+
+    return config;
+  },
 };
 
 export default nextConfig;
