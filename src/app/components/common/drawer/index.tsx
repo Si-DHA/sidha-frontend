@@ -4,7 +4,6 @@ import Navbar from "../navbar";
 import Link from "next/link";
 
 const Drawer = ({ userRole, children }: { userRole: string, children: React.ReactNode }) => {
-  // buat drawer berdasarkan role
   const [drawer, setDrawer] = useState(<></>);
   useEffect(() => {
     if (userRole === 'ADMIN') {
@@ -52,10 +51,19 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
           <div className="drawer-side">
             <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
             <ul className="menu p-4 w-80 min-h-full bg-base-200">
+
               <ul className="menu bg-base-200 w-56 rounded-box">
                 <li>
-                  <h2 className="menu-title text-neutral"><Link href="/lihat-penawaran-harga-item">Daftar Penawaran Harga</Link></h2>
-
+                  <h2 className="menu-title text-neutral">Dokumen Kontrak</h2>
+                  <ul>
+                    <li><Link href="/kontrak">Lihat Dokumen Kontrak</Link></li>
+                  </ul>
+                </li>
+                <li>
+                  <h2 className="menu-title text-neutral">Penawaran Harga</h2>
+                  <ul>
+                    <li><Link href="/lihat-penawaran-harga-item">Daftar Penawaran Harga</Link></li>
+                  </ul>
                 </li>
 
               </ul>
@@ -75,11 +83,17 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
             <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
             <ul className="menu p-4 w-80 min-h-full bg-base-200">
               <ul className="menu bg-base-200 w-56 rounded-box">
-
                 <li>
                   <h2 className="menu-title text-neutral"><a>Registrasi Akun</a></h2>
                   <ul>
                     <li><Link href="/register/klien">Registrasi Klien</Link></li>
+
+                  </ul>
+                </li>
+                <li>
+                  <h2 className="menu-title text-neutral"><a>Dokumen Surat Kontrak</a></h2>
+                  <ul>
+                    <li><Link href="/kontrak/daftar">Daftar  Kontrak Klien</Link></li>
 
                   </ul>
                 </li>
@@ -111,7 +125,7 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
             <ul className="menu p-4 w-80 min-h-full bg-base-200">
               <ul className="menu bg-base-200 w-56 rounded-box">
                 <li>
-                <h2 className="menu-title text-neutral"><Link href="/truk">Daftar Truk</Link></h2>
+                  <h2 className="menu-title text-neutral"><Link href="/truk">Daftar Truk</Link></h2>
                 </li>
               </ul>
             </ul>

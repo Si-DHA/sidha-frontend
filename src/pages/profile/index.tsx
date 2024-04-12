@@ -10,13 +10,13 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import Drawer from "@/app/components/common/drawer";
+import Drawer from "@/app/components/common/Drawer";
 
 
 export default function ProfilePage() {
   const id = Cookies.get('idUser');
   console.log(id);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<any>(null);
   const [userId, setUserId] = useState(id);
 
 
@@ -30,7 +30,7 @@ export default function ProfilePage() {
     }
     const role = Cookies.get('role');
     setUserRole(role || '');
-  },)
+  }, [isLoggedIn, router])
 
 
   useEffect(() => {

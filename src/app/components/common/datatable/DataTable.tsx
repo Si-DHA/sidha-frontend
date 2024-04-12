@@ -74,6 +74,11 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
         router.push(`list-user/detail?id=${idUser}`);
     }
 
+    const handleRowClickKontrak = (idUser: any) => {
+      router.push(`/kontrak?id=${idUser}`);
+  }
+
+
     return page.map((row:any, index) => {
       prepareRow(row);
       return (
@@ -86,12 +91,15 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
               handleRowClick(row.original.idTruk);
             } else if (type === 'user') {
               handleRowClickUser(row.original.id);
+            } else if (type === "kontrak"){
+              handleRowClickKontrak(row.original.userId);
+            
             }
           }}
           key={index}>
           <td style={{ textAlign: 'center' }}>{index + 1}</td> {/* Add table cell for numbering */}
           {row.cells.map((cell:any, index:any) => {
-            if (cell.column.id === 'expiredKir') { // Replace 'datetimeColumn' with the actual ID of your datetime column
+            if (cell.column.id === 'expiredKir' || cell.column.id === 'createdAt' ) { // Replace 'datetimeColumn' with the actual ID of your datetime column
               const date = new Date(cell.value); // Convert datetime string to Date object
               const options :any= { day: '2-digit', month: '2-digit', year: 'numeric' };
               const formattedDate = date.toLocaleDateString('en-GB', options); // Format date to string (e.g., 'MM/DD/YYYY')
