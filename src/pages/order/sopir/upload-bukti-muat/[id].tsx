@@ -140,7 +140,7 @@ const BuktiMuatPage = () => {
                 <div className="flex flex-row gap-y-12 gap-x-12">
                     <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                         <div className="modal-box">
-                            <h3 className="font-bold text-lg">Delete</h3>
+                            <h3 className="font-bold text-lg">Upload</h3>
                             <p className="py-4">Are you sure you want to upload this?</p>
                             <div className="modal-action">
                                 <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
