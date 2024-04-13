@@ -99,6 +99,15 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                   </ul>
                 </li>
 
+                <li>
+                  <h2 className="menu-title text-neutral"><a>Purchase Order</a></h2>
+                  <ul>
+                    <li><Link href="/order/create">Buat Purchase Order</Link></li>
+                    <li><Link href="/order">Daftar Purchase Order</Link></li>
+
+                  </ul>
+                </li>
+
               </ul>
             </ul>
           </div>
