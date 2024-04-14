@@ -15,6 +15,7 @@ const TrukPage: React.FC = () => {
         const fetchData = async () => {
             try {
                 const trukDataResponse = await viewAllTruk();
+                console.log(trukDataResponse);
                 if (trukDataResponse) {
                     setTrukData(trukDataResponse['content']);
                 }

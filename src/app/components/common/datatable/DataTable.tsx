@@ -70,6 +70,10 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
       router.push(`truk/detail?id=${idTruk}`);
     };
 
+    const handleRowClickOrder = (idOrder: any) => {
+      router.push(`order/detail?id=${idOrder}`);
+    }
+
     return page.map((row:any, index) => {
       prepareRow(row);
       return (
@@ -77,7 +81,13 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
           className="hover"
           {...row.getRowProps()}
           style={{ borderBottom: '1px solid black' }}
-          onClick={type === 'truk' ? () => handleRowClick(row.original.idTruk) : undefined}
+          onClick={() => {
+            if (type === 'truk') {
+              handleRowClick(row.original.idTruk);
+            } else if (type === 'order') {
+              handleRowClickOrder(row.original.idOrder);
+            }
+          }}
           key={index}>
           <td style={{ textAlign: 'center' }}>{index + 1}</td> {/* Add table cell for numbering */}
           {row.cells.map((cell:any, index:any) => {
