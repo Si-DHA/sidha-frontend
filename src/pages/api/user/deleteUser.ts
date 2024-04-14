@@ -1,10 +1,11 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const viewInvoice = async (idInvoice: String): Promise<any> => {
+export const deleteUser = async (userID: String): Promise<any> => {
     try {
-        const url = `${BASE_URL}/invoice/order/${idInvoice}`;
-        const response = await fetch(url, {
-            method: 'GET',
+      
+        
+        const response = await fetch(BASE_URL + '/user/' + userID, {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
@@ -16,9 +17,8 @@ export const viewInvoice = async (idInvoice: String): Promise<any> => {
         if (response.ok) {
             return responseData;
         } else {
-            throw new Error(responseData.message);
+            return [];
         }
-
     } catch (error: any) {
         throw new Error(error.message);
     }

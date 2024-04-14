@@ -16,11 +16,11 @@ import Link from 'next/link';
 
 
 export default function ProfilePage() {
-  const id = Cookies.get('idUser');
+  const queryParameters = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const id = queryParameters?.get("id");
 
-  console.log(id);
+
   const [userData, setUserData] = useState<any>(null);
-  const [userId, setUserId] = useState(id);
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [position, setPosition] = useState('');
@@ -31,6 +31,7 @@ export default function ProfilePage() {
   const [positionError, setPositionError] = useState("");
   const [imageUrl, setImageUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   var isLoggedIn = Cookies.get('isLoggedIn');
   const [userRole, setUserRole] = useState('');
@@ -41,6 +42,10 @@ export default function ProfilePage() {
       router.push('/login');
     }
     const role = Cookies.get('role');
+    if (role == 'KLIEN' || role == 'SOPIR') {
+      setShouldRedirect(true);
+      router.push('/404');
+    }
     setUserRole(role || '');
   },)
 
@@ -119,8 +124,8 @@ export default function ProfilePage() {
   }
 
   useEffect(() => {
-    fetchUser(userId);
-  }, [userId]);
+    fetchUser(id);
+  }, [id]);
 
   const fetchUser = (id: any) => {
     fetch(BASE_URL + `/user/${id}`)
@@ -145,6 +150,10 @@ export default function ProfilePage() {
       .catch(error => console.error('Fetch error:', error));
   };
 
+  if (shouldRedirect) {
+    return null;
+  }
+
   if (!userData) {
     return <div>Loading...</div>;
   }
@@ -166,10 +175,12 @@ export default function ProfilePage() {
       const hasilUpdate = await responseUpdate.json();
       if (hasilUpdate.statusCode == 200) {
         setIsLoading(false);
-        setAlert(<SuccessAlert key={Date.now()} message="Informasi profil berhasil diperbaharui !" />);
+
+        setAlert(<SuccessAlert key={Date.now()} message="Profil berhasil diubah" />);
         setTimeout(() => {
-          router.push('/profile');
+          router.push('/list-user/detail?id=' + userId);
         }, 3000);
+
 
       } else {
         setIsLoading(false);
@@ -189,6 +200,17 @@ export default function ProfilePage() {
       className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk"
     >
       <Drawer userRole={userRole}>
+        <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Edit Akun</h3>
+            <p className="p-8">Apakah Anda yakin akan mengedit akun dengan nama :  <span className='font-bold'>{userData.name}</span> ?</p>
+            <div className="modal-action">
+              <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Batal</button>
+              <button className="btn btn-secondary" onClick={() => { handleUpdateProfile(id); document.getElementById('my_modal_5').close(); }}>Edit</button>
+            </div>
+
+          </div>
+        </dialog>
 
         <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
           {alert}
@@ -208,26 +230,10 @@ export default function ProfilePage() {
               </div>
               <div className="card-body items-center text-center">
                 <h2 className="card-title pb-4">{name} </h2>
+                <div className="badge badge-success">{userData.role}</div>
                 <div className="flex flex-col  justify-center items-center flex-wrap gap-y-4">
 
-                  <div className="card-actions">
-                    <button className="btn btn-sm">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
-                      </svg>
-                      <Link href="/profile/edit/photo">Ganti Foto Profil</Link>
 
-                    </button>
-                  </div>
-                  <div className="card-actions">
-                    <button className="btn btn-sm">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
-                      </svg>
-                      <Link href="/profile/ganti-password">Ganti Password</Link>
-
-                    </button>
-                  </div>
                 </div>
 
               </div>
@@ -306,8 +312,8 @@ export default function ProfilePage() {
                 </table>
 
                 <div className="flex flex-row justify-center align-middle">
-                  <div className="btn btn-secondary" onClick={() => handleUpdateProfile(userId)}>
-                    {isLoading ? <span className="loading loading-dots loading-lg"></span> : "Ubah Profil"} </div>
+                  <div className="btn btn-secondary" onClick={() => document.getElementById('my_modal_5').showModal()}>
+                    {isLoading ? <span className="loading loading-dots loading-lg"></span> : "Edit Profil"} </div>
                 </div>
 
               </div>
