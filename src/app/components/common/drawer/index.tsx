@@ -55,7 +55,7 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
               <ul className="menu bg-base-200 w-56 rounded-box">
                 <li>
                   <h2 className="menu-title text-neutral"><Link href="/lihat-penawaran-harga-item">Daftar Penawaran Harga</Link></h2>
-
+                  <h2 className="menu-title text-neutral"><Link href="/order/klien">Order Anda</Link></h2>
                 </li>
 
               </ul>

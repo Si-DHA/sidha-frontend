@@ -2,11 +2,11 @@ import { BASE_URL } from '@/app/constant/constant';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { idOrderItem } = req.query;
+  const { idOrder } = req.query;
 
-  if (req.method === 'GET' && idOrderItem) {
+  if (req.method === 'GET' && idOrder) {
     try {
-      const endpoint = BASE_URL + `/order/order-item/${idOrderItem}`;
+      const endpoint = BASE_URL + `/order/${idOrder}/order-item`;
 
       const response = await fetch(endpoint, {
         method: 'GET',
