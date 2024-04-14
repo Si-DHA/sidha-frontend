@@ -5,7 +5,7 @@ import FailAlert from "@/app/components/common/FailAlert";
 import { viewDetailKontrak } from "../api/kontrak/viewDetailKontrak";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Drawer from "@/app/components/common/Drawer";
+import Drawer from "@/app/components/common/drawer";
 import Cookies from "js-cookie";
 import { Inter } from "next/font/google";
 import Link from "next/link";
@@ -55,13 +55,14 @@ const InvoiceDetailPage = () => {
         const mappedInvoiceData = mapInvoiceData(invoiceDataResponse['content']);
         setInvoiceData(mappedInvoiceData);
 
-        if (rawData?.invoice?.buktiDP == null) {
+        if (rawData?.invoice?.buktiDP == null || rawData?.invoice?.buktiDP.status < 1) {
           setStatus('Belum Bayar DP');
-        } else if (rawData?.invoice?.buktiDP != null && rawData?.invoice?.buktiPelunasan == null) {
-          setStatus('DP sudah dibayar');
-        } else if (rawData?.invoice?.buktiDP != null && rawData?.invoice?.buktiPelunasan != null) {
+        } else if (rawData?.invoice?.buktiPelunasan == null || rawData?.invoice?.buktiPelunasan?.status < 1) {
+          setStatus('Menunggu Pelunasan');
+        } else {
           setStatus('Lunas');
         }
+
       } catch (error: any) {
         router.push('/404');
         setError(error.message);
@@ -116,6 +117,14 @@ const InvoiceDetailPage = () => {
     Header: 'Sisa', accessor: 'Sisa'
   }];
 
+  const goToPembayaranDP = () => {
+    router.push(`pembayaran?id=${id}&isPelunasan=false`);
+  }
+
+  const goToPelunasan = () => {
+    router.push(`pembayaran?id=${id}&isPelunasan=true`);
+  }
+
 
   return (
     <main
@@ -131,17 +140,40 @@ const InvoiceDetailPage = () => {
               <h1 className="card-title text-center text-[25px] font-bold text-slate-900 pb-12">Invoice {klienData.companyName} <br /> Order ID #{rawData.id} </h1>
               {error ? (<div>{error}</div>) : (<>
                 {invoiceData ? (
-                  <DataTable columns={columns} data={invoiceData}
-                    type="user" />) : (
+                  <>
+                    {status === 'Belum Bayar DP' ? (
+                      <DataTable
+                        columns={columns}
+                        data={invoiceData}
+                        type="invoice"
+                        btnText="Bayar DP" 
+                        onClick={goToPembayaranDP}
+                      />
+                    ) : status === 'Menunggu Pelunasan' ? (
+                      <DataTable
+                        columns={columns}
+                        data={invoiceData}
+                        type="invoice"
+                        btnText="Bayar Pelunasan"
+                        onClick={goToPelunasan}
+                      />
+                    ) : (
+                      <DataTable
+                        columns={columns}
+                        data={invoiceData}
+                        type="invoice"
+                      />
+                    )}
+                  </>) : (
                   <DataTable columns={columns} data={[]} type="invoice" />)}
               </>)}
 
               <div className="flex flex-col justify-center items-center bg-slate-50 rounded-2xl mx-auto my-auto p-4 align-middle">
-              <h1 className="text-[24px] text-slate-900 font-bold ">Status Invoice</h1>
+                <h1 className="text-[24px] text-slate-900 font-bold ">Status Invoice</h1>
                 <div className="overflow-x-auto">
                   <table className="table items-center align-middle">
                     {/* head */}
-                  
+
                     <tbody>
                       {/* row 1 */}
                       <tr>
@@ -150,16 +182,16 @@ const InvoiceDetailPage = () => {
                       </tr>
                       {/* row 2 */}
                       <tr>
-                      <td className="font-bold">Total DP</td>
+                        <td className="font-bold">Total DP</td>
                         <td className="">{(rawData.totalPrice * 0.6).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
                       </tr>
                       {/* row 3 */}
                       <tr>
-                      <td className="font-bold">Total Harga</td>
+                        <td className="font-bold">Total Harga</td>
                         <td >{(rawData.totalPrice * 1).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
                       </tr>
                       <tr>
-                      <td className="font-bold">Total Pelunasan</td>
+                        <td className="font-bold">Total Pelunasan</td>
                         <td >{(rawData.totalPrice * 0.4).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
                       </tr>
                     </tbody>
