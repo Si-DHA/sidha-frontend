@@ -1,10 +1,9 @@
 import Drawer from "@/app/components/common/drawer";
-import Footer from "@/app/components/common/footer"
-import Cookies from 'js-cookie';
+import Footer from "@/app/components/common/footer";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-const DaftarPurchaseOrderPage = () => {
+const PurchaseOrderDetail = () => {
 
     var isLoggedIn = true
     const userRole = 'KARYAWAN'
@@ -16,11 +15,42 @@ const DaftarPurchaseOrderPage = () => {
         }
     },)
 
+    const [modal, setModal]:any = useState(null);
+    const handleModal = () => {
+        modal.showModal()
+    }
+    
+    useEffect(() => {
+        setModal(document.getElementById('modal_confirm'));
+        
+    }, [])
+
+    const handleBack = () => {
+        router.push('/order/create');
+    }
+
+    const handleCheckout = () => {
+        router.push('/order');
+    }
+
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
+            <dialog id="modal_confirm" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Checkout</h3>
+                    <p className="py-4">'Apakah Anda yakin ingin checkout Purchase Order ini?</p>
+                    <div className="modal-action">
+                        <form method="dialog" className='space-x-4'>
+                            {/* if there is a button in form, it will close the modal */}
+                            <button className="btn px-8">Batal</button>
+                            <button className="btn btn-error px-6" onClick={handleCheckout}>Checkout Sekarang</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
             <Drawer userRole={userRole}>
                 <div className="flex flex-col justify-center items-center mih-h-screen p-8">
-                    <h1 className="text-3xl font-bold text-center ">Daftar Purchase Order</h1>
+                    <h1 className="text-3xl font-bold text-center ">Detail Purchase Order</h1>
                 </div>
                 <div className="flex flex-col gap-6 mx-4 my-4 ">
                     <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
@@ -30,11 +60,11 @@ const DaftarPurchaseOrderPage = () => {
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th>Id Order</th>
-                                        <th>Tanggal Pengiriman</th>
-                                        <th>Jumlah Order Item</th>
-                                        <th>Total Biaya Pengiriman</th>
-                                        <th>Action</th>
+                                        <th>Tipe Barang</th>
+                                        <th>Fragile</th>
+                                        <th>Tipe Truk</th>
+                                        <th>Rute Pegiriman</th>
+                                        <th>Biaya Pengiriman</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -45,9 +75,7 @@ const DaftarPurchaseOrderPage = () => {
                                         <td>Quality Control Specialist</td>
                                         <td>Blue</td>
                                         <td>Blue</td>
-                                        <td>
-                                            <button className="btn btn-primary btn-sm">Detail</button>
-                                        </td>
+                                        <td>Blue</td>
                                     </tr>
                                     {/* row 2 */}
                                     <tr>
@@ -56,9 +84,7 @@ const DaftarPurchaseOrderPage = () => {
                                         <td>Desktop Support Technician</td>
                                         <td>Purple</td>
                                         <td>Purple</td>
-                                        <td>
-                                            <button className="btn btn-primary btn-sm">Detail</button>
-                                        </td>
+                                        <td>Purple</td>
                                     </tr>
                                     {/* row 3 */}
                                     <tr>
@@ -67,14 +93,22 @@ const DaftarPurchaseOrderPage = () => {
                                         <td>Tax Accountant</td>
                                         <td>Red</td>
                                         <td>Red</td>
-                                        <td>
-                                            <button className="btn btn-primary btn-sm">Detail</button>
-                                        </td>
+                                        <td>Red</td>
                                     </tr>
 
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colSpan={5}>Total Biaya Pengiriman</th>
+                                        <th>Rp5.000.000</th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
+                    </div>
+                    <div className="flex flex-row gap-4 ">
+                        <button className="btn" onClick={handleBack}>Kembali</button>
+                        <button className="btn btn-primary grow" onClick={handleModal}>Checkout Purchase Order</button>
                     </div>
                 </div>
             </Drawer>
@@ -83,4 +117,4 @@ const DaftarPurchaseOrderPage = () => {
     );
 }
 
-export default DaftarPurchaseOrderPage
+export default PurchaseOrderDetail

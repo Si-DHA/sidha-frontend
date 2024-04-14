@@ -29,6 +29,20 @@ const CreatePurchaseOrderPage = () => {
         );
     }
 
+    const [errorDate, setErrorDate] = useState('');
+
+    // validasi tanggal pengiriman
+    const handleDateChange = (e: any) => {
+        const today = new Date();
+        const selectedDate = new Date(e.target.value);
+        if (selectedDate < today) {
+            setErrorDate('Tanggal pengiriman tidak boleh kurang dari tanggal hari ini');
+        }
+    }
+
+    const handleDetailOrder = () => {
+        router.push('/order/checkout');
+    }
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
@@ -41,12 +55,16 @@ const CreatePurchaseOrderPage = () => {
                         <label className="label">
                             <span className="label-text">Tanggal Pengiriman</span>
                         </label>
-                        <input type="date" className="input input-bordered" />
+                        <input type="date" required className="input input-bordered" onChange={handleDateChange} />
+                        {errorDate && <div className="text-sm text-red-500">{errorDate}</div>}
                     </div>
+
+
                     {[...Array(numberOfForms)].map((_, index) => (
                         <PurchaseOrderForm key={index} index={index} />
                     ))}
                     <BtnAddPurchaseOrder />
+                    <button className="btn btn-primary" onClick={handleDetailOrder}>Lihat Rincian Order</button>
                 </div>
             </Drawer>
             <Footer />

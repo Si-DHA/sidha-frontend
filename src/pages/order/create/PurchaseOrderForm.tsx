@@ -7,13 +7,13 @@ const RuteOrderForm = () => {
         setRutes([...rutes, '']);
     };
 
-    const handleRemoveRute = (index) => {
+    const handleRemoveRute = (index:any) => {
         if (rutes.length > 1) { // Pastikan minimal satu rute tetap ada
             setRutes(rutes.filter((_, i) => i !== index));
         }
     };
 
-    const handleChangeRute = (index, value) => {
+    const handleChangeRute = (index:any, value:any) => {
         const updatedRutes = [...rutes];
         updatedRutes[index] = value;
         setRutes(updatedRutes);
@@ -47,7 +47,7 @@ const RuteOrderForm = () => {
     );
 };
 
-const PurchaseOrderForm = ({ index }) => {
+const PurchaseOrderForm = ({ index }:any) => {
 
     const [isDeleted, setIsDeleted] = useState(false);
 
