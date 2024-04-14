@@ -2,7 +2,6 @@ import Footer from "@/app/components/common/footer";
 import Navbar from "@/app/components/common/navbar";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
-import { BASE_URL } from '@/app/constant/constant';
 import { viewBuktiImage } from "../../api/pembayaran/viewBuktiImage";
 import { konfirmasiBuktiPembayaran } from "../../api/pembayaran/konfirmasiBuktiPembayaran";
 import { viewInvoice } from "../../api/invoice/viewInvoice";
