@@ -41,7 +41,7 @@ const UpdateTrukPage = () => {
         fetchSopirData(); // Call fetchSopirData function when component mounts
     }, []);
 
-    // Function to handle the creation of a truck
+    // Function to handle the update of a truck
     const handleUpdate = async () => {
         try {
             // Capture values from inputs
@@ -92,6 +92,7 @@ const UpdateTrukPage = () => {
             }, 3000);
         }
     };
+
     const formatDate = (dateString: any) => {
         if (!dateString) return ''; // handle case where dateString is null or undefined
         const date = new Date(dateString);
