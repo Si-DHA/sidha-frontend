@@ -4,7 +4,7 @@ import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
 import { BASE_URL } from '@/app/constant/constant';
 import { viewBuktiImage } from "../api/pembayaran/viewBuktiImage";
-import { viewInvoice } from "../api/invoice/viewInvoice";
+import { viewInvoiceById } from "../api/invoice/viewInvoiceById";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
@@ -27,7 +27,7 @@ const PembayaranPage = () => {
                 const objectUrl = URL.createObjectURL(imageDataResponse);
                 setImageUrl(objectUrl);
 
-                const invoiceDataResponse = await viewInvoice(idInvoice);
+                const invoiceDataResponse = await viewInvoiceById(idInvoice);
                 setInvoiceData(invoiceDataResponse['content']);
                 if (isPelunasan) {
                     setBuktiData(invoiceDataResponse['content']['buktiPelunasan']);
