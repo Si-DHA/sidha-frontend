@@ -24,14 +24,22 @@ export default function UserDetailPage() {
   const [userRole, setUserRole] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [alert, setAlert] = useState(null);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+  const [canEdit, setCanEdit] = useState(true);
 
   var isLoggedIn = Cookies.get('isLoggedIn');
+  const role = Cookies.get('role');
+
 
   useEffect(() => {
     if (!isLoggedIn) {
       router.push('/login');
     }
-    const role = Cookies.get('role');
+    if(role == 'KLIEN' || role == 'SOPIR') {
+      setShouldRedirect(true);
+      router.push('/404');
+    }
+
     setUserRole(role || '');
   }, [isLoggedIn, router])
 
@@ -41,10 +49,21 @@ export default function UserDetailPage() {
         const userDataResponse = await viewUserById(id);
         setImageUrl(BASE_URL + `/image/file/${id}`);
         setUserData(userDataResponse['content']);
+        if(role == 'ADMIN'){
+          setCanEdit(true);
+        } 
+        if(userDataResponse['content'].role == 'ADMIN' || userDataResponse['content'].role == 'SOPIR' || userDataResponse['content'].role == 'KARYAWAN'){
+          if(role != 'ADMIN'){
+            setCanEdit(false);
+          }
+        }
+        
       } catch (error: any) {
         setError(error.message);
       }
     }
+
+
     fetchData();
   }, [])
 
@@ -52,7 +71,7 @@ export default function UserDetailPage() {
     const response = await deleteUser(id);
     if (response.statusCode == 200) {
       setTimeout(() => {
-        router.push('/list-user');
+        router.reload();
       }, 3000);
       setAlert(<SuccessAlert message="Akun berhasil dihapus" />);
     } else {
@@ -60,9 +79,13 @@ export default function UserDetailPage() {
     }
   }
 
+  if(shouldRedirect){
+    return null;
+  }
   if (!userData) {
     return <div>Loading...</div>
   }
+
   return (
     <main
       className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk"
@@ -105,12 +128,14 @@ export default function UserDetailPage() {
                 <div className="flex flex-col  items-center pt-8 flex-wrap gap-y-4">
 
                   <div className="card-actions" text-xs>
-                    <button className="btn btn-md btn-warning ">
+                  { canEdit &&  !userData.isDeleted &&   <button className="btn btn-md btn-warning "
+                    onClick={() => router.push(`/list-user/detail/edit?id=${id}`) }
+                    >
                       Edit Akun
-                    </button>
+                    </button>}
                   </div>
                   <div className="card-actions">
-                    {!userData.isDeleted && <button onClick={() => document.getElementById('my_modal_5').showModal()} className="btn btn-md btn-error">
+                    {canEdit && !userData.isDeleted && <button onClick={() => document.getElementById('my_modal_5').showModal()} className="btn btn-md btn-error">
                       Delete Akun
                     </button>}
                   </div>

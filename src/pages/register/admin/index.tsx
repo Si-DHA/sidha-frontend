@@ -9,6 +9,7 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 import Image from "next/image";
 import Link from "next/link";
+import { Router, useRouter } from "next/router";
 import { useState, useEffect } from 'react';
 
 
@@ -21,6 +22,7 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState("");
   const [alert, setAlert] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -57,7 +59,7 @@ export default function RegisterPage() {
     try {
       event.preventDefault();
       if (!validatePhone(phone)) {
-        setAlert(<FailAlert key={Date.now()} message="Phone number must be between 10-13 digits" />);
+        setAlert(<FailAlert key={Date.now()} message="Nomor HP harus berawalan 08 dan berjumlah 10 - 13 digit" />);
         return;
       }
       setIsLoading(true);
@@ -80,7 +82,10 @@ export default function RegisterPage() {
       if (data.statusCode == 201) {
         setIsLoading(false);
 
-        setAlert(<SuccessAlert key={Date.now()} message="Admin Account has been created" />);
+        setAlert(<SuccessAlert key={Date.now()} message="Akun admin berhasil dibuat" />);
+        setTimeout(() => {
+          router.push('/list-user?role=admin');
+        }, 3000);
       } else {
         setIsLoading(false);
         setAlert(<FailAlert key={Date.now()} message={`${data.message}`} />);
@@ -100,15 +105,15 @@ export default function RegisterPage() {
     <main
       className={`flex min-h-screen flex-col items-center justify-between ${inter.className}`} data-theme="cmyk"
     >
-      <Navbar />
+    
       <div className="hero flex flex-col min-h-screen mx-auto  bg-base-">
         <div className="flex flex-col justify-center justify">
           <div className="text-slate-900 text-4xl  text-center font-bold mt-20 my-2 ">
-            Admin Account Registration
+            Registrasi Akun Admin
           </div>
 
           <div className="text-slate-500 text-l text-center font-italic">
-            Please ensure that you fill in the admin identity correctly
+            Pastikan data identitas Admin yang Anda masukkan benar
           </div>
           <div>
             {alert}
@@ -124,26 +129,40 @@ export default function RegisterPage() {
 
           <div className="flex flex-col">
             <form onSubmit={handleSubmit} className="">
+            <div className="label">
+                  <span className="label-text">Nama</span>
+                </div>
               <label className="input input-bordered flex items-center gap-2 m-2 p-3">
-                <input type="text" className="grow" placeholder="Full Name" value={name} onChange={handleNameChange} required />
+                <input type="text" className="grow" placeholder="Budi Firmansyah" value={name} onChange={handleNameChange} required />
               </label>
+                
+              <div className="label">
+                <span className="label-text">Email</span>
+              </div>
 
               <label className="input input-bordered flex items-center gap-2 m-2 p-3">
-                <input type="email" className="grow" placeholder="Email" value={email} onChange={handleEmailChange} required />
+                <input type="email" className="grow" placeholder="abc@def.com" value={email} onChange={handleEmailChange} required />
               </label>
 
-              <label className="input input-bordered flex items-center gap-2 m-2 p-3">
-                <input type="text" className="grow" placeholder="Address" value={address} onChange={handleAddressChange} required />
-              </label>
+              <div className="label">
+                <span className="label-text">Alamat Lengkap</span>
+              </div>
 
               <label className="input input-bordered flex items-center gap-2 m-2 p-3">
-                <input type="text" className="grow" placeholder="Phone" value={phone} min={10} max={13} onChange={handlePhoneChange} required />
+                <input type="text" className="grow" placeholder="Depok 123456" value={address} onChange={handleAddressChange} required />
+              </label>
+
+              <div className="label">
+                <span className="label-text">Nomor HP /  Whatsapp</span>
+              </div>
+              <label className="input input-bordered flex items-center gap-2 m-2 p-3">
+                <input type="text" className="grow" placeholder="08XXXX" value={phone} min={10} max={13} onChange={handlePhoneChange} required />
               </label>
 
 
               <div className="flex flex-col justify-center">
                 <button type="submit" className="btn btn-secondary btn-l text-white m-2 p-3 ">
-                  {isLoading ? <span className="loading loading-dots loading-lg"></span> : "Register"}
+                  {isLoading ? <span className="loading loading-dots loading-lg"></span> : "Daftar"}
                 </button>
                 <div className="text-slate-500 m-2 p-3 text-center justify-center">
                 </div>

@@ -166,8 +166,10 @@ export default function ProfilePage() {
       const hasilUpdate = await responseUpdate.json();
       if (hasilUpdate.statusCode == 200) {
         setIsLoading(false);
-
-        setAlert(<SuccessAlert key={Date.now()} message="Profile updated successfully" />);
+        setAlert(<SuccessAlert key={Date.now()} message="Informasi profil berhasil diperbaharui !" />);
+        setTimeout(() => {
+          router.push('/profile');
+        }, 3000);
 
       } else {
         setIsLoading(false);

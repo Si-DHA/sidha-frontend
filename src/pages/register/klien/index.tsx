@@ -34,6 +34,10 @@ export default function RegisterPage() {
       router.push('/login');
     }
     const role = Cookies.get('role');
+    if (role == 'KLIEN' || role == 'ADMIN' || role == 'SOPIR') {
+      router.push('/dashboard');
+    }
+    
     setUserRole(role || '');
   },)
 
@@ -148,6 +152,9 @@ export default function RegisterPage() {
         setEmail("");
         setAddress("");
         setPhone("");
+        setTimeout(() => {
+          router.push('/list-user?role=klien');
+        }, 3000);
        
 
       } else {
@@ -189,9 +196,9 @@ export default function RegisterPage() {
 
             <div className="flex flex-col ">
               <form onSubmit={handleSubmit} className="">
-                <div className="label">
-                  <span className="label-text">Nama</span>
-                </div>
+                  <div className="label">
+                    <span className="label-text">Nama</span>
+                  </div>
                 <label className="input input-bordered flex items-center ">
                   <input type="text" className="grow" placeholder="Budi Firmansyah" value={name} onChange={handleNameChange} required />
                 </label>

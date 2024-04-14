@@ -30,7 +30,7 @@ export default function ProfilePage() {
   const [phoneError, setPhoneError] = useState("");
   const [positionError, setPositionError] = useState("");
   const [imageUrl, setImageUrl] = useState('');
-  const [document, setDocument] = useState<File | null>("");
+  const [document, setDocument] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
 
@@ -68,53 +68,6 @@ export default function ProfilePage() {
       }
     }
   };
-
-  const validate = () => {
-    let tempErrors: any = {};
-
-    tempErrors.name = name ? "" : "Name is required.";
-    tempErrors.address = address ? "" : "Address is required.";
-    tempErrors.phone = phone ? "" : "Phone is required.";
-
-    setErrors(tempErrors);
-
-    return Object.values(tempErrors).every(x => x === "");
-  };
-
-  const validatePhone = (phone: any) => {
-    const phoneRegex = /^[0-9]{10,13}$/;
-    if (!phoneRegex.test(phone)) {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  const validatePosition = (position: any) => {
-
-    if (userData && userData.role === 'KARYAWAN' && position === "") {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-
-  const handleNameChange = (event: any) => {
-    setName(event.target.value);
-  }
-
-  const handleAddressChange = (event: any) => {
-    setAddress(event.target.value);
-  }
-
-  const handlePositionChange = (event: any) => {
-    setPosition(event.target.value);
-  }
-
-  const handlePhoneChange = (event: any) => {
-    setPhone(event.target.value);
-  }
 
 
 
@@ -178,7 +131,7 @@ export default function ProfilePage() {
     if (document) {
       await updateProfile(document);
     } else {
-      setAlert(<FailAlert key={Date.now()} message="Please select a file to upload." />);
+      setAlert(<FailAlert key={Date.now()} message="Tolong unggah foto terlebih dahulu !" />);
     }
   }
 

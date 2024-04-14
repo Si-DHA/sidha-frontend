@@ -18,6 +18,21 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
             <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
             <ul className="menu p-4 w-80 min-h-full bg-base-200">
               <ul className="menu bg-base-200 w-56 rounded-box">
+              <li>
+                  <h2 className="menu-title text-neutral"><a>Daftar Akun</a></h2>
+                  <ul>
+                    <li><Link href="/list-user?role=klien">Daftar Klien</Link></li>
+                  </ul>
+                  <ul>
+                    <li><Link href="/list-user?role=sopir">Daftar Sopir</Link></li>
+                  </ul>
+                  <ul>
+                    <li><Link href="/list-user?role=admin">Daftar Admin</Link></li>
+                  </ul>
+                  <ul>
+                    <li><Link href="/list-user?role=karyawan">Daftar Karyawan</Link></li>
+                  </ul>
+                </li>
 
                 <li>
                   <h2 className="menu-title text-neutral"><a>Registrasi Akun</a></h2>
@@ -83,6 +98,15 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
             <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
             <ul className="menu p-4 w-80 min-h-full bg-base-200">
               <ul className="menu bg-base-200 w-56 rounded-box">
+                <li>
+                  <h2 className="menu-title text-neutral"><a>Daftar Akun</a></h2>
+                  <ul>
+                    <li><Link href="/list-user?role=klien">Daftar Klien</Link></li>
+                  </ul>
+                  <ul>
+                    <li><Link href="/list-user?role=sopir">Daftar Sopir</Link></li>
+                  </ul>
+                </li>
                 <li>
                   <h2 className="menu-title text-neutral"><a>Registrasi Akun</a></h2>
                   <ul>
