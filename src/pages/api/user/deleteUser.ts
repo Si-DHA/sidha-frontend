@@ -1,11 +1,11 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const viewAllUser = async (role: String): Promise<any> => {
+export const deleteUser = async (userID: String): Promise<any> => {
     try {
       
         
-        const response = await fetch(BASE_URL + '/user/' + role, {
-            method: 'GET',
+        const response = await fetch(BASE_URL + '/user/' + userID, {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',

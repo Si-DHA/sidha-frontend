@@ -65,13 +65,13 @@ export default function RegisterPage() {
   }
 
   const validatePhone = (phone: any) => {
-    const phoneRegex = /^[0-9]{10,13}$/;
+    const phoneRegex = /^08[0-9]{8,11}$/;
     if (!phoneRegex.test(phone)) {
       return false;
     } else {
       return true;
     }
-  };
+};
 
 
   const handleSubmit = async (event: any) => {

@@ -58,13 +58,13 @@ export default function RegisterPage() {
     setPhone(event.target.value);
   }
   const validatePhone = (phone: any) => {
-    const phoneRegex = /^[0-9]{10,13}$/;
+    const phoneRegex = /^08[0-9]{8,11}$/;
     if (!phoneRegex.test(phone)) {
       return false;
     } else {
       return true;
     }
-  };
+};
 
   const handleDocumentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
