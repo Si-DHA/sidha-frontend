@@ -50,20 +50,25 @@ export default function RegisterPage() {
   const handlePhoneChange = (event) => {
     setPhone(event.target.value);
   }
-  const validatePhone = (phone) => {
-    const phoneRegex = /^[0-9]{10,13}$/;
+
+  const validatePhone = (phone: any) => {
+    const phoneRegex = /^08[0-9]{8,11}$/;
     if (!phoneRegex.test(phone)) {
       return false;
     } else {
       return true;
     }
-  };
+};
+
 
   useEffect(() => {
     if (!isLoggedIn) {
       router.push('/login');
     }
     const role = Cookies.get('role');
+    if (role != 'ADMIN') {
+      router.push('/dashboard');
+    }
     setUserRole(role || '');
   },)
 
@@ -74,7 +79,7 @@ export default function RegisterPage() {
     try {
       event.preventDefault();
       if (!validatePhone(phone)) {
-        setAlert(<FailAlert key={Date.now()} message="Phone number must be between 10-13 digits" />);
+        setAlert(<FailAlert key={Date.now()} message="Nomor HP harus berawalan 08 dan memiliki 10-13 digit" />);
         return;
       }
       setIsLoading(true);
@@ -96,8 +101,10 @@ export default function RegisterPage() {
 
       if (data.statusCode == 201) {
         setIsLoading(false);
-
-        setAlert(<SuccessAlert key={Date.now()} message="Driver Account has been created" />);
+        setAlert(<SuccessAlert key={Date.now()} message="Akun Sopir berhasil dibuat" />);
+        setTimeout(() => {
+          router.push('/list-user?role=sopir');
+        }, 3000); 
       } else {
         setIsLoading(false);
         setAlert(<FailAlert key={Date.now()} message={`${data.message}`} />);
@@ -138,17 +145,29 @@ export default function RegisterPage() {
             </div>
             <div className="flex flex-col">
               <form onSubmit={handleSubmit} className="">
+              <div className="label">
+                <span className="label-text">Nama</span>
+              </div>
                 <label className="input input-bordered flex items-center gap-2 m-2 p-3">
-                  <input type="text" className="grow" placeholder="Full Name" value={name} onChange={handleNameChange} required />
+                  <input type="text" className="grow" placeholder="Budi Firmansyah" value={name} onChange={handleNameChange} required />
                 </label>
+                <div className="label">
+                <span className="label-text">Email</span>
+              </div>
                 <label className="input input-bordered flex items-center gap-2 m-2 p-3">
-                  <input type="email" className="grow" placeholder="Email" value={email} onChange={handleEmailChange} required />
+                  <input type="email" className="grow" placeholder="abc@def.com" value={email} onChange={handleEmailChange} required />
                 </label>
+                <div className="label">
+                <span className="label-text">Alamat Lengkap</span>
+              </div>
                 <label className="input input-bordered flex items-center gap-2 m-2 p-3">
-                  <input type="text" className="grow" placeholder="Address" value={address} onChange={handleAddressChange} required />
+                  <input type="text" className="grow" placeholder="Jalan Manggis Depok 12111 " value={address} onChange={handleAddressChange} required />
                 </label>
+                <div className="label">
+                <span className="label-text">Nomor HP</span>
+              </div>
                 <label className="input input-bordered flex items-center gap-2 m-2 p-3">
-                  <input type="text" className="grow" placeholder="Phone" value={phone} min={10} max={13} onChange={handlePhoneChange} required />
+                  <input type="text" className="grow" placeholder="08xxxxxxxxxx" value={phone} min={10} max={13} onChange={handlePhoneChange} required />
                 </label>
 
 
