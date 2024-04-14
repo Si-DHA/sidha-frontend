@@ -79,6 +79,10 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
   }
 
 
+    const handleRowClickOrder = (idOrder: any) => {
+      router.push(`order/detail?id=${idOrder}`);
+    }
+
     return page.map((row:any, index) => {
       prepareRow(row);
       return (
@@ -94,6 +98,8 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
             } else if (type === "kontrak"){
               handleRowClickKontrak(row.original.userId);
             
+            } else if (type === 'order') {
+              handleRowClickOrder(row.original.idOrder);
             }
           }}
           key={index}>
