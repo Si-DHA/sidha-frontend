@@ -1,9 +1,8 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const viewInvoice = async (idInvoice: String): Promise<any> => {
+export const viewAllSopir= async (): Promise<any> => {
     try {
-        const url = `${BASE_URL}/invoice/order/${idInvoice}`;
-        const response = await fetch(url, {
+        const response = await fetch(BASE_URL+'/user/sopir', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -16,9 +15,8 @@ export const viewInvoice = async (idInvoice: String): Promise<any> => {
         if (response.ok) {
             return responseData;
         } else {
-            throw new Error(responseData.message);
+            return [];
         }
-
     } catch (error: any) {
         throw new Error(error.message);
     }
