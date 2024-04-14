@@ -2,17 +2,20 @@ import Drawer from "@/app/components/common/drawer";
 import Footer from "@/app/components/common/footer";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Cookies from 'js-cookie';
 
 const PurchaseOrderDetail = () => {
 
-    var isLoggedIn = true
-    const userRole = 'KARYAWAN'
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
     const router = useRouter();
 
     useEffect(() => {
         if (!isLoggedIn) {
             router.push('/login');
         }
+        const role = Cookies.get('role');
+        setUserRole(role || '');
     },)
 
     const [modal, setModal]:any = useState(null);
@@ -38,10 +41,9 @@ const PurchaseOrderDetail = () => {
             <dialog id="modal_confirm" className="modal">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">Checkout</h3>
-                    <p className="py-4">'Apakah Anda yakin ingin checkout Purchase Order ini?</p>
+                    <p className="py-4">Apakah Anda yakin ingin checkout Purchase Order ini?</p>
                     <div className="modal-action">
                         <form method="dialog" className='space-x-4'>
-                            {/* if there is a button in form, it will close the modal */}
                             <button className="btn px-8">Batal</button>
                             <button className="btn btn-error px-6" onClick={handleCheckout}>Checkout Sekarang</button>
                         </form>
@@ -49,8 +51,9 @@ const PurchaseOrderDetail = () => {
                 </div>
             </dialog>
             <Drawer userRole={userRole}>
-                <div className="flex flex-col justify-center items-center mih-h-screen p-8">
+                <div className="flex flex-col gap-2 justify-center items-center mih-h-screen p-8">
                     <h1 className="text-3xl font-bold text-center ">Detail Purchase Order</h1>
+                    <h2 className="text-l text-center ">Tanggal Pengiriman: 12/12/2021</h2>
                 </div>
                 <div className="flex flex-col gap-6 mx-4 my-4 ">
                     <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">

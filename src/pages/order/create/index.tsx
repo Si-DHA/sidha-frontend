@@ -4,28 +4,47 @@ import Cookies from 'js-cookie';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import PurchaseOrderForm from "./PurchaseOrderForm";
+import { PurchaseOrder } from "@/pages/order/model";
 
 const CreatePurchaseOrderPage = () => {
 
-    var isLoggedIn = true
-    const userRole = 'KARYAWAN'
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
     const router = useRouter();
+    const [formData, setFormData] = useState([
+        {
+            id: '',
+            createdAt: '',
+            orderItems: [],
+            totalPrice: 0,
+            tanggalPengiriman: '',
+            klien: ''
+        } as PurchaseOrder
+    ] as PurchaseOrder[]);
 
     useEffect(() => {
         if (!isLoggedIn) {
             router.push('/login');
         }
+        const role = Cookies.get('role');
+        setUserRole(role || '');
     },)
 
-    const [numberOfForms, setNumberOfForms] = useState(1);
 
     const handleAddPurchaseOrder = () => {
-        setNumberOfForms(prevCount => prevCount + 1);
+        setFormData([...formData, {
+            id: '',
+            createdAt: '',
+            orderItems: [],
+            totalPrice: 0,
+            tanggalPengiriman: '',
+            klien: ''
+        } as PurchaseOrder]);
     }
 
     const BtnAddPurchaseOrder = () => {
         return (
-            <button className="btn" onClick={handleAddPurchaseOrder}>Tambah Order Item</button>
+            <div className="btn" onClick={handleAddPurchaseOrder}>Tambah Order Item</div>
         );
     }
 
@@ -50,21 +69,23 @@ const CreatePurchaseOrderPage = () => {
                 <div className="flex flex-col justify-center items-center mih-h-screen p-8">
                     <h1 className="text-3xl font-bold text-center ">Buat Purchase Order</h1>
                 </div>
-                <div className="flex flex-col gap-6 mx-4 my-4 ">
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text">Tanggal Pengiriman</span>
-                        </label>
-                        <input type="date" required className="input input-bordered" onChange={handleDateChange} />
-                        {errorDate && <div className="text-sm text-red-500">{errorDate}</div>}
-                    </div>
+                <div className="flex flex-col gap-6 mx-4 my-4 " onSubmit={handleDetailOrder}>
+                    <form className="form-control flex flex-col gap-6">
 
+                        <div className="flex flex-col w-full">
+                            <label className="label">
+                                <span className="label-text">Tanggal Pengiriman</span>
+                            </label>
+                            <input type="date" required className="input input-bordered" onChange={handleDateChange} />
+                            {errorDate && <div className="text-sm text-red-500">{errorDate}</div>}
+                        </div>
 
-                    {[...Array(numberOfForms)].map((_, index) => (
-                        <PurchaseOrderForm key={index} index={index} />
-                    ))}
-                    <BtnAddPurchaseOrder />
-                    <button className="btn btn-primary" onClick={handleDetailOrder}>Lihat Rincian Order</button>
+                        {[...Array(formData.length)].map((_, index) => (
+                            <PurchaseOrderForm key={index} index={index} />
+                        ))}
+                        <BtnAddPurchaseOrder />
+                        <button className="btn btn-primary" type="submit">Lihat Rincian Order</button>
+                    </form>
                 </div>
             </Drawer>
             <Footer />
