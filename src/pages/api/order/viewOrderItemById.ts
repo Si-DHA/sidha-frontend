@@ -1,34 +1,25 @@
 import { BASE_URL } from '@/app/constant/constant';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { idOrderItem } = req.query;
-
-  if (req.method === 'GET' && idOrderItem) {
+export const viewOrderItemById = async (idOrderItem: String): Promise<any> => {
     try {
-      const endpoint = BASE_URL + `/order/order-item/${idOrderItem}`;
+        const url = `${BASE_URL}/order/order-item/${idOrderItem}`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        });
 
-      const response = await fetch(endpoint, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      });
+        const responseData = await response.json();
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        return res.status(response.status).json({ message: errorData.message || 'Failed to get order' });
-      }
+        if (response.ok) {
+            return responseData;
+        } else {
+            throw new Error(responseData.message);
+        }
 
-      const data = await response.json();
-      return res.status(200).json(data);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      return res.status(500).json({ message });
+    } catch (error: any) {
+        throw new Error(error.message);
     }
-  } else {
-    res.setHeader('Allow', ['GET']);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
+};
