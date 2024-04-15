@@ -4,13 +4,16 @@ import Cookies from 'js-cookie';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Order, OrderItem, Rute } from "../model";
-import { daftarRute, tipeBarang, tipeTruk } from "../data";
+import { tipeBarang, tipeTruk } from "../data";
+import { getPossibleRute } from "@/pages/api/order/getPossibleRute";
 
 const CreatePurchaseOrderPage = () => {
 
     var userId = Cookies.get('userId');
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
+    const [possibleRute, setPossibleRute] = useState([] as string[][]);
+    const [error, setError] = useState('' as string);
     const router = useRouter();
 
     useEffect(() => {
@@ -19,6 +22,19 @@ const CreatePurchaseOrderPage = () => {
         }
         const role = Cookies.get('role');
         setUserRole(role || '');
+
+        const fetchData = async () => {
+            try {
+                if (!userId) {
+                    throw new Error('User ID not found');
+                }
+                const response = await getPossibleRute(userId);
+                setPossibleRute(response);
+            } catch (error: any) {
+                setError(error.message);
+            }
+        }
+        fetchData();
     },)
 
     const [order, setOrder] = useState<Order>({
@@ -27,6 +43,7 @@ const CreatePurchaseOrderPage = () => {
         orderItems: []
     } as Order
     );
+
 
     const [orderItem, setOrderItem] = useState([
         {
@@ -188,7 +205,7 @@ const CreatePurchaseOrderPage = () => {
                             </div> : null}
                             <select className="select select-bordered grow" onChange={(e) => handleOnChangeSourceAndDestination(e, orderItemIndex, ruteIndex)}>
                                 <option disabled selected>Pilih satu</option>
-                                {daftarRute.map((rute, index) => (
+                                {possibleRute.map((rute, index) => (
                                     <option key={index}>{rute[0]} - {rute[1]}</option>
                                 ))}
                             </select>
