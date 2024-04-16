@@ -1,5 +1,6 @@
 import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
+import Drawer from "@/app/components/common/drawer";
+import Cookies from "js-cookie";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
 import { useState, useEffect } from "react";
@@ -12,6 +13,22 @@ const CreateTrukPage = () => {
     const [error, setError] = useState('');
     const [sopirData, setSopirData] = useState([]); // State to hold truck data
     const [alert, setAlert] = useState(null);
+
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        if (role === 'ADMIN') {
+            setUserRole(role);
+        } else {
+            setError('You are not allowed to access this page');
+        }
+
+    }, [isLoggedIn, router])
 
     useEffect(() => {
 
@@ -82,123 +99,125 @@ const CreateTrukPage = () => {
         <main
             className={`flex min-h-screen flex-col items-center justify-between`} data-theme="cmyk"
         >
-            <Navbar />
-            <div className="flex flex-row">
-                {alert}
-            </div>
-            <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box">
-                    <h3 className="font-bold text-lg">Create</h3>
-                    <p className="py-4">Are you sure your data is correct?</p>
-                    <div className="modal-action">
-                        <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
-                        <button className="btn btn-success" onClick={() => { handleCreate(); document.getElementById('my_modal_5').close(); }}>Create</button>
-                    </div>
-
+            <Drawer userRole={userRole}>
+                <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
+                    {alert}
                 </div>
-            </dialog>
-            <div className="flex flex-row gap-y-12 gap-x-12">
-                <div className="flex flex-col grow justify-center align-center ">
-                    <div className="card w-96 bg-base-100 shadow-md">
-                        {/* <div className="avatar justify-center">
-                        </div> */}
-                        <div className="card-body">
-                            <h1 className="font-bold">Nomor Polisi</h1>
-                            <input required id="licensePlate" className="input input-bordered flex items-center gap-2 grow" type="text" placeholder="B 1234 ABC" />
-                            <h1 className="font-bold">Tipe Truk</h1>
-                            <select id="type" className="input input-bordered flex items-center gap-2 grow">
-                                <option value="CDD">CDD</option>
-                                <option value="CDL">CDL</option>
-                                <option value="Fuso">Fuso</option>
-                                <option value="Wingbox">Wingbox</option>
-                            </select>
-                            <h1 className="font-bold">Sopir</h1>
-                            <select id="idSopir" className="input input-bordered flex items-center gap-2 grow">
-                                <option value='0'>-</option>
-                                {sopirData.map((sopir) => (
-                                    <option key={sopir['id']} value={sopir['id']}>{sopir['name']}</option>
-                                ))}
-                            </select>
+                {error ? (
+                    <div className="mx-auto my-auto">Error: {error}</div>
+                ) : (
+                    <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+                        <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+                            <div className="modal-box">
+                                <h3 className="font-bold text-lg">Create</h3>
+                                <p className="py-4">Are you sure your data is correct?</p>
+                                <div className="modal-action">
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
+                                    <button className="btn btn-success" onClick={() => { handleCreate(); document.getElementById('my_modal_5').close(); }}>Create</button>
+                                </div>
+
+                            </div>
+                        </dialog>
+                        <div className="flex flex-col grow justify-center align-center ">
+                            <div className="card w-96 bg-base-100 shadow-md">
+                                <div className="card-body">
+                                    <h1 className="font-bold">Nomor Polisi</h1>
+                                    <input required id="licensePlate" className="input input-bordered flex items-center gap-2 grow" type="text" placeholder="B 1234 ABC" />
+                                    <h1 className="font-bold">Tipe Truk</h1>
+                                    <select id="type" className="input input-bordered flex items-center gap-2 grow">
+                                        <option value="CDD">CDD</option>
+                                        <option value="CDL">CDL</option>
+                                        <option value="Fuso">Fuso</option>
+                                        <option value="Wingbox">Wingbox</option>
+                                    </select>
+                                    <h1 className="font-bold">Sopir</h1>
+                                    <select id="idSopir" className="input input-bordered flex items-center gap-2 grow">
+                                        <option value='0'>-</option>
+                                        {sopirData.map((sopir) => (
+                                            <option key={sopir['id']} value={sopir['id']}>{sopir['name']}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="flex flex-col">
-                    <div className="card w-1600 bg-base-100 shadow-md">
+                        <div className="flex flex-col">
+                            <div className="card w-1600 bg-base-100 shadow-md">
 
-                        <div className="card-body ">
-                            <h1 className="font-bold">Data Truk</h1>
-                            <table className="table text-left" >
-                                <tbody>
-                                    <tr>
-                                        <td>Merk</td>
-                                        <td><label className="input input-bordered flex items-center gap-2">
-                                            <input required id="merk" type="text" className="grow" placeholder="Mitsubishi Fe 75" />
-                                        </label></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Kubikasi Box</td>
-                                        <td><label className="input input-bordered flex items-center gap-2">
-                                            <input required id="kubikasiBox" type="number" className="grow" placeholder="20 (dalam meter kubik)" />
-                                        </label></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Panjang Box</td>
-                                        <td><label className="input input-bordered flex items-center gap-2">
-                                            <input required id="panjangBox" type="number" className="grow" placeholder="20 (dalam meter)" />
-                                        </label></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Lebar Box</td>
-                                        <td><label className="input input-bordered flex items-center gap-2">
-                                            <input required id="lebarBox" type="number" className="grow" placeholder="20 (dalam meter)" />
-                                        </label></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tinggi Box</td>
-                                        <td><label className="input input-bordered flex items-center gap-2">
-                                            <input required id="tinggiBox" type="number" className="grow" placeholder="20 (dalam meter)" />
-                                        </label></td>
-                                    </tr>
+                                <div className="card-body ">
+                                    <h1 className="font-bold">Data Truk</h1>
+                                    <table className="table text-left" >
+                                        <tbody>
+                                            <tr>
+                                                <td>Merk</td>
+                                                <td><label className="input input-bordered flex items-center gap-2">
+                                                    <input required id="merk" type="text" className="grow" placeholder="Mitsubishi Fe 75" />
+                                                </label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Kubikasi Box</td>
+                                                <td><label className="input input-bordered flex items-center gap-2">
+                                                    <input required id="kubikasiBox" type="number" className="grow" placeholder="20 (dalam meter kubik)" />
+                                                </label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Panjang Box</td>
+                                                <td><label className="input input-bordered flex items-center gap-2">
+                                                    <input required id="panjangBox" type="number" className="grow" placeholder="20 (dalam meter)" />
+                                                </label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Lebar Box</td>
+                                                <td><label className="input input-bordered flex items-center gap-2">
+                                                    <input required id="lebarBox" type="number" className="grow" placeholder="20 (dalam meter)" />
+                                                </label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Tinggi Box</td>
+                                                <td><label className="input input-bordered flex items-center gap-2">
+                                                    <input required id="tinggiBox" type="number" className="grow" placeholder="20 (dalam meter)" />
+                                                </label></td>
+                                            </tr>
 
-                                </tbody>
-                            </table>
+                                        </tbody>
+                                    </table>
 
-                            <h1 className="font-bold">Data Surat</h1>
+                                    <h1 className="font-bold">Data Surat</h1>
 
-                            <table className="table text-left">
+                                    <table className="table text-left">
 
-                                <tbody>
-                                    <tr>
-                                        <td>Masa Berlaku KIR</td>
-                                        <td><label className="input input-bordered flex items-center gap-2">
-                                            <input required id="expiredKir" type="date" className="grow" placeholder="" />
-                                        </label></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Nama di STNK</td>
-                                        <td><label className="input input-bordered flex items-center gap-2">
-                                            <input required id="stnkName" type="text" className="grow" placeholder="John Doe" />
-                                        </label></td>
-                                    </tr>
+                                        <tbody>
+                                            <tr>
+                                                <td>Masa Berlaku KIR</td>
+                                                <td><label className="input input-bordered flex items-center gap-2">
+                                                    <input required id="expiredKir" type="date" className="grow" placeholder="" />
+                                                </label></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Nama di STNK</td>
+                                                <td><label className="input input-bordered flex items-center gap-2">
+                                                    <input required id="stnkName" type="text" className="grow" placeholder="John Doe" />
+                                                </label></td>
+                                            </tr>
 
-                                </tbody>
+                                        </tbody>
 
-                            </table>
-                            <div className="flex flex-row justify-center align-middle">
-                                <button onClick={() => document.getElementById('my_modal_5').showModal()}
-                                    className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" type="submit">Create</button>
+                                    </table>
+                                    <div className="flex flex-row justify-center align-middle">
+                                        <button onClick={() => document.getElementById('my_modal_5').showModal()}
+                                            className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" type="submit">Create</button>
+                                    </div>
+
+
+                                </div>
+
+
                             </div>
 
 
                         </div>
-
-
                     </div>
-
-
-                </div>
-            </div>
-
+                )}
+            </Drawer>
 
             <Footer />
         </main>
