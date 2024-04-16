@@ -11,7 +11,7 @@ import Cookies from 'js-cookie'
 import { BASE_URL } from "@/app/constant/constant";
 import { useRouter } from "next/router";
 import Drawer from "@/app/components/common/drawer";
-
+import Link from 'next/link';
 
 
 
@@ -29,6 +29,8 @@ export default function ProfilePage() {
   const [errors, setErrors] = useState({});
   const [phoneError, setPhoneError] = useState("");
   const [positionError, setPositionError] = useState("");
+  const [imageUrl, setImageUrl] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   var isLoggedIn = Cookies.get('isLoggedIn');
   const [userRole, setUserRole] = useState('');
@@ -58,7 +60,7 @@ export default function ProfilePage() {
   };
 
   const validatePhone = (phone: any) => {
-    const phoneRegex = /^[0-9]{10,13}$/;
+    const phoneRegex = /^08[0-9]{8,11}$/;
     if (!phoneRegex.test(phone)) {
       return false;
     } else {
@@ -96,15 +98,20 @@ export default function ProfilePage() {
 
   const handleUpdateProfile = async (userId: any) => {
     if (!validate()) {
+      setIsLoading(false);
       setAlert(<FailAlert key={Date.now()} message="Mohon pastikan data diisi dengan benar" />);
       return;
     }
     if (!validatePhone(phone)) {
-      setAlert(<FailAlert key={Date.now()} message="Nomor telepon harus berupa angka dan mempunyai 10-13 digit" />);
+      setIsLoading(false);
+
+      setAlert(<FailAlert key={Date.now()} message="Nomor telepon harus berupa angka, berawalan 08,  dan mempunyai 10-13 digit" />);
       return;
     }
 
     if (!validatePosition(position)) {
+      setIsLoading(false);
+
       setAlert(<FailAlert key={Date.now()} message="Jabatan tidak boleh kosong" />);
       return;
     }
@@ -119,8 +126,13 @@ export default function ProfilePage() {
     fetch(BASE_URL + `/user/${id}`)
       .then(response => {
         if (!response.ok) {
+          setIsLoading(false);
+
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+        setIsLoading(false);
+
+        setImageUrl(BASE_URL + `/image/file/${id}`);
         return response.json();
       })
       .then(data => {
@@ -139,6 +151,7 @@ export default function ProfilePage() {
 
   async function updateProfile(name: string, address: string, position: string, phone: string, userId: string) {
     try {
+      setIsLoading(true);
       const formData = new FormData();
       formData.append('name', name);
       formData.append('address', address);
@@ -152,14 +165,20 @@ export default function ProfilePage() {
 
       const hasilUpdate = await responseUpdate.json();
       if (hasilUpdate.statusCode == 200) {
-        setAlert(<SuccessAlert key={Date.now()} message="Profile updated successfully" />);
-        // redirect to profile page
+        setIsLoading(false);
+        setAlert(<SuccessAlert key={Date.now()} message="Informasi profil berhasil diperbaharui !" />);
+        setTimeout(() => {
+          router.push('/profile');
+        }, 3000);
 
       } else {
+        setIsLoading(false);
         setAlert(<FailAlert key={Date.now()} message={`${data.message}`} />);
       }
 
     } catch (error) {
+      setIsLoading(false);
+
       setAlert(<FailAlert key={Date.now()} message={`${error.message}`} />);
 
     }
@@ -167,128 +186,136 @@ export default function ProfilePage() {
 
   return (
     <main
-      className={`flex flex-col items-center justify-center align-middle min-h-screen ${inter.className}`} data-theme="cmyk"
+      className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk"
     >
       <Drawer userRole={userRole}>
-       
-        <div className="hero flex flex-col align-middle min-h-screen mx-auto">
-        <div className="flex flex-row">
+
+        <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
           {alert}
         </div>
 
-          <div className="flex flex-row gap-y-12 gap-x-12">
-            <div className=" flex md:flex-col sm:flex-row grow justify-center align-center ">
-              <div className="card w-96 bg-base-100 shadow-md">
-                <div className="avatar justify-center">
-                  <div className="w-24 rounded-full flex">
-                    <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                  </div>
-                </div>
-                <div className="card-body items-center text-center">
-                  <h2 className="card-title">{userData.name} </h2>
-                  <div className="flex flex-col  justify-center flex-wrap gap-y-4">
+        <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
 
-                    <label className="form-control w-full max-w-xs">
-                      <div className="label">
-                        <span className="label-text">Ganti foto Profil Anda</span>
-                        <span className="label-text-alt">.jpg/.jpeg/.png</span>
-                      </div>
-                      <input type="file" accept="image/*" className="file-input file-input-bordered w-full max-w-xs" />
-                      <div className="label">
-                        <span className="label-text-alt">max. size</span>
-                        <span className="label-text-alt">10Mb</span>
-                      </div>
-                    </label>
-
-                  </div>
-
+          <div className=" flex md:flex-col sm:flex-row  justify-center ">
+            <div className="hidden sm:card  w-96 bg-base-100 shadow-md">
+              <div className="avatar justify-center">
+                <div className="w-24 rounded-full flex">
+                  <img src={imageUrl} onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "https://i.pinimg.com/736x/0d/64/98/0d64989794b1a4c9d89bff571d3d5842.jpg"
+                  }} />
                 </div>
               </div>
+              <div className="card-body items-center text-center">
+                <h2 className="card-title pb-4">{name} </h2>
+                <div className="flex flex-col  justify-center items-center flex-wrap gap-y-4">
+
+                  <div className="card-actions">
+                    <button className="btn btn-sm">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+                      </svg>
+                      <Link href="/profile/edit/photo">Ganti Foto Profil</Link>
+
+                    </button>
+                  </div>
+                  <div className="card-actions">
+                    <button className="btn btn-sm">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+                      </svg>
+                      <Link href="/profile/ganti-password">Ganti Password</Link>
+
+                    </button>
+                  </div>
+                </div>
+
+              </div>
             </div>
-            <div className="flex flex-col">
-              <div className="card w-1600 bg-base-100 shadow-md">
+          </div>
+          <div className="flex flex-col">
+            <div className="card  bg-base-100 shadow-md">
 
-                <div className="card-body ">
-                  <h1 className="font-bold">Data Diri</h1>
-                  <table className="table text-left" >
-                    {/* head */}
+              <div className="card-body ">
+                <h1 className="font-bold text-[21px]">Data Diri</h1>
+                <table className="table text-left" >
+                  {/* head */}
 
-                    <tbody>
-                      {/* row 1 */}
+                  <tbody>
+                    {/* row 1 */}
+                    <tr>
+                      <td className="font-semibold">Nama</td>
+                      <td><label className="input input-bordered flex items-center gap-2">
+                        <input type="text" className="grow" placeholder="Isi nama lengkap anda" value={name} onChange={handleNameChange} />
+                      </label></td>
+                    </tr>
+                    <tr className="">
+                      <td className="font-semibold italic">Username</td>
+                      <td>{userData.username}</td>
+                    </tr>
+
+                    {userData.role === 'KLIEN' && (
                       <tr>
-                        <td>Name</td>
+                        <td className="font-semibold">Nama Perusahaan</td>
+                        <td>{userData.companyName}</td>
+                      </tr>
+                    )}
+
+                    {userData.role === 'KARYAWAN' && (
+                      <tr>
+                        <td className="font-semibold">Jabatan</td>
                         <td><label className="input input-bordered flex items-center gap-2">
-                          <input type="text" className="grow" placeholder="Isi nama lengkap anda" value={name} onChange={handleNameChange} />
+                          <input type="text" className="grow" placeholder="Isi jabatan Anda" value={position} onChange={handlePositionChange} />
                         </label></td>
                       </tr>
-                      <tr className="">
-                        <td>Username</td>
-                        <td>{userData.username}</td>
-                      </tr>
 
-                      {userData.role === 'KLIEN' && (
-                        <tr>
-                          <td>Company Name</td>
-                          <td>{userData.companyName}</td>
-                        </tr>
-                      )}
+                    )}
 
-                      {userData.role === 'KARYAWAN' && (
-                        <tr>
-                          <td>Position</td>
-                          <td><label className="input input-bordered flex items-center gap-2">
-                            <input type="text" className="grow" placeholder="Isi jabatan Anda" value={position} onChange={handlePositionChange} />
-                          </label></td>
-                        </tr>
+                    <tr>
+                      <td className="font-semibold">Alamat</td>
+                      <td> <label className="input input-bordered flex items-center gap-2 ">
+                        <input type="text" className="grow" placeholder="Isi alamat lengkap Anda" value={address} onChange={handleAddressChange} />
+                      </label></td>
+                    </tr>
+                  </tbody>
+                </table>
 
-                      )}
+                <h1 className="font-bold text-[21px] pt-4">Kontak</h1>
 
-                      <tr>
-                        <td>Address</td>
-                        <td> <label className="input input-bordered flex items-center gap-2 ">
-                          <input type="text" className="grow" placeholder="Isi alamat lengkap Anda" value={address} onChange={handleAddressChange} />
-                        </label></td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <h1 className="font-bold">Kontak</h1>
-
-                  <table className="table text-left">
-                    {/* head */}
-
-                    <tbody>
-                      {/* row 1 */}
-                      <tr>
-                        <td>Email</td>
-                        <td>{userData.email}</td>
-                      </tr>
-                      <tr className="">
-                        <td>Phone</td>
-                        <td>
-                          <label className="input input-bordered flex items-center gap-2 ">
-
-                            <input type="text" className="grow" placeholder="Isi nomor Whatsapp Anda" value={phone} onChange={handlePhoneChange} minLength={11} maxLength={13} />
-                          </label>
-                        </td>
-                      </tr>
-
-                    </tbody>
-
-                  </table>
-                  <div className="flex flex-row justify-center align-middle">
-                    <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => handleUpdateProfile(userId)}>Edit </button>
-
-                  </div>
+                <table className="table text-left">
 
 
+                  <tbody>
+
+                    <tr>
+                      <td className="font-semibold">Email</td>
+                      <td>{userData.email}</td>
+                    </tr>
+
+                    <tr className="">
+                      <td className="font-semibold">Nomor HP</td>
+                      <td>
+                        <label className="input input-bordered flex items-center gap-2 ">
+
+                          <input type="text" className="grow" placeholder="Isi nomor Whatsapp Anda" value={phone} onChange={handlePhoneChange} minLength={11} maxLength={13} />
+                        </label>
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+
+                <div className="flex flex-row justify-center align-middle">
+                  <div className="btn btn-secondary" onClick={() => handleUpdateProfile(userId)}>
+                    {isLoading ? <span className="loading loading-dots loading-lg"></span> : "Ubah Profil"} </div>
                 </div>
-
 
               </div>
 
 
             </div>
+
+
           </div>
         </div>
       </Drawer>

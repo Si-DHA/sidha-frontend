@@ -15,6 +15,7 @@ const TrukPage: React.FC = () => {
         const fetchData = async () => {
             try {
                 const trukDataResponse = await viewAllTruk();
+                console.log(trukDataResponse);
                 if (trukDataResponse) {
                     setTrukData(trukDataResponse['content']);
                 }
@@ -55,7 +56,7 @@ const TrukPage: React.FC = () => {
 
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
+        <main className="flex  flex-col items-center justify-between" data-theme="winter">
             <Navbar />
             <h1 className="card-title">List Truk DHA</h1>
             {error ? (

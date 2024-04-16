@@ -16,8 +16,13 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.pdf$/,
+      use: 'raw-loader',
+    });
+
+    return config;
   },
 };
 

@@ -28,4 +28,5 @@ const setLogin = (data: any) => {
     Cookies.set("token", data.content.token);
     Cookies.set("role", data.content.user.role);
     Cookies.set('isLoggedIn', 'true');
+    Cookies.set('name', data.content.user.name);
 }

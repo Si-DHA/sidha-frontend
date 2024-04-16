@@ -75,6 +75,7 @@ const CreatePenawaranHarga = () => {
             if (response.ok) {
                 const responseData = await response.json();
                 const idPenawaranHarga = responseData.idPenawaranHarga;
+                
                 setAlert(<SuccessAlert message="Penawaran Harga berhasil dibuat." />);
                 router.push(`/penawaranharga/${idPenawaranHarga}/create`);
             } else {
