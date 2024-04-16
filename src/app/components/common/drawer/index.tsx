@@ -18,8 +18,8 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
             <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
             <ul className="menu p-4 w-80 min-h-full bg-base-200">
               <ul className="menu bg-base-200 w-56 rounded-box">
-              <li>
-                  <h2 className="menu-title text-neutral"><a>Daftar Akun</a></h2>
+                <li>
+                  <h2 className="menu-title text-neutral"><a>Data Akun</a></h2>
                   <ul>
                     <li><Link href="/list-user?role=klien">Daftar Klien</Link></li>
                   </ul>
@@ -35,6 +35,12 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                 </li>
 
                 <li>
+                  <h2 className="menu-title text-neutral"><a>Data Truk</a></h2><ul>
+                    <li><Link href="/truk">Daftar Truk</Link></li>
+                  </ul>
+                </li>
+
+                <li>
                   <h2 className="menu-title text-neutral"><a>Registrasi Akun</a></h2>
                   <ul>
                     <li><Link href="/register/karyawan">Registrasi Karyawan</Link></li>
@@ -42,14 +48,6 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
 
                   </ul>
                 </li>
-
-                <li>
-                  <h2 className="menu-title text-neutral"><Link href="/truk">Daftar Truk</Link></h2>
-                  <ul>
-                    <li><Link href="/truk/create">Tambah Truk</Link></li>
-                  </ul>
-                </li>
-
               </ul>
             </ul>
           </div>
@@ -197,16 +195,16 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                   <h2 className="menu-title text-neutral"><Link href="/truk">Daftar Truk</Link></h2>
                 </li>
                 <li>
-                <h2 className="menu-title text-neutral"><Link href="/insiden/sopir">Laporkan Insiden</Link></h2>
+                  <h2 className="menu-title text-neutral"><Link href="/insiden/sopir">Laporkan Insiden</Link></h2>
                 </li>
                 <li>
-                <h2 className="menu-title text-neutral"><Link href="/order/sopir">Order Anda</Link></h2>
+                  <h2 className="menu-title text-neutral"><Link href="/order/sopir">Order Anda</Link></h2>
                 </li>
                 <li>
-                <h2 className="menu-title text-neutral"><Link href="/tawarankerja/sopir">Lihat Tawaran Kerja</Link></h2>
+                  <h2 className="menu-title text-neutral"><Link href="/tawarankerja/sopir">Lihat Tawaran Kerja</Link></h2>
                 </li>
                 <li>
-                <h2 className="menu-title text-neutral"><Link href="/tawarankerja/sopir/listacceptedoffer">Tawaran Kerja Anda</Link></h2>
+                  <h2 className="menu-title text-neutral"><Link href="/tawarankerja/sopir/listacceptedoffer">Tawaran Kerja Anda</Link></h2>
                 </li>
               </ul>
             </ul>

@@ -92,17 +92,15 @@ const KonfirmasiPembayaranPage = () => {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="cmyk">
-            {/* <Navbar /> */}
-            {error ? (
-                <Drawer userRole={userRole}>
-                    <div>Error: {error}</div>
-                </Drawer>
-            ) : invoiceData && (
-                <Drawer userRole={userRole}>
-                    <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
-                        {alert}
-                    </div>
-                    <style jsx>{`
+            <Drawer userRole={userRole}>
+                <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
+                    {alert}
+                </div>
+                {error ? (
+                    <div className="mx-auto my-auto">Error: {error}</div>
+                ) : invoiceData && (
+                    <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+                        <style jsx>{`
                         .image-container {
                             padding-top:10px;
                             max-width: 200px;
@@ -116,7 +114,7 @@ const KonfirmasiPembayaranPage = () => {
                             height: 100%;
                         }
                     `}</style>
-                    <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+
                         <dialog id="my_modal_tolak" className="modal modal-bottom sm:modal-middle">
                             <div className="modal-box">
                                 <h3 className="font-bold text-lg mb-5">Tolak</h3>
@@ -247,9 +245,8 @@ const KonfirmasiPembayaranPage = () => {
                             </div>
                         </div>
                     </div>
-                </Drawer>
-            )
-            }
+                )}
+            </Drawer>
             <Footer />
         </main >
     );
