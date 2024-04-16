@@ -98,6 +98,10 @@ const OrderItemDetailPage = () => {
         }
     };
 
+    const formatPrice = (price: number): string => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+      };
+
     return (
         <main className="flex flex-col min-h-screen bg-white">
             <Drawer userRole={userRole}>
@@ -116,7 +120,9 @@ const OrderItemDetailPage = () => {
                                 </div>
                                 <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt className="text-sm font-medium text-gray-500">Lokasi</dt>
-                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{orderItemData['content']['price']}</dd>
+                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                        {formatPrice(orderItemData['content']['price'])}
+                                    </dd>
                                 </div>
                                 <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt className="text-sm font-medium text-gray-500">Status</dt>

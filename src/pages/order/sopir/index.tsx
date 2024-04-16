@@ -68,31 +68,36 @@ const ViewAllOrderItemsPage: React.FC = () => {
     fetchOrderItems();
   }, []);
 
-  // const handleEdit = (id: string) => {
-  //   router.push(`/uploadBuktiBongkarMuat/${id}`);
-  // };
+  const getStatusDescription = (status: number) => {
+    switch (status) {
+      case 0:
+        return 'Menunggu Konfirmasi Tawaran Kerja';
+      case 1:
+        return 'Menunggu Bukti Muat';
+      case 2:
+      case 3:
+        return 'Menunggu Bukti Bongkar';
+      case 4:
+        return 'Pengantaran Selesai';
+      default:
+        return 'Unknown Status';
+    }
+  };
 
   const columns = [
-    // {
-    //   Header: 'ID Order Item',
-    //   accessor: 'id',
-    // },
     {
-      Header: 'Price',
-      accessor: 'price',
+      Header: 'ID Order Item',
+      accessor: 'id',
     },
-    // {
-    //   Header: 'Status Order',
-    //   accessor: 'statusOrder',
-    // },
-    // {
-    //   Header: 'Alasan Penolakan',
-    //   accessor: 'alasanPenolakan',
-    // },
+    {
+      Header: 'Status Order',
+      accessor: 'statusOrder',
+      Cell: ({ value }) => getStatusDescription(value),
+    },
     {
       Header: 'Pecah Belah',
       accessor: 'isPecahBelah',
-      Cell: ({ value }) => (value ? 'Yes' : 'No'),
+      Cell: ({ value }) => (value ? 'Ya' : 'Bukan'),
     },
     {
       Header: 'Tipe Barang',
@@ -102,10 +107,11 @@ const ViewAllOrderItemsPage: React.FC = () => {
       Header: 'Tipe Truk',
       accessor: 'tipeTruk',
     },
-    // {
-    //   Header: 'Keterangan',
-    //   accessor: 'keterangan',
-    // },
+    {
+      Header: 'Keterangan',
+      accessor: 'keterangan',
+      Cell: ({ value }) => value ? value : 'Tidak ada keterangan',
+    },
     {
       Header: 'Rute',
       accessor: 'rute',
@@ -121,24 +127,24 @@ const ViewAllOrderItemsPage: React.FC = () => {
     },
     {
       Header: 'Bukti Bongkar Muat',
-      accessor: 'id',
       Cell: ({ row }) => (
-        <div className="flex space-x-4">
+        <div className="flex justify-center space-x-4">
           <button
-            onClick={() => router.push(`/order/sopir/upload-bukti-muat/${row.original.id}`)}
+            onClick={() => router.push(`/order/sopir/kelola-bukti-muat/${row.original.id}`)}
             className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-            Upload Bukti Muat
+            Kelola Bukti Muat
           </button>
           <button
-            onClick={() => router.push(`/order/sopir/upload-bukti-bongkar/${row.original.id}`)}
-            className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            disabled={!row.original.buktiMuat} // Disable button if buktiMuat is null
+            onClick={() => router.push(`/order/sopir/kelola-bukti-bongkar/${row.original.id}`)}
+            className={`px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${!row.original.buktiMuat ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            Upload Bukti Bongkar
+            Kelola Bukti Bongkar
           </button>
         </div>
       ),
-    },
+    },    
   ];
 
     return (
@@ -151,8 +157,6 @@ const ViewAllOrderItemsPage: React.FC = () => {
                     columns={columns}
                     loading={loading}
                     NoDataComponent={CustomNoDataComponent}
-                    // btnText="Buat Laporan" onClick={() => router.push(`/insiden/sopir/create`)}
-                    // type='insiden'
                 />
             </div>
             </Drawer>

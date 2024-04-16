@@ -90,55 +90,44 @@ const OrderItemPage = () => {
         setUserRole(role || '');
     },)
 
-    const handleBack = () => {
-        router.push('/order/klien');
-    };
-
-    const formatCurrency = (value: number) => {
-        return `Rp${new Intl.NumberFormat('id-ID').format(value)}`;
-    };
-
     const fetchOrderItem = async () => {
         setLoading(true);
         try {
-          const fetchUrl = `/api/order/viewAllOrderItemByIdOrder?idOrder=${idOrder}`;
-          const response = await fetch(fetchUrl);
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to fetch data');
-          }
-          const data = await response.json();
-          setOrderItem(data);
+            const fetchUrl = `/api/order/viewAllOrderItemByIdOrder?idOrder=${idOrder}`;
+            const response = await fetch(fetchUrl);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to fetch data');
+            }
+            const data = await response.json();
+            setOrderItem(data);
         } catch (error) {
-          console.error('Failed to fetch order item:', error);
+            console.error('Failed to fetch order item:', error);
         } finally {
-          setLoading(false);
+            setLoading(false);
         }
-      };
+    };
 
-      useEffect(() => {
+    useEffect(() => {
         if (idOrder) {
-          fetchOrderItem();
+            fetchOrderItem();
         }
-      }, [idOrder]);
+    }, [idOrder]);
+
+    const formatPrice = (price: number): string => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+    };
 
     const columns = [
-        // {
-        //   Header: 'ID Order Item',
-        //   accessor: 'id',
-        // },
+        {
+            Header: 'ID Order Item',
+            accessor: 'id',
+        },
         {
             Header: 'Price',
             accessor: 'price',
+            Cell: ({ value }) => formatPrice(value),
         },
-        // {
-        //   Header: 'Status Order',
-        //   accessor: 'statusOrder',
-        // },
-        // {
-        //   Header: 'Alasan Penolakan',
-        //   accessor: 'alasanPenolakan',
-        // },
         {
             Header: 'Pecah Belah',
             accessor: 'isPecahBelah',
@@ -152,10 +141,6 @@ const OrderItemPage = () => {
             Header: 'Tipe Truk',
             accessor: 'tipeTruk',
         },
-        // {
-        //   Header: 'Keterangan',
-        //   accessor: 'keterangan',
-        // },
         {
             Header: 'Rute',
             accessor: 'rute',
@@ -172,13 +157,7 @@ const OrderItemPage = () => {
         {
             Header: 'Kelola',
             Cell: ({ row }) => (
-                <div className="flex space-x-4">
-                    <button
-                        // onClick={() => router.push(`/order/sopir/upload-bukti-muat/${row.original.id}`)}
-                        className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                        Ubah Order
-                    </button>
+                <div className="flex justify-center space-x-4">
                     <button
                         onClick={() => router.push(`/order/klien/${idOrder}/${row.original.id}`)}
                         className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"

@@ -81,6 +81,10 @@ const ViewAllOrdersPage: React.FC = () => {
         fetchOrders();
     }, []);
 
+    const formatPrice = (price: number): string => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+    };
+
     const columns = [
         {
             Header: 'ID Order',
@@ -89,6 +93,7 @@ const ViewAllOrdersPage: React.FC = () => {
         {
             Header: 'Harga Total',
             accessor: 'totalPrice',
+            Cell: ({ value }) => formatPrice(value),
         },
         {
             Header: 'Tanggal Dibuat',
@@ -99,14 +104,18 @@ const ViewAllOrdersPage: React.FC = () => {
             accessor: 'updatedAt',
         },
         {
+            Header: 'Tanggal Pengiriman',
+            accessor: 'tanggalPengiriman',
+        },
+        {
             Header: 'Kelola',
             Cell: ({ row }) => (
-                <div className="flex space-x-4">
+                <div className="flex justify-center space-x-4">
                     <button
                         onClick={() => router.push(`/order/klien/${row.original.id}`)}
                         className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                        Lihat Daftar Order Item
+                        Lihat Order Item
                     </button>
                 </div>
             ),
@@ -123,7 +132,7 @@ const ViewAllOrdersPage: React.FC = () => {
                             columns={columns}
                             data={orders}
                             progressPending={loading}
-                            noDataComponent={<CustomNoDataComponent/>}
+                            noDataComponent={<CustomNoDataComponent />}
                         />
                     </div>
                 </div>
