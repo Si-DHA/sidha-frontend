@@ -213,16 +213,18 @@ const CreatePurchaseOrderPage = () => {
                                 <span className="label-text">Rute Pengiriman<span className="text-s text-red-500">*</span></span>
 
                             </div> : null}
-                            <select className="select select-bordered grow" onChange={(e) => handleOnChangeSourceAndDestination(e, orderItemIndex, ruteIndex)}>
+                            <select className="select select-bordered grow" onChange={(e) => handleOnChangeSourceAndDestination(e, orderItemIndex, ruteIndex)} defaultValue={orderItem[orderItemIndex].rute[ruteIndex].source}>
                                 <option disabled selected>Pilih satu</option>
                                 {possibleRute.map((rute, index) => (
-                                    <option key={index}>{rute}</option>
+                                    <option key={index}>
+                                        {rute}
+                                    </option>
                                 ))}
                             </select>
                         </div>
                         <div className="flex flex-row gap-4 ">
-                            <input type="text" className="input input-bordered grow" placeholder="Alamat Penjemputan" onChange={(e) => handleOnChangeAlamatPenjemputan(e, orderItemIndex, ruteIndex)} />
-                            <input type="text" className="input input-bordered grow" placeholder="Alamat Pengiriman" onChange={(e) => handleOnChangeAlamatPengiriman(e, orderItemIndex, ruteIndex)} />
+                            <input type="text" className="input input-bordered grow" placeholder="Alamat Penjemputan" onChange={(e) => handleOnChangeAlamatPenjemputan(e, orderItemIndex, ruteIndex)} defaultValue={orderItem[orderItemIndex].rute[ruteIndex].alamatPenjemputan}></input>
+                            <input type="text" className="input input-bordered grow" placeholder="Alamat Pengiriman" onChange={(e) => handleOnChangeAlamatPengiriman(e, orderItemIndex, ruteIndex)} defaultValue={orderItem[orderItemIndex].rute[ruteIndex].alamatPengiriman}></input>
                         </div>
                     </label>
                     {ruteIndex > 0 && (
@@ -244,17 +246,19 @@ const CreatePurchaseOrderPage = () => {
                         <span className="label-text">Tipe Barang<span className="text-s text-red-500">*</span></span>
 
                     </div>
-                    <select required className="select select-bordered" onChange={(e) => handleOnChangeTipeBarang(e, index)}>
-                        <option disabled selected>Pilih satu</option>
-                        {tipeBarang.map((tipe, index) => (
-                            <option key={index}>{tipe}</option>
+                    <select required className="select select-bordered" onChange={(e) => handleOnChangeTipeBarang(e, index)} defaultValue={orderItem[index].tipeBarang}>
+                        <option disabled>Pilih satu</option>
+                        {tipeBarang.map((tipe, idx) => (
+                            <option key={idx}>
+                                {tipe}
+                            </option>
                         ))}
                     </select>
                 </label>
                 <div className="form-control w-full">
                     <label className="label cursor-pointer">
                         <span className="label-text">Barang rentan pecah belah (fragile)?<span className="text-s text-red-500">*</span></span>
-                        <input type="checkbox" className="checkbox checkbox-primary" onChange={(e) => handleOnChangeIsPecahBelah(e, index)} />
+                        <input type="checkbox" className="checkbox checkbox-primary" onChange={(e) => handleOnChangeIsPecahBelah(e, index)} defaultValue={orderItem[index].isPecahBelah as unknown as string} />
                     </label>
                 </div>
                 <label className="form-control w-full">
@@ -262,10 +266,12 @@ const CreatePurchaseOrderPage = () => {
                         <span className="label-text">Tipe Truk<span className="text-s text-red-500">*</span></span>
 
                     </div>
-                    <select className="select select-bordered" required onChange={(e) => handleOnChangeTipeTruk(e, index)}>
+                    <select className="select select-bordered" required onChange={(e) => handleOnChangeTipeTruk(e, index)} defaultValue={orderItem[index].tipeTruk}>
                         <option disabled selected>Pilih satu</option>
                         {tipeTruk.map((tipe, index) => (
-                            <option key={index}>{tipe}</option>
+                            <option key={index} >
+                                {tipe}
+                            </option>
                         ))}
                     </select>
                 </label>
@@ -273,7 +279,7 @@ const CreatePurchaseOrderPage = () => {
                     <div className="label">
                         <span className="label-text">Keterangan</span>
                     </div>
-                    <textarea className="textarea textarea-bordered h-24" placeholder="Keterangan" onChange={(e) => handleOnChangeKeterangan(e, index)}>{orderItem[index].keterangan}</textarea>
+                    <textarea className="textarea textarea-bordered h-24" placeholder="Keterangan" onChange={(e) => handleOnChangeKeterangan(e, index)} defaultValue={orderItem[index].keterangan}></textarea>
                 </label>
                 {orderItem[index].rute.map((_, ruteIndex) => (
                     <RuteOrderForm key={ruteIndex} ruteIndex={ruteIndex} orderItemIndex={index} />
