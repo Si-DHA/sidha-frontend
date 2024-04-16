@@ -1,33 +1,32 @@
-
-// object
-export interface PurchaseOrder {
-    id: string;
-    createdAt: string;
-    orderItems: OrderItem[];
-    totalPrice: number;
+export interface Order {
+    klienId: string;
     tanggalPengiriman: string;
-    klien: string;
+    orderItems: OrderItem[];
 }
 
-// object
 export interface OrderItem {
-    id: string;
-    price: number;
-    statusOrder: number;
-    alasanPenolakan: string;
     isPecahBelah: boolean;
     tipeBarang: string;
     tipeTruk: string;
     keterangan: string;
-    ruteOrder: Rute[];
+    rute: Rute[];
 }
 
-// object
 export interface Rute {
-    id: string;
     source: string;
     destination: string;
-    alamatPenjemputan: string;
     alamatPengiriman: string;
-    price: number;
+    alamatPenjemputan: string;
+}
+
+export interface ConfirmOrder {
+    orderId: string;
+    karyawanId: string;
+    orderItems: OrderItemConfirm[];
+}
+
+export interface OrderItemConfirm {
+    orderItemId: string;
+    isAccepted: boolean;
+    rejectionReason: string;
 }
