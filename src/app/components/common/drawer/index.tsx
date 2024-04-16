@@ -117,7 +117,7 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                 <li>
                   <h2 className="menu-title text-neutral"><a>Dokumen Surat Kontrak</a></h2>
                   <ul>
-                    <li><Link href="/kontrak/daftar">Daftar  Kontrak Klien</Link></li>
+                    <li><Link href="/kontrak/daftar">Daftar Kontrak Klien</Link></li>
 
                   </ul>
                 </li>

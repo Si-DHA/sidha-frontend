@@ -55,15 +55,15 @@ const InvoiceDetailPage = () => {
         const mappedInvoiceData = mapInvoiceData(invoiceDataResponse['content']);
         setInvoiceData(mappedInvoiceData);
 
-        if (rawData?.invoice?.buktiDP == null) {
+        if (rawData?.invoice?.buktiDP == null || rawData?.invoice?.buktiDP.status < 1) {
           setStatus('Belum Bayar DP');
-        } else if (rawData?.invoice?.buktiDP != null && rawData?.invoice?.buktiPelunasan == null) {
+        } else if (rawData?.invoice?.buktiPelunasan == null || rawData?.invoice?.buktiPelunasan?.status < 1) {
           setStatus('DP sudah dibayar');
-        } else if (rawData?.invoice?.buktiDP != null && rawData?.invoice?.buktiPelunasan != null) {
+        } else {
           setStatus('Lunas');
         }
       } catch (error: any) {
-        router.push('/404');
+        
         setError(error.message);
       }
     };
