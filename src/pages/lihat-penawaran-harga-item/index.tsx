@@ -1,153 +1,240 @@
-import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
-import { Inter } from "next/font/google";
 import React, { useEffect, useState } from 'react';
-import { viewAllPenawaranHargaItem } from "../api/penawaran-harga-item/viewAllPenawaranHargaItem";
-import { getPenawaranHargaItemBySource } from "../api/penawaran-harga-item/getPenawaranHargaItemBySource";
+import { useRouter } from 'next/router';
+import Navbar from '@/app/components/common/navbar';
+import Footer from '@/app/components/common/footer';
+import DataTable from "@/app/components/common/datatable/DataTable";
+import { FiEdit, FiSave, FiTrash2 } from 'react-icons/fi';
+import { deletePenawaranHargaItem } from '@/pages/api/deletePenawaranHargaItem';
+import { updatePenawaranHargaItem } from '@/pages/api/updatePenawaranHargaItem';
 import Cookies from "js-cookie";
-import { useRouter } from "next/router";
 import Drawer from "@/app/components/common/drawer";
 
-
-const inter = Inter({ subsets: ["latin"] });
+interface Klien {
+  id: string;
+  companyName: string;
+}
 
 interface PenawaranHargaItem {
-    idPenawaranHargaItem: string;
-    source: string;
-    destination: string;
-    cddPrice: number;
-    cddLongPrice: number;
-    wingboxPrice: number;
-    fusoPrice: number;
+  idPenawaranHargaItem: string;
+  source: string;
+  destination: string;
+  cddPrice: number;
+  cddLongPrice: number;
+  wingboxPrice: number;
+  fusoPrice: number;
+  isEditing?: boolean;
 }
 
-const LihatPenawaranHargaItemPage = () => {
-    const [error, setError] = useState('');
-    const [penawaranHargaItemData, setPenawaranHargaItemData] = useState<PenawaranHargaItem[]>([]);
-    const [selectedSource, setSelectedSource] = useState('');
-    const [allSources, setAllSources] = useState<string[]>([]);
+const CustomNoDataComponent = () => (
+  <div style={{ padding: '24px' }}>
+    <span>No data available</span>
+  </div>
+);
 
-    var isLoggedIn = Cookies.get('isLoggedIn');
-    const [userRole, setUserRole] = useState('');
-    const router = useRouter();
-
-    useEffect(() => {
-        if (!isLoggedIn) {
-            router.push('/login');
-        }
-        const role = Cookies.get('role');
-        setUserRole(role || '');
-    },)
+const PenawaranHargaItemPage = () => {
+  const [kliens, setKliens] = useState<Klien[]>([]);
+  const [companyName, setCompanyName] = useState('');
+  const [items, setItems] = useState<PenawaranHargaItem[]>([]);
+  
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const [idPenawaranHarga, setIdPenawaranHarga] = useState<string | null>(null);
 
 
-    useEffect(() => {
-        fetchData(); // Call fetchData function when component mounts
-    }, []);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
-    const fetchData = async () => {
+  var isLoggedIn = Cookies.get('isLoggedIn');
+  const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    const fetchKliens = async () => {
         try {
-            const penawaranHargaItemDataResponse: PenawaranHargaItem[] = await viewAllPenawaranHargaItem(); // Explicitly define type
-            setPenawaranHargaItemData(penawaranHargaItemDataResponse);
-
-            // Extract unique sources and update the state
-            const uniqueSourcesSet = new Set(penawaranHargaItemDataResponse.map(item => item.source));
-            const uniqueSourcesArray: string[] = Array.from(uniqueSourcesSet); // Explicitly define type
-            setAllSources(uniqueSourcesArray);
-        } catch (error: any) {
-            setError(error.message);
+          const response = await fetch('/api/proxyKlien');
+          if (!response.ok) {
+            throw new Error('Failed to fetch kliens');
+          }
+          const { content } = await response.json();
+          setKliens(content);
+      
+          // Find the logged-in Klien and set the idPenawaranHarga
+          const loggedInKlien = content.find(klien => klien.id === Cookies.get('idUser'));
+          if (loggedInKlien && loggedInKlien.penawaranHarga) {
+            setIdPenawaranHarga(loggedInKlien.penawaranHarga.idPenawaranHarga);
+            setCompanyName(loggedInKlien.companyName || '');
+          }
+        } catch (error) {
+          console.error(error);
         }
-    };
+      };
+      
 
-    const handleSearch = async () => {
+    fetchKliens();
+  }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/login');
+    }
+    const role = Cookies.get('role');
+    setUserRole(role || '');
+  }, [])
+
+  const handleBack = () => {
+    router.push('/penawaranharga');
+  };
+
+  useEffect(() => {
+    if (idPenawaranHarga) {
+      (async () => {
+        setLoading(true);
         try {
-            if (selectedSource === 'All') {
-                fetchData(); // Fetch all data if "All" is selected
-            } else if (selectedSource) {
-                const penawaranHargaItemDataResponse = await getPenawaranHargaItemBySource(selectedSource);
-                setPenawaranHargaItemData(penawaranHargaItemDataResponse);
-            } else {
-                // Handle no source selected
-                setError('Please select a source.');
-            }
-        } catch (error: any) {
-            setError(error.message);
+          const fetchUrl = `/api/viewAllPenawaranHargaItem?idPenawaranHarga=${idPenawaranHarga}`;
+          const response = await fetch(fetchUrl);
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to fetch data');
+          }
+
+          const data: PenawaranHargaItem[] = await response.json();
+          setItems(data);
+        } catch (error) {
+          console.error('Failed to fetch Penawaran Harga items:', error);
+        } finally {
+          setLoading(false);
         }
-    };
+      })();
+    }
+  }, [idPenawaranHarga]);
 
-    return (
-        <main className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk">
-            <Drawer userRole={userRole}>
-                <div className="flex-1 py-6 px-4">
-                    <div className="container mx-auto">
-                        <div className="text-center lg:text-left">
-                            <h1 className="text-3xl font-bold">Daftar Penawaran Harga Item</h1>
-                            <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                        </div>
-                        <div className="flex justify-between">
-                            <div className="join">
-                                <select className="select select-bordered join-item" onChange={(e) => setSelectedSource(e.target.value)} value={selectedSource}>
-                                    <option disabled selected>Asal Muat</option>
-                                    <option value="All">All</option> {/* Add "All" option */}
-                                    {allSources.map((source, index) => (
-                                        <option key={index} value={source}>{source}</option>
-                                    ))}
-                                </select>
-                                <div className="indicator">
-                                    <button className="btn join-item" onClick={handleSearch}>Cari</button>
-                                </div>
-                            </div>
+  const formatCurrency = (value: number) => {
+    return `Rp${new Intl.NumberFormat('id-ID').format(value)}`;
+  };
 
-                            <button className="btn" onClick={() => (document.getElementById('baca_ketentuan') as HTMLDialogElement)?.showModal()}>Baca Ketentuan</button>
-                            <dialog id="baca_ketentuan" className="modal">
-                                <div className="modal-box">
-                                    <h3 className="font-bold text-lg mb-4">Ketentuan Penawaran</h3>
-                                    <p>1. Tarif tidak termasuk PPN dan asuransi muatan</p>
-                                    <p>2. Tarif belum termasuk muat (bila ada)</p>
-                                    <p>3. Kehilangan atau kerusakan akibat force majeur seperti (kebakaran, bencana alam, dll) tidak ditanggung oleh transporter</p>
-                                    <p>4. Pembayaran DP uang jalan 60% dan sisa tagihan setelah invoice diterima </p>
-                                    <p>5. Multidrop Rp200.000,- per titik</p>
-                                    <div className="modal-action">
-                                        <form method="dialog">
-                                            <button className="btn">Ya, Saya Mengerti</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </dialog>
-                        </div>
-                        <table className="table table-zebra table-fixed">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>ID</th>
-                                    <th>Asal Muat</th>
-                                    <th>Tujuan</th>
-                                    <th>CDD</th>
-                                    <th>CDD Long</th>
-                                    <th>Wingbox</th>
-                                    <th>Fuso</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {penawaranHargaItemData.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{item.idPenawaranHargaItem}</td>
-                                        <td>{item.source}</td>
-                                        <td>{item.destination}</td>
-                                        <td>{item.cddPrice}</td>
-                                        <td>{item.cddLongPrice}</td>
-                                        <td>{item.wingboxPrice}</td>
-                                        <td>{item.fusoPrice}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </Drawer>
-            <Footer />
-        </main>
+  const fetchItems = async () => {
+    setLoading(true);
+    try {
+      const fetchUrl = `/api/viewAllPenawaranHargaItem?idPenawaranHarga=${idPenawaranHarga}`;
+      const response = await fetch(fetchUrl);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch data');
+      }
+      const data = await response.json();
+      setItems(data);
+    } catch (error) {
+      console.error('Failed to fetch Penawaran Harga items:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (idPenawaranHarga) {
+      fetchItems();
+    }
+  }, [idPenawaranHarga]);
+
+  const handlePriceChange = (itemId: string, priceType: keyof PenawaranHargaItem, newValue: number) => {
+    const updatedValue = Math.max(0, newValue);
+
+    setItems(currentItems =>
+      currentItems.map(item =>
+        item.id === itemId ? { ...item, [priceType]: updatedValue } : item
+      )
     );
-}
+  };
+  
+  const columns = [
+    {
+      Header: 'Asal',
+      accessor: 'source',
+    },
+    {
+      Header: 'Tujuan',
+      accessor: 'destination',
+    },
+    {
+      Header: 'Harga CDD',
+      accessor: 'cddPrice',
+      Cell: ({ row }) => row.original.isEditing ? (
+        <input
+          type="number"
+          defaultValue={row.original.cddPrice}
+          onBlur={(e) => handlePriceChange(row.original.idPenawaranHargaItem, 'cddPrice', parseFloat(e.target.value))}
+          style={{ width: '100px' }}
+          min="0"
+        />
+      ) : formatCurrency(row.original.cddPrice),
+    },
 
-export default LihatPenawaranHargaItemPage;
+    {
+      Header: 'Harga CDD Long',
+      accessor: 'cddLongPrice',
+      Cell: ({ row }) => row.original.isEditing ? (
+        <input
+          type="number"
+          defaultValue={row.original.cddLongPrice}
+          onBlur={(e) => handlePriceChange(row.original.idPenawaranHargaItem, 'cddLongPrice', parseFloat(e.target.value))}
+          style={{ width: '100px' }}
+          min="0"
+        />
+      ) : formatCurrency(row.original.cddLongPrice),
+    },
+
+
+    {
+      Header: 'Harga Wingbox',
+      accessor: 'wingboxPrice',
+      Cell: ({ row }) => row.original.isEditing ? (
+        <input
+          type="number"
+          defaultValue={row.original.wingboxPrice}
+          onBlur={(e) => handlePriceChange(row.original.idPenawaranHargaItem, 'wingboxPrice', parseFloat(e.target.value))}
+          style={{ width: '100px' }}
+          min="0"
+        />
+      ) : formatCurrency(row.original.wingboxPrice),
+    },
+
+
+    {
+      Header: 'Harga Fuso',
+      accessor: 'fusoPrice',
+      Cell: ({ row }) => row.original.isEditing ? (
+        <input
+          type="number"
+          defaultValue={row.original.fusoPrice}
+          onBlur={(e) => handlePriceChange(row.original.idPenawaranHargaItem, 'fusoPrice', parseFloat(e.target.value))}
+          style={{ width: '100px' }}
+          min="0"
+        />
+      ) : formatCurrency(row.original.fusoPrice),
+    }
+  ];
+
+  return (
+    <main className="flex min-h-screen flex-col " data-theme="winter">
+      <Drawer userRole={userRole}>
+        <div className="flex-1 py-6 px-4">
+          <div className="container mx-auto">
+            <h1 className="text-3xl font-bold mt-1 mb-5" style={{ color: '#2d3254' }}>Daftar Rute Penawaran {companyName} </h1>
+
+
+            <DataTable
+              columns={columns}
+              data={items}
+              progressPending={loading}
+              noDataComponent={<CustomNoDataComponent />}
+              type='penawaranHargaItem'
+            />
+          </div>
+        </div>
+        <Footer />
+      </Drawer>
+    </main>
+  );
+};
+
+export default PenawaranHargaItemPage;
