@@ -51,11 +51,11 @@ const OrderItemsIndexPage = () => {
     };
 
     const columns = [
-        { Header: 'Source', accessor: 'source' },
-        { Header: 'Destination', accessor: 'destination' },
-        { Header: 'Is Fragile', accessor: 'isPecahBelah', Cell: ({ value }) => value ? 'Yes' : 'No' },
-        { Header: 'Price', accessor: 'price', Cell: ({ value }) => value !== 'N/A' ? `Rp${parseInt(value).toLocaleString('id-ID')}` : 'N/A' },
-        { Header: 'Created Date', accessor: 'createdDate' },
+        { Header: 'Asal', accessor: 'source' },
+        { Header: 'Tujuan', accessor: 'destination' },
+        { Header: 'Mudah Pecah', accessor: 'isPecahBelah', Cell: ({ value }) => value ? 'Yes' : 'No' },
+        { Header: 'Harga', accessor: 'price', Cell: ({ value }) => value !== 'N/A' ? `Rp${parseInt(value).toLocaleString('id-ID')}` : 'N/A' },
+        { Header: 'Tanggal Dibuat', accessor: 'createdDate' },
         {
             Header: 'Details',
             accessor: 'id',
@@ -73,15 +73,15 @@ const OrderItemsIndexPage = () => {
     return (
         <>
             <Drawer userRole='userRole'>
-                <main className="container mx-auto p-4">
-                    <h2 className="text-2xl font-bold mb-2">Available Job Offers</h2>
+                <main className="flex flex-col items-center justify-between" data-theme="winter">
+                    <h2 className="text-2xl font-bold mb-2">Tawaran Kerja</h2>
                     <DataTable
                         data={orderItems}
                         columns={columns}
                         loading={loading}
                         NoDataComponent={() => <div>No available order items</div>}
                     />
-                    {selectedOfferId && (
+                    {/* {selectedOfferId && (
                         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
                             <div className="bg-white p-4 rounded-lg shadow-lg">
                                 <h3 className="text-lg font-medium">Accept Job Offer</h3>
@@ -103,7 +103,7 @@ const OrderItemsIndexPage = () => {
                                 </div>
                             </div>
                         </div>
-                    )}
+                    )} */}
                 </main>
                 <Footer />
             </Drawer>

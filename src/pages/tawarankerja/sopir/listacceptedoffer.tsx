@@ -9,7 +9,7 @@ import { getTawaranKerjaAccepted } from '@/pages/api/tawaran-kerja/getTawaranKer
 const AcceptedOrderItemsIndexPage = () => {
     const [tawaranKerja, setTawaranKerja] = useState([]);
     const [loading, setLoading] = useState(true);
-    const sopirId = Cookies.get('idUser'); // Ensure this cookie is set during login
+    const sopirId = Cookies.get('idUser'); 
 
     useEffect(() => {
         setLoading(true);
@@ -38,11 +38,11 @@ const AcceptedOrderItemsIndexPage = () => {
     }, [sopirId]);
 
     const columns = [
-        { Header: 'Source', accessor: 'source' },
-        { Header: 'Destination', accessor: 'destination' },
-        { Header: 'Is Fragile', accessor: 'isPecahBelah', Cell: ({ value }) => value ? 'Yes' : 'No' },
-        { Header: 'Price', accessor: 'price', Cell: ({ value }) => value !== 'N/A' ? `Rp${parseInt(value).toLocaleString('id-ID')}` : 'N/A' },
-        { Header: 'Created Date', accessor: 'createdDate' },
+        { Header: 'Asal', accessor: 'source' },
+        { Header: 'Tujuan', accessor: 'destination' },
+        { Header: 'Mudah Pecah', accessor: 'isPecahBelah', Cell: ({ value }) => value ? 'Yes' : 'No' },
+        { Header: 'Harga', accessor: 'price', Cell: ({ value }) => value !== 'N/A' ? `Rp${parseInt(value).toLocaleString('id-ID')}` : 'N/A' },
+        { Header: 'Tanggal Pembuatan', accessor: 'createdDate' },
         {
             Header: 'Details',
             accessor: 'id',  // Assuming `id` now directly relates to `orderItem.id`
@@ -60,8 +60,8 @@ const AcceptedOrderItemsIndexPage = () => {
     return (
         <>
             <Drawer userRole='userRole'>
-                <main className="container mx-auto p-4">
-                    <h2 className="text-2xl font-bold mb-2">Accepted Job Offers</h2>
+            <main className="flex flex-col items-center justify-between" data-theme="winter">
+                    <h2 className="text-2xl font-bold mb-2">Tawaran Kerja yang Anda Terima</h2>
                     <DataTable
                         data={tawaranKerja}
                         columns={columns}

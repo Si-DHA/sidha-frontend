@@ -80,8 +80,8 @@ const IndexPage = () => {
     return (
         <>
             <Drawer userRole='userRole'>
-            <div className="container mx-auto p-4">
-                <h2 className="text-2xl font-bold mb-2">Laporan Insiden Anda</h2>
+            <main className="flex flex-col items-center justify-between" data-theme="winter">
+                    <h2 className="text-2xl font-bold mb-4">Laporan Insiden Anda</h2>
                 <DataTable
                     data={insidens}
                     columns={columns}
@@ -90,7 +90,7 @@ const IndexPage = () => {
                     btnText="Buat Laporan" onClick={() => router.push(`/insiden/sopir/create`)}
                     type='insiden'
                 />
-            </div>
+            </main>
             </Drawer>
             <Footer />
         </>

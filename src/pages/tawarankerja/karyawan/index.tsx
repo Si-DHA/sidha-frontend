@@ -20,6 +20,7 @@ const AcceptedOrderItemsIndexPage = () => {
                     source: tawaran.orderItem.rute?.[0]?.source ?? 'N/A',
                     destination: tawaran.orderItem.rute?.[0]?.destination ?? 'N/A',
                     isPecahBelah: tawaran.orderItem.isPecahBelah ?? false,
+                    isDikonfirmasiKaryawan: tawaran.isDikonfirmasiKaryawan ?? false,
                     price: tawaran.orderItem.price ?? 'N/A',
                     createdDate: tawaran.orderItem.orderItemHistories?.[0]?.createdDate
                         ? new Date(tawaran.orderItem.orderItemHistories[0].createdDate).toLocaleString('id-ID')
@@ -36,11 +37,12 @@ const AcceptedOrderItemsIndexPage = () => {
     }, []);
 
     const columns = [
-        { Header: 'Source', accessor: 'source' },
-        { Header: 'Destination', accessor: 'destination' },
-        { Header: 'Is Fragile', accessor: 'isPecahBelah', Cell: ({ value }) => value ? 'Yes' : 'No' },
-        { Header: 'Price', accessor: 'price', Cell: ({ value }) => value !== 'N/A' ? `Rp${parseInt(value).toLocaleString('id-ID')}` : 'N/A' },
-        { Header: 'Created Date', accessor: 'createdDate' },
+        { Header: 'Asal', accessor: 'source' },
+        { Header: 'Tujuan', accessor: 'destination' },
+        { Header: 'Mudah Pecah', accessor: 'isPecahBelah', Cell: ({ value }) => value ? 'Ya' : 'Tidak' },
+        { Header: 'Harga', accessor: 'price', Cell: ({ value }) => value !== 'N/A' ? `Rp${parseInt(value).toLocaleString('id-ID')}` : 'N/A' },
+        { Header: 'Sopir Confirmed', accessor: 'isDikonfirmasiKaryawan', Cell: ({ value }) => value ? 'Ya' : 'Tidak' },
+        { Header: 'Tanggal Pembuatan', accessor: 'createdDate' },
         {
             Header: 'Details',
             accessor: 'id',
@@ -58,8 +60,9 @@ const AcceptedOrderItemsIndexPage = () => {
     return (
         <>
             <Drawer userRole='userRole'>
-                <main className="container mx-auto p-4">
-                    <h2 className="text-2xl font-bold mb-2">Accepted Job Offers</h2>
+            <main className="flex flex-col items-center justify-between" data-theme="winter">
+                    <h2 className="text-2xl font-bold mb-1">Tawaran Kerja</h2>
+                    <h5 className="text-l mb-2">Segera konfirmasi sopir untuk pengantaran dibawah!</h5>
                     <DataTable
                         data={tawaranKerja}
                         columns={columns}

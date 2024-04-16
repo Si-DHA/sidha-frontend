@@ -7,6 +7,8 @@ import { getAcceptedOffersBySopir } from '@/pages/api/tawaran-kerja/getAcceptedO
 import Footer from '@/app/components/common/footer';
 import Drawer from '@/app/components/common/drawer';
 import Cookies from 'js-cookie';
+import SuccessAlert from "@/app/components/common/SuccessAlert";
+import FailAlert from "@/app/components/common/FailAlert";
 
 const SopirDetailPage = () => {
     const [orderItem, setOrderItem] = useState(null);
@@ -15,6 +17,7 @@ const SopirDetailPage = () => {
     const router = useRouter();
     const { orderItemId } = router.query;
     const sopirId = Cookies.get('idUser');
+    const [alert, setAlert] = useState({ show: false, message: '', type: '' });
 
     useEffect(() => {
         if (orderItemId) {
@@ -55,67 +58,71 @@ const SopirDetailPage = () => {
             }
             if (hasAccepted) {
                 router.replace(`accept`);
-              }
+            }
         }
     }, [hasAccepted, router, orderItemId, sopirId]);
 
 
     const handleAccept = async () => {
         if (!orderItemId) {
-            alert('Order item ID is missing');
+            setAlert({ show: true, message: 'ID item tawaran tidak ditemukan', type: 'fail' });
             return;
         }
         try {
             const sopirId = Cookies.get('idUser');
             await acceptTawaranKerja(orderItemId.toString(), sopirId, lokasi);
-            alert('Job offer accepted successfully');
+            setAlert({ show: true, message: 'Tawaran kerja berhasil diterima', type: 'success' });
             router.replace(`/tawarankerja/sopir/detail/${orderItemId}/accept`);
         } catch (error) {
             console.error('Error accepting job offer:', error);
-            alert('Failed to accept job offer');
+            setAlert({ show: true, message: 'Gagal menerima tawaran kerja', type: 'fail' });
         }
     };
 
     // Inside your component's return statement
     return (
         <Drawer userRole='userRole'>
-            <main className="container mx-auto p-4 flex flex-wrap justify-between">
+            <main className="flex flex-col items-center justify-between" data-theme="winter">
+                {alert.show && (alert.type === 'success' ? <SuccessAlert message={alert.message} /> : <FailAlert message={alert.message} />)}
                 {orderItem ? (
-                    <>
-                        <div className="flex-1 pr-4 max-w-lg"> {/* Adjust max width as needed */}
-                            <h2 className="text-2xl font-bold mb-4">Detail Penawaran Kerja</h2>
-                            <p><strong>Source:</strong> {orderItem.source}</p>
-                            <p><strong>Destination:</strong> {orderItem.destination}</p>
+                    <div className="w-full max-w-4xl p-4 bg-white shadow-md rounded-lg">
+                        <h2 className="text-2xl font-bold mb-4">Detail Penawaran Kerja</h2>
+                        <div className="grid grid-cols-2 gap-4">
+                            <p><strong>Asal:</strong> {orderItem.source}</p>
+                            <p><strong>Tujuan:</strong> {orderItem.destination}</p>
                             <p><strong>Mudah Pecah:</strong> {orderItem.isPecahBelah}</p>
-                            <p><strong>Price:</strong> {orderItem.price}</p>
+                            <p><strong>Harga:</strong> {orderItem.price}</p>
                             <p><strong>Tipe Barang:</strong> {orderItem.tipeBarang}</p>
                             <p><strong>Tipe Truk:</strong> {orderItem.tipeTruk}</p>
                             <p><strong>Alamat Pengiriman:</strong> {orderItem.alamatPengiriman}</p>
                             <p><strong>Alamat Penjemputan:</strong> {orderItem.alamatPenjemputan}</p>
-                            <p><strong>Created Date:</strong> {orderItem.createdDate}</p>
-                            <p><strong>Created By:</strong> {orderItem.createdBy}</p>
+                            {/* <p><strong>Tanggal Dibuat:</strong> {orderItem.createdDate}</p>
+                            <p><strong>Username Klien:</strong> {orderItem.createdBy}</p> */}
                         </div>
                         {!hasAccepted && (
-                            <div className="flex-1 max-w-md">
+                            <div className="mt-4">
                                 <input
                                     type="text"
-                                    placeholder="Enter your current location"
+                                    placeholder="Dimana lokasi Anda sekarang?"
                                     value={lokasi}
                                     onChange={e => setLokasi(e.target.value)}
                                     className="input input-bordered input-primary w-full mb-2"
                                 />
                                 <button
-                                    onClick={handleAccept}
+                                    onClick={() => handleAccept()}
                                     className="btn btn-primary w-full"
                                 >
-                                    Accept Job Offer
+                                    Terima Tawaran Kerja
                                 </button>
                             </div>
                         )}
-                    </>
+                    </div>
                 ) : (
-                    <p>Loading job offer details...</p>
+                    <div className="text-center">
+                        <p>Loading job offer details...</p>
+                    </div>
                 )}
+
             </main>
             <Footer />
         </Drawer>
