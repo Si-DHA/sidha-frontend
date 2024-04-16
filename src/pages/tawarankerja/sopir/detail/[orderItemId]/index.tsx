@@ -12,7 +12,6 @@ const SopirDetailPage = () => {
     const [orderItem, setOrderItem] = useState(null);
     const [lokasi, setLokasi] = useState('');
     const [hasAccepted, setHasAccepted] = useState(false);
-    const [isConfirmed, setIsConfirmed] = useState(false);
     const router = useRouter();
     const { orderItemId } = router.query;
     const sopirId = Cookies.get('idUser');
