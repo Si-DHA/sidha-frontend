@@ -1,5 +1,6 @@
 import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
+import Drawer from "@/app/components/common/drawer";
+import Cookies from "js-cookie";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
 import { useState, useEffect } from "react";
@@ -17,6 +18,23 @@ const UpdateTrukPage = () => {
     const [trukData, setTrukData] = useState(null);
     const [sopirData, setSopirData] = useState([]);
     const [alert, setAlert] = useState(null);
+
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        if (role === 'ADMIN') {
+            setUserRole(role);
+        } else {
+            setError('You are not allowed to access this page');
+        }
+
+    }, [isLoggedIn, router])
+
 
     useEffect(() => {
         const fetchTrukData = async () => {
@@ -106,28 +124,27 @@ const UpdateTrukPage = () => {
         <main
             className={`flex min-h-screen flex-col items-center justify-between`} data-theme="cmyk"
         >
-            <Navbar />
-            <div className="flex flex-row">
-                {alert}
-            </div>
-            {error ? (
-                <div>Error: {error}</div>
-            ) : trukData === null ? (
-                <p>Loading..</p>
-            ) : (
-                <div>
-                    <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-                        <div className="modal-box">
-                            <h3 className="font-bold text-lg">Update</h3>
-                            <p className="py-4">Are you sure your data is correct?</p>
-                            <div className="modal-action">
-                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
-                                <button className="btn btn-success" onClick={() => { handleUpdate(); document.getElementById('my_modal_5').close(); }}>Update</button>
-                            </div>
+            <Drawer userRole={userRole}>
+                <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
+                    {alert}
+                </div>
+                {error ? (
+                    <div className="mx-auto my-auto">Error: {error}</div>
+                ) : trukData === null ? (
+                    <p>Loading..</p>
+                ) : (
+                    <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+                        <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+                            <div className="modal-box">
+                                <h3 className="font-bold text-lg">Update</h3>
+                                <p className="py-4">Are you sure your data is correct?</p>
+                                <div className="modal-action">
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
+                                    <button className="btn btn-success" onClick={() => { handleUpdate(); document.getElementById('my_modal_5').close(); }}>Update</button>
+                                </div>
 
-                        </div>
-                    </dialog>
-                    <div className="flex flex-row gap-y-12 gap-x-12">
+                            </div>
+                        </dialog>
                         <div className="flex flex-col grow justify-center align-center ">
                             <div className="card w-96 bg-base-100 shadow-md">
                                 <div className="card-body">
@@ -242,10 +259,8 @@ const UpdateTrukPage = () => {
 
                         </div>
                     </div>
-                </div>
-            )}
-
-
+                )}
+            </Drawer>
             <Footer />
         </main>
     );
