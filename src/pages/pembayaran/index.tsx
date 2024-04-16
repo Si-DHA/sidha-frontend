@@ -1,5 +1,4 @@
 import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
 import Drawer from "@/app/components/common/drawer";
 import Cookies from "js-cookie";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
@@ -116,19 +115,22 @@ const PembayaranPage = () => {
                 ) : invoiceData && (
                     <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
                         <style jsx>{`
-                    .image-container {
-                        padding-top:10px;
-                        max-width: 200px;
-                        max-height: 300px;
-                        overflow: auto;
-                        margin: 0 auto;
-                    }
-    
-                    .image-container img {
-                        width: auto;
-                        height: 100%;
-                    }
-                `}</style>
+                            .image-container {
+                                padding-top:10px;
+                                width: 100%;
+                                max-width: 200px;
+                                max-height: 300px; /* Set a fixed height */
+                                overflow: auto; /* Enable scrolling if the image exceeds container height */
+                                margin: 0 auto;
+                            }
+                        
+                            .image-container img {
+                                max-width: 100%; /* Ensure the image doesn't exceed container width */
+                                max-height: 100%; /* Ensure the image doesn't exceed container height */
+                                display: block; /* Ensure the image stays within its container */
+                                margin: auto; /* Center the image horizontally */
+                            }
+                        `}</style>
 
                         <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                             <div className="modal-box">
