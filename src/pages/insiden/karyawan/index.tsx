@@ -98,15 +98,15 @@ const KaryawanInsidenIndexPage = () => {
         <>
             
             <Drawer userRole='userRole'>
-            <div className="container mx-auto p-4">
-                <h2 className="text-2xl font-bold mb-2">Semua Insiden</h2>
+            <main className="flex flex-col items-center justify-between" data-theme="winter">
+                    <h2 className="text-2xl font-bold mb-4">Laporan Insiden</h2>
                 <DataTable
                     data={insidens}
                     columns={columns}
                     loading={loading}
                     NoDataComponent={CustomNoDataComponent}
                 />
-            </div>
+            </main>
             </Drawer>
             <Footer />
         </>
