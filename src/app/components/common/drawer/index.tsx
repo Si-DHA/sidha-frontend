@@ -152,6 +152,14 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                   </ul>
                 </li>
 
+                <li>
+                  <h2 className="menu-title text-neutral"><a>Tawaran Kerja</a></h2>
+                  <ul>
+                    <li><Link href="/tawarankerja/karyawan">Konfirmasi Tawaran Kerja</Link></li>
+
+                  </ul>
+                </li>
+
               </ul>
             </ul>
           </div>
@@ -179,6 +187,12 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                 </li>
                 <li>
                 <h2 className="menu-title text-neutral"><Link href="/order/sopir">Order Anda</Link></h2>
+                </li>
+                <li>
+                <h2 className="menu-title text-neutral"><Link href="/tawarankerja/sopir">Lihat Tawaran Kerja</Link></h2>
+                </li>
+                <li>
+                <h2 className="menu-title text-neutral"><Link href="/tawarankerja/sopir/listacceptedoffer">Tawaran Kerja Anda</Link></h2>
                 </li>
               </ul>
             </ul>
