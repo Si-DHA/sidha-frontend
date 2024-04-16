@@ -9,10 +9,10 @@ import { getPossibleRute } from "@/pages/api/order/getPossibleRute";
 
 const CreatePurchaseOrderPage = () => {
 
-    var userId = Cookies.get('userId');
+    var userId = Cookies.get('idUser');
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
-    const [possibleRute, setPossibleRute] = useState([] as string[][]);
+    const [possibleRute, setPossibleRute] = useState([] as string[]);
     const [error, setError] = useState('' as string);
     const router = useRouter();
 
@@ -34,7 +34,9 @@ const CreatePurchaseOrderPage = () => {
                 setError(error.message);
             }
         }
-        fetchData();
+        if (possibleRute.length === 0) {
+            fetchData();
+        }
     },)
 
     const [order, setOrder] = useState<Order>({
@@ -43,6 +45,8 @@ const CreatePurchaseOrderPage = () => {
         orderItems: []
     } as Order
     );
+
+
 
 
     const [orderItem, setOrderItem] = useState([
@@ -61,6 +65,13 @@ const CreatePurchaseOrderPage = () => {
             ]
         } as OrderItem
     ]);
+
+    // useEffect(() => {
+    //     if (router.query.order !== undefined) {
+    //         setOrder(JSON.parse(router.query.order as string));
+    //         setOrderItem(JSON.parse(router.query.order as string).orderItems);
+    //     }
+    // });
 
     const handleAddOrderItem = () => {
         setOrderItem([...orderItem, {
@@ -151,7 +162,6 @@ const CreatePurchaseOrderPage = () => {
         order.orderItems = orderItem;
         const validationResult = validateOrder();
         if (validationResult === true) {
-            console.log(order);
             router.push({
                 pathname: '/order/create/detail',
                 query: { order: JSON.stringify(order) }
@@ -206,7 +216,7 @@ const CreatePurchaseOrderPage = () => {
                             <select className="select select-bordered grow" onChange={(e) => handleOnChangeSourceAndDestination(e, orderItemIndex, ruteIndex)}>
                                 <option disabled selected>Pilih satu</option>
                                 {possibleRute.map((rute, index) => (
-                                    <option key={index}>{rute[0]} - {rute[1]}</option>
+                                    <option key={index}>{rute}</option>
                                 ))}
                             </select>
                         </div>
