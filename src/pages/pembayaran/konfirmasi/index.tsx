@@ -2,13 +2,13 @@ import Footer from "@/app/components/common/footer";
 import Navbar from "@/app/components/common/navbar";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
-import { BASE_URL } from '@/app/constant/constant';
-import { viewBuktiImage } from "../api/pembayaran/viewBuktiImage";
-import { viewInvoiceById } from "../api/invoice/viewInvoiceById";
+import { viewBuktiImage } from "../../api/pembayaran/viewBuktiImage";
+import { konfirmasiBuktiPembayaran } from "../../api/pembayaran/konfirmasiBuktiPembayaran";
+import { viewInvoiceById } from "../../api/invoice/viewInvoiceById";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-const PembayaranPage = () => {
+const KonfirmasiPembayaranPage = () => {
     const queryParameters = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
     const idInvoice = queryParameters?.get("id");
     const isPelunasan = queryParameters?.get("isPelunasan") === "true";
@@ -18,7 +18,6 @@ const PembayaranPage = () => {
     const [imageUrl, setImageUrl] = useState(null);
     const [invoiceData, setInvoiceData] = useState(null);
     const [buktiData, setBuktiData] = useState(null);
-    const [imageUploaded, setImageUploaded] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,46 +41,32 @@ const PembayaranPage = () => {
         fetchData();
     }, []);
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImageUrl(reader.result);
-            };
-            reader.readAsDataURL(file);
-            setImageUploaded(file);
-        }
-    };
-
-    const uploadBuktiImage = async () => {
+    const handleKonfirmasi = async (isConfirmed: boolean) => {
         try {
-            if (!imageUploaded) {
-                throw new Error("Tidak ada file yang dipilih");
+            // Create POST request body
+            const requestBody = {
+                idInvoice,
+                isPelunasan,
+                isConfirmed,
+            };
+
+            // Add alasan penolakan if it is being rejected
+            if (!isConfirmed) {
+                const alasanPenolakan = document.getElementById('alasanPenolakan').value;
+                if (alasanPenolakan.trim()) {
+                    requestBody.alasanPenolakan = alasanPenolakan;
+                }
             }
 
-            const formData = new FormData();
-            formData.append('idInvoice', idInvoice);
-            formData.append('isPelunasan', isPelunasan);
-            formData.append('imageFile', imageUploaded);
-
-            const response = await fetch(BASE_URL + '/invoice/upload-bukti', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                setAlert(<SuccessAlert message="Bukti pembayaran berhasil diunggah" />);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
-            } else {
-                throw new Error(responseData.message);
-            }
-        } catch (error) {
-            setAlert(<FailAlert message={error.message || "Gagal mengunggah bukti pembayaran"} />);
+            const konfirmasiResponse = await konfirmasiBuktiPembayaran(requestBody);
+            setAlert(<SuccessAlert message="Bukti pembayaran berhasil dikonfirmasi" />);
             setTimeout(() => {
-                setAlert(null);
+                window.location.reload();
+            }, 3000);
+        } catch (error) {
+            setAlert(<FailAlert message={error.message || "Gagal mengonfirmasi bukti pembayaran"} />);
+            setTimeout(() => {
+                window.location.reload();
             }, 3000);
         }
     };
@@ -112,13 +97,27 @@ const PembayaranPage = () => {
                 <div>Error: {error}</div>
             ) : invoiceData && (
                 <div className="flex flex-row gap-y-12 gap-x-12">
-                    <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+                    <dialog id="my_modal_tolak" className="modal modal-bottom sm:modal-middle">
                         <div className="modal-box">
-                            <h3 className="font-bold text-lg">Delete</h3>
-                            <p className="py-4">Are you sure you want to upload this?</p>
+                            <h3 className="font-bold text-lg mb-5">Tolak</h3>
+                            <label className="input input-bordered flex items-center gap-2">
+                                <input required id="alasanPenolakan" type="text" className="grow" placeholder="Masukkan alasan penolakan" />
+                            </label>
                             <div className="modal-action">
-                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
-                                <button className="btn btn-success" onClick={() => { uploadBuktiImage(); document.getElementById('my_modal_5').close(); }}>Upload</button>
+                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_tolak').close()}>Cancel</button>
+                                <button className="btn btn-error" onClick={() => { handleKonfirmasi(false); document.getElementById('my_modal_tolak').close(); }}>Tolak</button>
+                            </div>
+
+                        </div>
+                    </dialog>
+
+                    <dialog id="my_modal_terima" className="modal modal-bottom sm:modal-middle">
+                        <div className="modal-box">
+                            <h3 className="font-bold text-lg">Terima</h3>
+                            <p className="py-4">Apakah Anda yakin ingin menerima bukti pembayaran ini?</p>
+                            <div className="modal-action">
+                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_terima').close()}>Batal</button>
+                                <button className="btn btn-success" onClick={() => { handleKonfirmasi(true); document.getElementById('my_modal_terima').close(); }}>Terima</button>
                             </div>
 
                         </div>
@@ -185,17 +184,7 @@ const PembayaranPage = () => {
                     <div className="flex flex-col grow justify-center items-center bukti-pembayaran mb-4">
                         <div className="card w-96 bg-base-100 shadow-md">
                             <div className="card-body items-center text-center">
-                                <h3 className="text-xl font-semibold mb-4">Unggah bukti pembayaran</h3>
-
-                                <label className="form-control w-full max-w-xs">
-                                    <input id="buktiImage" type="file" accept="image/*" className="file-input file-input-bordered w-full max-w-xs" onChange={handleFileChange}
-                                        disabled={buktiData && buktiData['status'] === 1}
-                                    />
-                                    <div className="label">
-                                        <span className="label-text-alt">max. size: 10Mb</span>
-                                        <span className="label-text-alt">.jpg/.jpeg/.png</span>
-                                    </div>
-                                </label>
+                                <h3 className="text-xl font-semibold mb-4">Konfirmasi bukti pembayaran</h3>
                                 {imageUrl && (
                                     <div className="mt-4 mb-5">
                                         <div className="image-container">
@@ -203,11 +192,37 @@ const PembayaranPage = () => {
                                         </div>
                                     </div>
                                 )}
-                                {(!buktiData || buktiData['status'] !== 1) && (
+                                {buktiData === null ? (
                                     <div className="flex flex-row w-full max-w-xs justify-center align-middle">
-                                        <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_5').showModal()}>Upload </button>
+                                        <button
+                                            className="btn btn-error btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow mr-5"
+                                            disabled
+                                        >
+                                            Tolak
+                                        </button>
+                                        <button
+                                            className="btn btn-success btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow"
+                                            disabled
+                                        >
+                                            Terima
+                                        </button>
                                     </div>
-                                )}
+                                ) : buktiData['status'] !== 1 ? (
+                                    <div className="flex flex-row w-full max-w-xs justify-center align-middle">
+                                        <button
+                                            className="btn btn-error btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow mr-5"
+                                            onClick={() => document.getElementById('my_modal_tolak').showModal()}
+                                        >
+                                            Tolak
+                                        </button>
+                                        <button
+                                            className="btn btn-success btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow"
+                                            onClick={() => document.getElementById('my_modal_terima').showModal()}
+                                        >
+                                            Terima
+                                        </button>
+                                    </div>
+                                ) : null}
                             </div>
 
                         </div>
@@ -220,4 +235,4 @@ const PembayaranPage = () => {
     );
 }
 
-export default PembayaranPage;
+export default KonfirmasiPembayaranPage;

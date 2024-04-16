@@ -1,8 +1,8 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const viewInvoice = async (idInvoice: String): Promise<any> => {
+export const viewInvoiceById = async (idInvoice: String): Promise<any> => {
     try {
-        const url = `${BASE_URL}/invoice/order/${idInvoice}`;
+        const url = `${BASE_URL}/invoice/${idInvoice}`;
         const response = await fetch(url, {
             method: 'GET',
             headers: {

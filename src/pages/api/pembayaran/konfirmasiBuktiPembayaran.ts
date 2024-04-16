@@ -1,14 +1,14 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const viewInvoice = async (idInvoice: String): Promise<any> => {
+export const konfirmasiBuktiPembayaran = async (requestBody: JSON): Promise<any> => {
     try {
-        const url = `${BASE_URL}/invoice/order/${idInvoice}`;
-        const response = await fetch(url, {
-            method: 'GET',
+        const response = await fetch(BASE_URL+'/invoice/konfirmasi-bukti', {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-            }
+            },
+            body: JSON.stringify(requestBody),
         });
 
         const responseData = await response.json();
@@ -18,7 +18,6 @@ export const viewInvoice = async (idInvoice: String): Promise<any> => {
         } else {
             throw new Error(responseData.message);
         }
-
     } catch (error: any) {
         throw new Error(error.message);
     }
