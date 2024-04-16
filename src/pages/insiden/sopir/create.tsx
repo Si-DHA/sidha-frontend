@@ -57,8 +57,10 @@ const CreateInsidenPage = () => {
                             className="w-full mt-1 p-2 border-2 rounded-md"
                         >
                             <option value="">Pilih Kategori</option>
+                            <option value="Bencana Alam">Bencana Alam</option>
+                            <option value="Kecelakaan">Kecelakaan</option>
+                            <option value="Kendaraan Rusak">Kendaraan Rusak</option>
                             <option value="Pencurian Barang">Pencurian Barang</option>
-                            <option value="Alamat Hilang">Alamat Hilang</option>
                         </select>
                     </div>
                     <div className="mb-4">
