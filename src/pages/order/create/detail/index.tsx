@@ -22,21 +22,21 @@ const PurchaseOrderDetail = () => {
         setUserRole(role || '');
     },)
 
-    const order = JSON.parse(router.query.order as string);
+    // const order = JSON.parse(router.query.order as string);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                if (!token) {
-                    throw new Error('Token not found');
-                }
-                const response = await getOrderDetailBeforeCheckout(order, token);
-                setOrderData(response);
-            } catch (error: any) {
-                setError(error.message);
-            }
-        }
-    }, [])
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             if (!token) {
+    //                 throw new Error('Token not found');
+    //             }
+    //             const response = await getOrderDetailBeforeCheckout(order, token);
+    //             setOrderData(response);
+    //         } catch (error: any) {
+    //             setError(error.message);
+    //         }
+    //     }
+    // }, [])
 
     const [modal, setModal]: any = useState(null);
     const handleModal = () => {
