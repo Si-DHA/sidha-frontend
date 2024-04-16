@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import { getOrderDetailBeforeCheckout } from "@/pages/api/order/getOrderDetailBeforeCheckout";
 import { Order } from "../../model";
 import DataTable from "@/app/components/common/datatable/DataTable";
+import { createOrder } from "@/pages/api/order/createOrder";
 
 const PurchaseOrderDetail = () => {
 
@@ -20,10 +21,10 @@ const PurchaseOrderDetail = () => {
     useEffect(() => {
         if (!isLoggedIn) {
             router.push('/login');
-        } 
+        }
 
-        // const role = Cookies.get('role');
-        // setUserRole(role || '');
+        const role = Cookies.get('role');
+        setUserRole(role || '');
 
         if (router.query.order === undefined) {
             router.push('/order/create');
@@ -68,7 +69,24 @@ const PurchaseOrderDetail = () => {
     }
 
     const handleCheckout = () => {
-        router.push('/order');
+        try {
+            if (!token) {
+                throw new Error('Token not found');
+            }
+
+            if (order === null) {
+                throw new Error('Order not found');
+            }
+
+            const response = createOrder(order, token);
+            if (response !== null) {
+                alert('Order berhasil dibuat');
+                router.push('/order');
+            }
+
+        } catch (error: any) {
+            setError(error.message);
+        }
     }
 
     const columns = [
@@ -91,7 +109,7 @@ const PurchaseOrderDetail = () => {
         {
             Header: 'Biaya Pengiriman',
             accessor: 'biayaPengiriman',
-        }   
+        }
     ]
 
     return (
@@ -119,15 +137,15 @@ const PurchaseOrderDetail = () => {
                             {error ? (
                                 <div>{error}</div>
                             ) : (
-                                <DataTable columns={columns} data={orderItems} btnText="Buat Order Baru" type=""/>
+                                <DataTable columns={columns} data={orderItems} btnText="Buat Order Baru" type="" />
                             )}
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div className="flex flex-row gap-4 ">
-                        <button className="btn" onClick={handleBack}>Kembali</button>
-                        <button className="btn btn-primary grow" onClick={handleModal}>Checkout Purchase Order</button>
+                    <div>
+                        <div className="flex flex-row gap-4 ">
+                            <button className="btn" onClick={handleBack}>Kembali</button>
+                            <button className="btn btn-primary grow" onClick={handleModal}>Checkout Purchase Order</button>
+                        </div>
                     </div>
                 </div>
             </Drawer>
