@@ -1,26 +1,32 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const createInsiden = async (sopirId: string, kategori: string, lokasi: string, keterangan: string, buktiFoto: File): Promise<any> => {
-    const formData = new FormData();
-    formData.append('sopirId', sopirId);
-    formData.append('kategori', kategori);
-    formData.append('lokasi', lokasi);
-    formData.append('keterangan', keterangan);
-    formData.append('buktiFoto', buktiFoto);
-
+export const createInsiden = async (formData: FormData) => {
     try {
         const response = await fetch(`${BASE_URL}/insiden/create`, {
             method: 'POST',
             body: formData,
         });
 
-        const responseData = await response.json();
-        if (response.ok) {
-            return responseData;
+        // Check if the response is JSON before attempting to parse it
+        const contentType = response.headers.get("Content-Type");
+        let errorData;
+
+        if (contentType && contentType.includes("application/json")) {
+            errorData = await response.json();
         } else {
-            throw new Error(responseData.message || 'Failed to create insiden');
+            errorData = { message: await response.text() };
         }
-    } catch (error: any) {
-        throw new Error(error.message);
+
+        if (!response.ok) {
+            throw new Error(errorData.message || "Unknown error occurred");
+        }
+
+        return errorData;
+    } catch (error) {
+        console.error('Failed to create insiden:', error);
+        throw error; // Re-throw to be caught by the component
     }
 };
+
+
+
