@@ -1,6 +1,6 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const getImageBongkar = async (idOrderItem: String): Promise<any> => {
+export const getImageBongkar = async (idOrderItem: string): Promise<any> => {
     try {
         const url = `${BASE_URL}/order/get-bukti-bongkar?idOrderItem=${idOrderItem}`;
         const response = await fetch(url, {
