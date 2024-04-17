@@ -8,7 +8,8 @@ import Footer from "@/app/components/common/footer";
 import Drawer from "@/app/components/common/drawer";
 import { confirmOrder } from '@/pages/api/order/confirmOrder';
 import { GrStatusPlaceholder } from 'react-icons/gr';
-
+import OrderStatusTracker
+ from '@/app/components/common/orderTimeline';
 const OrderItemDetailPage = () => {
   const router = useRouter();
   const { idOrder, idOrderItem } = router.query;
@@ -150,24 +151,8 @@ const OrderItemDetailPage = () => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
   };
 
-  const OrderStatusTracker = ({ statusCode }) => {
-    const statusNumber = parseInt(statusCode);
   
-    if (isNaN(statusNumber)) {
-      return <div>Invalid Status Code</div>;
-    }
-  
-    if (statusNumber === 1) {
-      return (
-        <div className="flex justify-center space-x-4">
-          anjay
-        </div>
-      );
-    } else {
-      return <div>{statusNumber}</div>;
-    }
-  };
-  
+
 
   return (
     <main className="flex flex-col min-h-screen bg-white">
@@ -199,6 +184,7 @@ const OrderItemDetailPage = () => {
 
             </div>
           </dialog>
+          <OrderStatusTracker statusCode={1}></OrderStatusTracker>
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
             <div className="px-4 py-5 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900">Order Item {idOrderItem}</h3>
