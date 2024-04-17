@@ -29,4 +29,8 @@ const setLogin = (data: any) => {
     Cookies.set("role", data.content.user.role);
     Cookies.set('isLoggedIn', 'true');
     Cookies.set('name', data.content.user.name);
+
+    if (data.content.user.role === 'KLIEN') {
+        Cookies.set('companyName', data.content.user.companyName);
+    } 
 }

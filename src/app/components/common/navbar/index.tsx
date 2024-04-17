@@ -30,6 +30,7 @@ const LogoutButton = () => {
         Cookies.remove('role');
         Cookies.remove('isLoggedIn');
         Cookies.remove('name');
+        Cookies.remove('companyName');
         modal.close()
     }
     return <div className='flex flex-none gap-2'>
