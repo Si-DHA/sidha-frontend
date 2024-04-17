@@ -91,7 +91,7 @@ const UpdateInsidenPage = () => {
           <h2 className="text-2xl font-bold text-center my-6">Update Insiden</h2>
           <form onSubmit={handleSubmit}>
 
-          <div className="mb-4">
+            <div className="mb-4">
               <label htmlFor="orderItemId" className="block text-sm font-medium text-gray-700">Order Item</label>
               <select
                 id="orderItemId"
@@ -104,6 +104,22 @@ const UpdateInsidenPage = () => {
                 {orderItems.map(item => (
                   <option key={item.id} value={item.id}>{item.description}</option>
                 ))}
+              </select>
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="kategori" className="block text-sm font-medium text-gray-700">Kategori</label>
+              <select
+                id="kategori"
+                value={insidenData.kategori}
+                onChange={(e) => setInsidenData({ ...insidenData, kategori: e.target.value })}
+                required
+                className="w-full mt-1 p-2 border-2 rounded-md"
+              >
+                <option value="Bencana Alam">Bencana Alam</option>
+                <option value="Kecelakaan">Kecelakaan</option>
+                <option value="Kendaraan Rusak">Kendaraan Rusak</option>
+                <option value="Pencurian Barang">Pencurian Barang</option>
               </select>
             </div>
 
