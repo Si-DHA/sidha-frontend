@@ -131,7 +131,7 @@ const UpdateTrukPage = () => {
                 {error ? (
                     <div className="mx-auto my-auto">Error: {error}</div>
                 ) : trukData === null ? (
-                    <p>Loading..</p>
+                    <div className="mx-auto my-auto">Loading..</div>
                 ) : (
                     <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
                         <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">

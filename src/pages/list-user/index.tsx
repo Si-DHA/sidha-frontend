@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { viewAllUser } from "@/pages/api/user/viewAllUser";
 import Cookies from "js-cookie";
-import Drawer from "@/app/components/common/Drawer";
+import Drawer from "@/app/components/common/drawer";
 import { Inter } from "next/font/google";
 
 

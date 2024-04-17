@@ -8,17 +8,18 @@ import Footer from "@/app/components/common/footer";
 import Drawer from "@/app/components/common/drawer";
 import { confirmOrder } from '@/pages/api/order/confirmOrder';
 import { GrStatusPlaceholder } from 'react-icons/gr';
+import { ConfirmOrder } from '../../model';
 
 const OrderItemDetailPage = () => {
   const router = useRouter();
   const { idOrder, idOrderItem } = router.query;
   const [error, setError] = useState('');
   const [alert, setAlert] = useState(null);
-  const [imageBongkarUrl, setImageBongkarUrl] = useState(null);
-  const [imageMuatUrl, setImageMuatUrl] = useState(null);
+  const [imageBongkarUrl, setImageBongkarUrl] = useState("");
+  const [imageMuatUrl, setImageMuatUrl] = useState("");
   const [orderItemData, setOrderItemData] = useState(null);
-  const [buktiBongkar, setBuktiBongkar] = useState(null);
-  const [buktiMuat, setBuktiMuat] = useState(null);
+  const [buktiBongkar, setBuktiBongkar] = useState("");
+  const [buktiMuat, setBuktiMuat] = useState("");
   var isLoggedIn = Cookies.get('isLoggedIn');
   const [userRole, setUserRole] = useState('');
   const [orderId, setOrderId] = useState('');
@@ -41,9 +42,9 @@ const OrderItemDetailPage = () => {
     setIsAccepted(newIsAccepted);
 
     const token = Cookies.get('token');
-    const orderData = {
+    const orderData : ConfirmOrder = {
       orderId: newOrderId,
-      karyawanId: newKaryawanId,
+      karyawanId: newKaryawanId as string,
       orderItems: [
         {
           orderItemId: newOrderItemId,
@@ -54,7 +55,7 @@ const OrderItemDetailPage = () => {
     };
 
     try {
-      const confirmResponse = await confirmOrder(orderData, token);
+      const confirmResponse = await confirmOrder(orderData, token as string);
       // Handle the response here
     } catch (error) {
       // Handle the error here
@@ -82,8 +83,8 @@ const OrderItemDetailPage = () => {
         if (!idOrderItem) {
           throw new Error('Order item ID is missing');
         }
-        const imageBongkarResponse = await getImageBongkar(idOrderItem);
-        const imageMuatResponse = await getImageMuat(idOrderItem);
+        const imageBongkarResponse = await getImageBongkar(idOrderItem as string);
+        const imageMuatResponse = await getImageMuat(idOrderItem as string);
         const objectBongkarUrl = URL.createObjectURL(imageBongkarResponse);
         const objectMuatUrl = URL.createObjectURL(imageMuatResponse);
         setImageBongkarUrl(objectBongkarUrl);
@@ -125,7 +126,7 @@ const OrderItemDetailPage = () => {
 
   if (!orderItemData) return <div>Loading...</div>;
 
-  const getStatusDescription = (statusCode) => {
+  const getStatusDescription = (statusCode:any) => {
     switch (statusCode) {
       case -1:
         return 'Ditolak';
@@ -150,7 +151,7 @@ const OrderItemDetailPage = () => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
   };
 
-  const OrderStatusTracker = ({ statusCode }) => {
+  const OrderStatusTracker = ({ statusCode }:any) => {
     const statusNumber = parseInt(statusCode);
   
     if (isNaN(statusNumber)) {
@@ -160,7 +161,7 @@ const OrderItemDetailPage = () => {
     if (statusNumber === 1) {
       return (
         <div className="flex justify-center space-x-4">
-          anjay
+          1
         </div>
       );
     } else {
@@ -182,8 +183,8 @@ const OrderItemDetailPage = () => {
                 <input type="text" placeholder="Beri alasan penolakan" value={rejectionReason} onChange={e => setRejectionReason(e.target.value)} className="input input-bordered input-error w-full max-w-xs" />
               </form>
               <div className="modal-action">
-                <button className="btn mr-2" onClick={() => document.getElementById('modal_tolak').close()}>Batal</button>
-                <button className="btn btn-success" onClick={() => { handleConfirmAnswer(false); document.getElementById('modal_tolak').close(); }}>Tolak</button>
+                <button className="btn mr-2" onClick={() => document.getElementById('modal_tolak')?.close()}>Batal</button>
+                <button className="btn btn-success" onClick={() => { handleConfirmAnswer(false); document.getElementById('modal_tolak')?.close(); }}>Tolak</button>
               </div>
 
             </div>
@@ -193,8 +194,8 @@ const OrderItemDetailPage = () => {
               <h3 className="font-bold text-lg">Terima</h3>
               <p>Anda yakin akan menerima order ini?</p>
               <div className="modal-action">
-                <button className="btn mr-2" onClick={() => document.getElementById('modal_terima').close()}>Batal</button>
-                <button className="btn btn-success" onClick={() => { handleConfirmAnswer(true); document.getElementById('modal_terima').close(); }}>Yakin</button>
+                <button className="btn mr-2" onClick={() => document.getElementById('modal_terima')?.close()}>Batal</button>
+                <button className="btn btn-success" onClick={() => { handleConfirmAnswer(true); document.getElementById('modal_terima')?.close(); }}>Yakin</button>
               </div>
 
             </div>
@@ -312,12 +313,12 @@ const OrderItemDetailPage = () => {
               >
                 Kembali
               </button>
-              {orderItemData['content']['statusOrder'] == 0 &&
+              {orderItemData['content']['statusOrder'] == 0 && userRole === 'KARYAWAN' &&
                 <div>
-                  <button className='btn btn-success' onClick={() => document.getElementById('modal_terima').showModal()}>
+                  <button className='btn btn-success' onClick={() => document.getElementById('modal_terima')?.showModal()}>
                     Terima
                   </button>
-                  <button className='btn btn-danger' onClick={() => document.getElementById('modal_tolak').showModal()}>
+                  <button className='btn btn-danger' onClick={() => document.getElementById('modal_tolak')?.showModal()}>
                     Tolak
                   </button>
                 </div>}

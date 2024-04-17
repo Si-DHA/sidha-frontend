@@ -1,8 +1,8 @@
 import { BASE_URL } from '@/app/constant/constant';
 
-export const getImageBongkar = async (idOrderItem: string): Promise<any> => {
+export const viewInvoiceKlien = async (idKlien: String): Promise<any> => {
     try {
-        const url = `${BASE_URL}/order/get-bukti-bongkar?idOrderItem=${idOrderItem}`;
+        const url = `${BASE_URL}/invoice/view-klien/${idKlien}`;
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -11,7 +11,14 @@ export const getImageBongkar = async (idOrderItem: string): Promise<any> => {
             }
         });
 
-        return response.blob();
+        const responseData = await response.json();
+
+        if (response.ok) {
+            return responseData;
+        } else {
+            throw new Error(responseData.message);
+        }
+
     } catch (error: any) {
         throw new Error(error.message);
     }
