@@ -134,8 +134,3 @@ const DaftarPurchaseOrderPage = () => {
 }
 
 export default DaftarPurchaseOrderPage
-
-function handleConfirmOrder(value: string): void {
-    console.log(value)
-}
-

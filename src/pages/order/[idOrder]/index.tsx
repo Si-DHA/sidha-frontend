@@ -5,6 +5,27 @@ import DataTable from "@/app/components/common/datatable/DataTable";
 import Cookies from "js-cookie";
 import Drawer from "@/app/components/common/drawer";
 
+const getStatusDescription = (statusCode) => {
+    switch (statusCode) {
+        case -1:
+            return 'Ditolak';
+        case 0:
+            return <div className="badge badge-error">Menunggu Konfirmasi</div>;
+        case 1:
+            return <div className="badge badge-success">Telah Dikonfirmasi</div>;
+        case 2:
+            return 'Menunggu DP';
+        case 3:
+            return 'Dalam Perjalanan';
+        case 4:
+            return 'Sampai (Menunggu Pelunasan)';
+        case 5:
+            return 'Selesai';
+        default:
+            return 'Unknown Status';
+    }
+};
+
 interface Klien {
     id: string;
     companyName: string;
@@ -47,13 +68,14 @@ const CustomNoDataComponent = () => (
     </div>
 );
 
-const OrderItemPage = () => {
+const DetailOrderPage = () => {
     const [klien, setKlien] = useState<Klien[]>([]);
     const [companyName, setCompanyName] = useState('');
     const [orderItem, setOrderItem] = useState<OrderItem[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const { idOrder } = router.query;
+    console.log("idOrder:", idOrder);
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
 
@@ -154,11 +176,17 @@ const OrderItemPage = () => {
             ),
         },
         {
+            Header: 'Status Order',
+            accessor: 'statusOrder',
+            Cell: ({ value }) => getStatusDescription(value),
+
+        },
+        {
             Header: 'Kelola',
             Cell: ({ row }) => (
                 <div className="flex justify-center space-x-4">
                     <button
-                        onClick={() => router.push(`/order/klien/${idOrder}/${row.original.id}`)}
+                        onClick={() => router.push(`/order/${idOrder}/${row.original.id}`)}
                         className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                         Detail
@@ -188,4 +216,4 @@ const OrderItemPage = () => {
     );
 };
 
-export default OrderItemPage;
+export default DetailOrderPage;

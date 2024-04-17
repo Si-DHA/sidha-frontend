@@ -80,7 +80,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
 
 
     const handleRowClickOrder = (idOrder: any) => {
-      router.push(`order/detail?id=${idOrder}`);
+      router.push(`order/${idOrder}`);
     }
 
     return page.map((row:any, index) => {
@@ -122,7 +122,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
   return (
     <div style={{ marginBottom: '20px', fontSize: '13px' }} className="overflow-x-auto">
       {/* Search input */}
-      <div style={{ float: 'left', marginBottom: '10px' }}>
+      {type!="order" && <div style={{ float: 'left', marginBottom: '10px' }}>
         <div style={{ position: 'relative' }}>
           <input
             value={globalFilter || ''}
@@ -144,7 +144,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
             <FontAwesomeIcon icon={faSearch} />
           </span>
         </div>
-      </div>
+      </div>}
       {btnText && onClick &&
         <div style={{ float: 'right', marginBottom: '15px' }}>
           <button className="btn btn-primary" onClick={onClick}>{btnText}</button>
