@@ -5,7 +5,7 @@ import FailAlert from "@/app/components/common/FailAlert";
 import { viewDetailKontrak } from "../api/kontrak/viewDetailKontrak";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Drawer from "@/app/components/common/Drawer";
+import Drawer from "@/app/components/common/drawer";
 import Cookies from "js-cookie";
 import { Inter } from "next/font/google";
 import Link from "next/link";

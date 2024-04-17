@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Router, useRouter } from "next/router";
 import { viewAllKontrak } from "@/pages/api/kontrak/viewAllKontrak";
 import { Inter } from "next/font/google";
-import Drawer from "@/app/components/common/Drawer";
+import Drawer from "@/app/components/common/drawer";
 const inter = Inter({ subsets: ["latin"] });
 import Cookies from "js-cookie";
 
