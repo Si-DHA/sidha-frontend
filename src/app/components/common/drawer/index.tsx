@@ -54,6 +54,7 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
         </div>
       )
     } else if (userRole === 'KLIEN') {
+      const idKlien = Cookies.get('idUser');
       setDrawer(
         <div className="drawer lg:drawer-open">
           <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
@@ -88,7 +89,7 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                 <li>
                   <h2 className="menu-title text-neutral">Invoice</h2>
                   <ul>
-                    <li><Link href="/">Daftar Invoice</Link></li>
+                    <li><Link href={`/invoice?idKlien=${idKlien}`}>Daftar Invoice</Link></li>
                   </ul>
                 </li>
 
@@ -159,7 +160,7 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                 <li>
                   <h2 className="menu-title text-neutral"><a>Invoice</a></h2>
                   <ul>
-                    <li><Link href="/">Daftar Invoice</Link></li>
+                    <li><Link href="/invoice/klien">Daftar Invoice</Link></li>
 
                   </ul>
                 </li>

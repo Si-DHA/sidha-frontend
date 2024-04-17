@@ -1,5 +1,4 @@
 import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
 import DataTable from "@/app/components/common/datatable/DataTable";
 import { viewAllTruk } from "../api/truk/viewAllTruk";
 import React, { useState, useEffect } from "react";
@@ -32,7 +31,6 @@ const TrukPage: React.FC = () => {
         const fetchData = async () => {
             try {
                 const trukDataResponse = await viewAllTruk();
-                console.log(trukDataResponse);
                 if (trukDataResponse) {
                     setTrukData(trukDataResponse['content']);
                 }

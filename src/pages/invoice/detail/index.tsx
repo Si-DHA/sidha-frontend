@@ -53,7 +53,7 @@ const InvoiceDetailPage = () => {
         var invoice = invoiceDataResponse['content']['invoice'];
 
         if (!invoice.buktiDp || invoice.buktiDp.status < 1) {
-          setStatus('Belum Bayar DP'); // If buktiDp is null or status is less than 1
+          setStatus('Menunggu DP'); // If buktiDp is null or status is less than 1
         } else if (!invoice.buktiPelunasan || invoice.buktiPelunasan.status < 1) {
           setStatus('Menunggu Pelunasan'); // If buktiPelunasan is null or status is less than 1
         } else {
@@ -142,11 +142,10 @@ const InvoiceDetailPage = () => {
               {error ? (<div>{error}</div>) : (<>
                 {invoiceData ? (
                   <>
-                    {status === 'Belum Bayar DP' && userRole === 'KLIEN' ? (
+                    {status === 'Menunggu DP' && userRole === 'KLIEN' ? (
                       <DataTable
                         columns={columns}
                         data={invoiceData}
-                        type="invoice"
                         btnText="Bayar DP"
                         onClick={goToPembayaranDP}
                       />
@@ -154,15 +153,13 @@ const InvoiceDetailPage = () => {
                       <DataTable
                         columns={columns}
                         data={invoiceData}
-                        type="invoice"
                         btnText="Bayar Pelunasan"
                         onClick={goToPelunasan}
                       />
-                    ) : status === 'Belum Bayar DP' && userRole === 'KARYAWAN' ? (
+                    ) : status === 'Menunggu DP' && userRole === 'KARYAWAN' ? (
                       <DataTable
                         columns={columns}
                         data={invoiceData}
-                        type="invoice"
                         btnText="Cek Pembayaran DP"
                         onClick={goToKonfirmasiPembayaranDP}
                       />
@@ -170,7 +167,6 @@ const InvoiceDetailPage = () => {
                       <DataTable
                         columns={columns}
                         data={invoiceData}
-                        type="invoice"
                         btnText="Cek Pembayaran Pelunasan"
                         onClick={goToKonfirmasiPembayaranPelunasan}
                       />
@@ -178,7 +174,6 @@ const InvoiceDetailPage = () => {
                       <DataTable
                         columns={columns}
                         data={invoiceData}
-                        type="invoice"
                       />
                     )}
                   </>) : (
