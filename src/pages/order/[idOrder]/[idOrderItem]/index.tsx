@@ -304,6 +304,7 @@ const OrderItemDetailPage = () => {
 
               </dl>
             </div>
+
             <div className="px-4 py-5 sm:px-6 flex justify-center gap-x-5">
               <button
                 onClick={() => router.push(`/order//${idOrder}`)}
@@ -311,7 +312,7 @@ const OrderItemDetailPage = () => {
               >
                 Kembali
               </button>
-              {orderItemData['content']['statusOrder'] > 1 &&
+              {orderItemData['content']['statusOrder'] == 0 &&
                 <div>
                   <button className='btn btn-success' onClick={() => document.getElementById('modal_terima').showModal()}>
                     Terima
@@ -321,7 +322,6 @@ const OrderItemDetailPage = () => {
                   </button>
                 </div>}
             </div>
-
           </div>
 
           <OrderStatusTracker statusCode={orderItemData['content']['statusOrder'] as String} />
