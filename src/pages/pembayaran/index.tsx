@@ -112,6 +112,8 @@ const PembayaranPage = () => {
                 </div>
                 {error ? (
                     <div className="mx-auto my-auto">Error: {error}</div>
+                ) : invoiceData === null ? (
+                    <div className="mx-auto my-auto">Loading..</div>
                 ) : invoiceData && (
                     <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
                         <style jsx>{`
