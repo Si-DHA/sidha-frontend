@@ -11,6 +11,13 @@ interface InsidenRow {
     id: string;
     createdAt: string;
     kategori: string;
+    orderItem?: {
+        id: string;
+        rute: Array<{
+            source: string;
+            destination: string;
+        }>;
+    };
 }
 
 const CustomNoDataComponent = () => (
@@ -62,6 +69,12 @@ const IndexPage = () => {
         {
             Header: 'Status',
             accessor: 'status',
+        },
+        {
+            Header: 'Rute',
+            accessor: (row: InsidenRow) => row.orderItem && row.orderItem.rute.length > 0 
+                ? `${row.orderItem.rute[0].source} to ${row.orderItem.rute[0].destination}`
+                : 'N/A', 
         },
         {
             Header: 'Actions',

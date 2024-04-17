@@ -1,5 +1,4 @@
 import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
 import Drawer from "@/app/components/common/drawer";
 import Cookies from "js-cookie";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
@@ -94,7 +93,7 @@ const PembayaranPage = () => {
                     window.location.reload();
                 }, 3000);
             } else {
-                throw new Error(responseData.message);
+                throw new Error(response.message);
             }
         } catch (error) {
             setAlert(<FailAlert message={error.message || "Gagal mengunggah bukti pembayaran"} />);
@@ -107,30 +106,32 @@ const PembayaranPage = () => {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="cmyk">
-            {error ? (
-                <Drawer userRole={userRole}>
-                    <div>Error: {error}</div>
-                </Drawer>
-            ) : invoiceData && (
-                <Drawer userRole={userRole}>
-                    <div className="flex flex-row">
-                        {alert}
-                    </div>
-                    <style jsx>{`
-                    .image-container {
-                        padding-top:10px;
-                        max-width: 200px;
-                        max-height: 300px;
-                        overflow: auto;
-                        margin: 0 auto;
-                    }
-    
-                    .image-container img {
-                        width: auto;
-                        height: 100%;
-                    }
-                `}</style>
+            <Drawer userRole={userRole}>
+                <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
+                    {alert}
+                </div>
+                {error ? (
+                    <div className="mx-auto my-auto">Error: {error}</div>
+                ) : invoiceData && (
                     <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+                        <style jsx>{`
+                            .image-container {
+                                padding-top:10px;
+                                width: 100%;
+                                max-width: 200px;
+                                max-height: 300px; /* Set a fixed height */
+                                overflow: auto; /* Enable scrolling if the image exceeds container height */
+                                margin: 0 auto;
+                            }
+                        
+                            .image-container img {
+                                max-width: 100%; /* Ensure the image doesn't exceed container width */
+                                max-height: 100%; /* Ensure the image doesn't exceed container height */
+                                display: block; /* Ensure the image stays within its container */
+                                margin: auto; /* Center the image horizontally */
+                            }
+                        `}</style>
+
                         <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                             <div className="modal-box">
                                 <h3 className="font-bold text-lg">Delete</h3>
@@ -231,10 +232,9 @@ const PembayaranPage = () => {
 
                             </div>
                         </div>
-
                     </div>
-                </Drawer>
-            )}
+                )}
+            </Drawer>
 
             <Footer />
         </main>
