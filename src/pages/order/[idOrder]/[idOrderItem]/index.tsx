@@ -160,7 +160,7 @@ const OrderItemDetailPage = () => {
     if (statusNumber === 1) {
       return (
         <div className="flex justify-center space-x-4">
-          anjay
+          1
         </div>
       );
     } else {
