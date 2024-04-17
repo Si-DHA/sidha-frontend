@@ -224,8 +224,8 @@ const InvoiceDetailPage = () => {
               <div className="flex flex-col">
 
                 <div className="flex flex-col gap-y-10 align-middle items-center  mx-auto py-5">
-                  <h4 className="text-slate-900 text-[32px] font-bold">Tidak ada data invoice yang ditampilkan</h4>
-                  <div>
+                <div className="mx-auto my-auto">Loading..</div>
+                <div>
                     <div className="btn btn-primary btn-sm"><Link href={"/dashboard"}>Kembali ke Dashboard</Link></div>
 
                   </div>

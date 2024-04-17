@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Drawer from "@/app/components/common/drawer";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 const TrukPage: React.FC = () => {
     const router = useRouter();
@@ -48,10 +49,6 @@ const TrukPage: React.FC = () => {
             accessor: 'licensePlate',
         },
         {
-            Header: 'Merk',
-            accessor: 'merk',
-        },
-        {
             Header: 'Tipe',
             accessor: 'type',
         },
@@ -62,6 +59,33 @@ const TrukPage: React.FC = () => {
         {
             Header: 'Expired KIR',
             accessor: 'expiredKir',
+        },
+        {
+            Header: 'Sopir',
+            Cell: ({ row }) => (
+                <>
+                    {row.original.sopir ? (
+                        <Link href={`/list-user/detail?id=${row.original.sopir.id}`}>
+                            {row.original.sopir.name}
+                        </Link>
+                    ) : (
+                        '-'
+                    )}
+                </>
+            )
+        },
+        {
+            Header: 'Kelola',
+            Cell: ({ row }) => (
+                <div className="flex justify-center space-x-4">
+                    <button
+                        onClick={() => router.push(`/truk/detail?id=${row.original.idTruk}`)}
+                        className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        Detail
+                    </button>
+                </div>
+            ),
         },
     ];
 
@@ -85,9 +109,9 @@ const TrukPage: React.FC = () => {
                             ) : (
                                 <>
                                     {trukData ? ( // Check if trukData is empty
-                                        <DataTable columns={columns} data={trukData} btnText="Tambah truk" onClick={createTruk} type="truk" />
+                                        <DataTable columns={columns} data={trukData} btnText="Tambah truk" onClick={createTruk} />
                                     ) : (
-                                        <DataTable columns={columns} data={[]} btnText="Tambah truk" onClick={createTruk} type="truk" />
+                                        <DataTable columns={columns} data={[]} btnText="Tambah truk" onClick={createTruk} />
                                     )}
                                 </>)}
                         </div>
