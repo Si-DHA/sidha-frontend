@@ -158,6 +158,7 @@ export default function ProfilePage() {
           Cookies.remove("role");
           Cookies.remove("isLoggedIn");
           Cookies.remove("name");
+          Cookies.remove("companyName");
         }, 5000);
       } else {
         setAlert(<FailAlert key={Date.now()} message={`${data.message}`} />);
