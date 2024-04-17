@@ -21,42 +21,47 @@ const UpdateInsidenPage = () => {
     orderItemId: '',
     buktiFoto: null,
   });
-  const [file, setFile] = useState(null);
-  const [alert, setAlert] = useState(null);
-  const [buktiFotoUrl, setBuktiFotoUrl] = useState('');
   const [orderItems, setOrderItems] = useState([]);
+  const [file, setFile] = useState(null);
+  const [buktiFotoUrl, setBuktiFotoUrl] = useState('');
+  const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     const sopirId = Cookies.get('idUser');
-    if (id && sopirId) {
-      getInsidenById(id).then((data) => {
+    if (id) {
+      // Fetch the incident details
+      getInsidenById(id).then(data => {
         setInsidenData({
           kategori: data.kategori,
           lokasi: data.lokasi,
           keterangan: data.keterangan,
-          buktiFoto: data.buktiFoto || null,
-          orderItemId: data.orderItemId || ''
+          orderItemId: data.orderItem.id, // Ensure this is the correct path to the orderItem ID
+          buktiFoto: data.buktiFoto || null
         });
-      }).catch((error) => {
+
+        // Fetch and set the image URL
+        if (data.buktiFoto && data.buktiFoto.id) {
+          getBuktiFoto(data.buktiFoto.id)
+            .then(blob => {
+              setBuktiFotoUrl(URL.createObjectURL(blob));
+            }).catch((error) => {
+              console.error('Failed to load bukti foto:', error);
+            });
+        }
+      }).catch(error => {
         console.error('Failed to fetch insiden details:', error);
         setAlert(<FailAlert message="Failed to load insiden details." />);
       });
+    }
 
+    // Fetch all possible order items
+    if (sopirId) {
       getAcceptedOffersBySopir(sopirId).then(data => {
         setOrderItems(data.content);
       }).catch(error => {
         console.error('Fetching error:', error);
         setAlert(<FailAlert message="Failed to load order items." />);
       });
-
-      if (insidenData.buktiFoto && insidenData.buktiFoto.id) {
-        getBuktiFoto(insidenData.buktiFoto.id)
-          .then(blob => {
-            setBuktiFotoUrl(URL.createObjectURL(blob));
-          }).catch((error) => {
-            console.error('Failed to load bukti foto:', error);
-          });
-      }
     }
   }, [id]);
 
@@ -66,8 +71,12 @@ const UpdateInsidenPage = () => {
     formData.append('kategori', insidenData.kategori);
     formData.append('lokasi', insidenData.lokasi);
     formData.append('keterangan', insidenData.keterangan);
-    formData.append('orderItemId', insidenData.orderItemId); // Include orderItemId in formData
-    if (file) formData.append('buktiFoto', file);
+    formData.append('orderItemId', insidenData.orderItemId);
+    if (file) {
+      formData.append('buktiFoto', file);
+    } else if (insidenData.buktiFoto) {
+      formData.append('buktiFoto', insidenData.buktiFoto.id);
+    }
 
     try {
       await updateInsiden(id, formData);
@@ -90,7 +99,6 @@ const UpdateInsidenPage = () => {
           {alert}
           <h2 className="text-2xl font-bold text-center my-6">Update Insiden</h2>
           <form onSubmit={handleSubmit}>
-
             <div className="mb-4">
               <label htmlFor="orderItemId" className="block text-sm font-medium text-gray-700">Order Item</label>
               <select
@@ -101,8 +109,10 @@ const UpdateInsidenPage = () => {
                 className="w-full mt-1 p-2 border-2 rounded-md"
               >
                 <option value="">Select an Order Item</option>
-                {orderItems.map(item => (
-                  <option key={item.id} value={item.id}>{item.description}</option>
+                {orderItems.map((item) => (
+                  <option key={item.orderItem.id} value={item.orderItem.id}>
+                    {item.orderItem.rute.length > 0 ? `${item.orderItem.rute[0].source} - ${item.orderItem.rute[0].destination}` : "No Route Available"}
+                  </option>
                 ))}
               </select>
             </div>
@@ -134,6 +144,7 @@ const UpdateInsidenPage = () => {
                 className="w-full mt-1 p-2 border-2 rounded-md"
               />
             </div>
+
             <div className="mb-4">
               <label htmlFor="keterangan" className="block text-sm font-medium text-gray-700">Keterangan</label>
               <textarea
@@ -145,6 +156,7 @@ const UpdateInsidenPage = () => {
                 rows="4"
               ></textarea>
             </div>
+
             <div className="mb-4">
               <label htmlFor="buktiFoto" className="block text-sm font-medium text-gray-700">Upload Bukti</label>
               <input
@@ -154,19 +166,21 @@ const UpdateInsidenPage = () => {
                 className="w-full mt-1 p-2 border-2 rounded-md file:bg-blue-500 file:text-white file:border-none file:px-4 file:py-2 file:rounded-md file:cursor-pointer"
               />
             </div>
+
             {buktiFotoUrl && (
               <div className="mt-4 mb-4">
-                <p className="text-sm text-gray-700">Bukti Foto Saat Ini:</p>
-                <img src={buktiFotoUrl} alt="Bukti Foto" className="mt-2 max-h-60 w-auto" />
+                <label className="block text-sm font-medium text-gray-700">Current Photo:</label>
+                <img src={buktiFotoUrl} alt="Current Bukti Foto" className="rounded-lg" style={{ maxWidth: '100%', height: 'auto' }} />
               </div>
             )}
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mb-4">
+
+            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mb-4">
               Update
             </button>
           </form>
         </main>
+        <Footer />
       </Drawer>
-      <Footer />
     </>
   );
 };
