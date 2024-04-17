@@ -1,5 +1,6 @@
 import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
+import Drawer from "@/app/components/common/drawer";
+import Cookies from "js-cookie";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
 import { BASE_URL } from '@/app/constant/constant';
@@ -19,6 +20,22 @@ const PembayaranPage = () => {
     const [invoiceData, setInvoiceData] = useState(null);
     const [buktiData, setBuktiData] = useState(null);
     const [imageUploaded, setImageUploaded] = useState(null);
+
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        if (role === 'KLIEN') {
+            setUserRole(role);
+        } else {
+            setError('You are not allowed to access this page');
+        }
+
+    }, [isLoggedIn, router])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -76,7 +93,7 @@ const PembayaranPage = () => {
                     window.location.reload();
                 }, 3000);
             } else {
-                throw new Error(responseData.message);
+                throw new Error(response.message);
             }
         } catch (error) {
             setAlert(<FailAlert message={error.message || "Gagal mengunggah bukti pembayaran"} />);
@@ -89,132 +106,136 @@ const PembayaranPage = () => {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="cmyk">
-            <Navbar />
-
-            <div className="flex flex-row">
-                {alert}
-            </div>
-            <style jsx>{`
-                .image-container {
-                    padding-top:10px;
-                    max-width: 200px;
-                    max-height: 300px;
-                    overflow: auto;
-                    margin: 0 auto;
-                }
-
-                .image-container img {
-                    width: auto;
-                    height: 100%;
-                }
-            `}</style>
-            {error ? (
-                <div>Error: {error}</div>
-            ) : invoiceData && (
-                <div className="flex flex-row gap-y-12 gap-x-12">
-                    <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-                        <div className="modal-box">
-                            <h3 className="font-bold text-lg">Delete</h3>
-                            <p className="py-4">Are you sure you want to upload this?</p>
-                            <div className="modal-action">
-                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
-                                <button className="btn btn-success" onClick={() => { uploadBuktiImage(); document.getElementById('my_modal_5').close(); }}>Upload</button>
-                            </div>
-
-                        </div>
-                    </dialog>
-
-                    <div className="flex flex-col informasi-pembayaran justify-center items-center">
-                        <div className="card w-1600 bg-base-100 shadow-md">
-
-                            <div className="card-body ">
-                                <h3 className="text-xl font-semibold mb-2 text-center">Jumlah yang harus dibayar</h3>
-                                {isPelunasan ? (
-                                    <h3 className="text-2xl font-bold mb-4 text-center text-primary">
-                                        Rp{invoiceData['totalPelunasan'].toLocaleString('id-ID')}
-                                    </h3>) : (
-                                    <h3 className="text-2xl font-bold mb-4 text-center text-primary">
-                                        Rp{invoiceData['totalDp'].toLocaleString('id-ID')}
-                                    </h3>)}
-                                <table className="table text-left" >
-
-                                    <tbody>
-                                        <tr>
-                                            <td className="font-semibold">Nama rekening</td>
-                                            <td>BCA a.n. Eni Yulianti</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="font-semibold">Nomor rekening</td>
-                                            <td>1234567890</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="font-semibold">Status pembayaran</td>
-                                            <td>
-                                                {buktiData ? (
-                                                    buktiData['status'] === 0 ? (
-                                                        <div className="badge badge-warning">
-                                                            Menunggu konfirmasi
-                                                        </div>
-                                                    ) : buktiData['status'] === 1 ? (
-                                                        <div className="badge badge-success">
-                                                            Disetujui
-                                                        </div>
-                                                    ) : buktiData['status'] === -1 ? (
-                                                        <div className="badge badge-error">
-                                                            Ditolak
-                                                        </div>
-                                                    ) : null
-                                                ) : (
-                                                    <div className="badge badge-info">
-                                                        Belum dibayar
-                                                    </div>
-                                                )}
-                                            </td>
-                                        </tr>
-                                        {buktiData && buktiData['status'] === -1 && (
-                                            <tr>
-                                                <td className="font-semibold">Alasan penolakan</td>
-                                                <td>{buktiData['alasanPenolakan']}</td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex flex-col grow justify-center items-center bukti-pembayaran mb-4">
-                        <div className="card w-96 bg-base-100 shadow-md">
-                            <div className="card-body items-center text-center">
-                                <h3 className="text-xl font-semibold mb-4">Unggah bukti pembayaran</h3>
-
-                                <label className="form-control w-full max-w-xs">
-                                    <input id="buktiImage" type="file" accept="image/*" className="file-input file-input-bordered w-full max-w-xs" onChange={handleFileChange}
-                                        disabled={buktiData && buktiData['status'] === 1}
-                                    />
-                                    <div className="label">
-                                        <span className="label-text-alt">max. size: 10Mb</span>
-                                        <span className="label-text-alt">.jpg/.jpeg/.png</span>
-                                    </div>
-                                </label>
-                                {imageUrl && (
-                                    <div className="mt-4 mb-5">
-                                        <div className="image-container">
-                                            <img src={imageUrl} alt="Bukti Pembayaran" />
-                                        </div>
-                                    </div>
-                                )}
-                                {(!buktiData || buktiData['status'] !== 1) && (
-                                    <div className="flex flex-row w-full max-w-xs justify-center align-middle">
-                                        <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_5').showModal()}>Upload </button>
-                                    </div>
-                                )}
-                            </div>
-
-                        </div>
-                    </div>
-
+            <Drawer userRole={userRole}>
+                <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
+                    {alert}
                 </div>
-            )}
+                {error ? (
+                    <div className="mx-auto my-auto">Error: {error}</div>
+                ) : invoiceData && (
+                    <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+                        <style jsx>{`
+                            .image-container {
+                                padding-top:10px;
+                                width: 100%;
+                                max-width: 200px;
+                                max-height: 300px; /* Set a fixed height */
+                                overflow: auto; /* Enable scrolling if the image exceeds container height */
+                                margin: 0 auto;
+                            }
+                        
+                            .image-container img {
+                                max-width: 100%; /* Ensure the image doesn't exceed container width */
+                                max-height: 100%; /* Ensure the image doesn't exceed container height */
+                                display: block; /* Ensure the image stays within its container */
+                                margin: auto; /* Center the image horizontally */
+                            }
+                        `}</style>
+
+                        <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+                            <div className="modal-box">
+                                <h3 className="font-bold text-lg">Delete</h3>
+                                <p className="py-4">Are you sure you want to upload this?</p>
+                                <div className="modal-action">
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
+                                    <button className="btn btn-success" onClick={() => { uploadBuktiImage(); document.getElementById('my_modal_5').close(); }}>Upload</button>
+                                </div>
+
+                            </div>
+                        </dialog>
+
+                        <div className="flex flex-col informasi-pembayaran justify-center items-center">
+                            <div className="card w-1600 bg-base-100 shadow-md">
+
+                                <div className="card-body ">
+                                    <h3 className="text-xl font-semibold mb-2 text-center">Jumlah yang harus dibayar</h3>
+                                    {isPelunasan ? (
+                                        <h3 className="text-2xl font-bold mb-4 text-center text-primary">
+                                            Rp{invoiceData['totalPelunasan'].toLocaleString('id-ID')}
+                                        </h3>) : (
+                                        <h3 className="text-2xl font-bold mb-4 text-center text-primary">
+                                            Rp{invoiceData['totalDp'].toLocaleString('id-ID')}
+                                        </h3>)}
+                                    <table className="table text-left" >
+
+                                        <tbody>
+                                            <tr>
+                                                <td className="font-semibold">Nama rekening</td>
+                                                <td>BCA a.n. Eni Yulianti</td>
+                                            </tr>
+                                            <tr>
+                                                <td className="font-semibold">Nomor rekening</td>
+                                                <td>1234567890</td>
+                                            </tr>
+                                            <tr>
+                                                <td className="font-semibold">Status pembayaran</td>
+                                                <td>
+                                                    {buktiData ? (
+                                                        buktiData['status'] === 0 ? (
+                                                            <div className="badge badge-warning">
+                                                                Menunggu konfirmasi
+                                                            </div>
+                                                        ) : buktiData['status'] === 1 ? (
+                                                            <div className="badge badge-success">
+                                                                Disetujui
+                                                            </div>
+                                                        ) : buktiData['status'] === -1 ? (
+                                                            <div className="badge badge-error">
+                                                                Ditolak
+                                                            </div>
+                                                        ) : null
+                                                    ) : (
+                                                        <div className="badge badge-info">
+                                                            Belum dibayar
+                                                        </div>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                            {buktiData && buktiData['status'] === -1 && (
+                                                <tr>
+                                                    <td className="font-semibold">Alasan penolakan</td>
+                                                    <td>{buktiData['alasanPenolakan']}</td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col grow justify-center items-center bukti-pembayaran mb-4">
+                            <div className="card w-96 bg-base-100 shadow-md">
+                                <div className="card-body items-center text-center">
+                                    <h3 className="text-xl font-semibold mb-4">Unggah bukti pembayaran</h3>
+
+                                    <label className="form-control w-full max-w-xs">
+                                        <input id="buktiImage" type="file" accept="image/*" className="file-input file-input-bordered w-full max-w-xs" onChange={handleFileChange}
+                                            disabled={buktiData && buktiData['status'] === 1}
+                                        />
+                                        <div className="label">
+                                            <span className="label-text-alt">max. size: 10Mb</span>
+                                            <span className="label-text-alt">.jpg/.jpeg/.png</span>
+                                        </div>
+                                    </label>
+                                    {imageUrl && (
+                                        <div className="mt-4 mb-5">
+                                            <div className="image-container">
+                                                <img src={imageUrl} alt="Bukti Pembayaran" />
+                                            </div>
+                                        </div>
+                                    )}
+                                    {(!buktiData || buktiData['status'] !== 1) && (
+                                        <div className="flex flex-row w-full max-w-xs justify-center align-middle">
+                                            <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_5').showModal()}>Upload </button>
+                                        </div>
+                                    )}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </Drawer>
+
             <Footer />
         </main>
     );

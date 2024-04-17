@@ -42,7 +42,11 @@ const KaryawanInsidenDetailPage = () => {
             await updateStatus(id as string, selectedStatus);
             setAlert(<SuccessAlert message="Insiden status updated successfully" />);
             setTimeout(() => {
+<<<<<<< HEAD
                 window.location.reload(); // Refresh the page
+=======
+                window.location.reload();
+>>>>>>> 6b979247a4172a075d04e657131d68d4ebdf4c4e
             }, 1000);
         } catch (error) {
             console.error('Error updating status:', error);
@@ -65,6 +69,7 @@ const KaryawanInsidenDetailPage = () => {
                         <h3 className="text-xl text-center font-bold mb-2">Detail Laporan Insiden</h3>
                     </div>
                     <dl>
+<<<<<<< HEAD
                         {insiden.createdAt && (
                             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                 <dt className="text-sm font-medium text-gray-500">Tanggal Laporan</dt>
@@ -79,6 +84,36 @@ const KaryawanInsidenDetailPage = () => {
                                 </dd>
                             </div>
                         )}
+=======
+                        {insiden.orderItem && (
+                            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt className="text-sm font-medium text-gray-500">ID</dt>
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.id}
+                                </dd>
+                            </div>
+                        )}
+                        {insiden.orderItem && (
+                            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt className="text-sm font-medium text-gray-500">Asal - Tujuan</dt>
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.rute[0].source} to {insiden.orderItem.rute[0].destination}
+                                </dd>
+                            </div>
+                        )}
+                        {insiden.createdAt && (
+                            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt className="text-sm font-medium text-gray-500">Tanggal Laporan</dt>
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    {new Date(insiden.updatedAt || insiden.createdAt).toLocaleString('id-ID', {
+                                        day: '2-digit',
+                                        month: 'long',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    })}
+                                </dd>
+                            </div>
+                        )}
+>>>>>>> 6b979247a4172a075d04e657131d68d4ebdf4c4e
                         <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">Kategori</dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.kategori}</dd>
@@ -136,7 +171,11 @@ const KaryawanInsidenDetailPage = () => {
             <Footer />
         </main>
     );
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 6b979247a4172a075d04e657131d68d4ebdf4c4e
 };
 
 export default KaryawanInsidenDetailPage;
