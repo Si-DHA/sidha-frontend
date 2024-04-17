@@ -59,20 +59,25 @@ const AcceptedOrderItemsIndexPage = () => {
 
     return (
         <>
+          <div className="flex flex-col h-screen justify-between"> 
             <Drawer userRole='userRole'>
-            <main className="flex flex-col items-center justify-between" data-theme="winter">
-                    <h2 className="text-2xl font-bold mb-2">Tawaran Kerja yang Anda Terima</h2>
-                    <DataTable
-                        data={tawaranKerja}
-                        columns={columns}
-                        loading={loading}
-                        NoDataComponent={() => <div>No accepted job offers found</div>}
-                    />
-                </main>
-                <Footer />
+              <div className="overflow-auto">
+                <h2 className="text-2xl text-center font-bold mb-2 mt-6">Tawaran Kerja yang Anda Terima</h2>
+                <div className="mx-auto w-full max-w-4xl p-4">
+                  <DataTable
+                    data={tawaranKerja}
+                    columns={columns}
+                    loading={loading}
+                    NoDataComponent={() => <div>No accepted job offers found</div>}
+                  />
+                </div>
+              </div>
             </Drawer>
+            <Footer />
+          </div>
         </>
-    );
+      );
+      
 };
 
 export default AcceptedOrderItemsIndexPage;

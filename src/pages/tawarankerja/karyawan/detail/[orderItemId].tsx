@@ -81,7 +81,7 @@ const KaryawanDetailPage = () => {
               </div>
             </div>
             <div className="mt-4">
-              <h3 className="text-xl mb-1 font-semibold">Select Sopir for this Order</h3>
+              <h3 className="text-xl mb-2 mt-2 font-semibold">Select Sopir for this Order</h3>
               <select
                 value={selectedSopirId}
                 onChange={(e) => setSelectedSopirId(e.target.value)}
@@ -97,7 +97,7 @@ const KaryawanDetailPage = () => {
               </select>
               <button
                 onClick={handleConfirmSopir}
-                className="btn btn-primary"
+                className="btn btn-primary mb-4"
                 disabled={confirmationStatus || !selectedSopirId}
               >
                 Confirm Sopir
