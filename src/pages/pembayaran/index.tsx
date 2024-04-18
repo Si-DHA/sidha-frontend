@@ -115,7 +115,7 @@ const PembayaranPage = () => {
                 ) : invoiceData === null ? (
                     <div className="mx-auto my-auto">Loading..</div>
                 ) : invoiceData && (
-                    <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+                    <div className="flex flex-col lg:flex-row  justify-center items-center gap-x-16  gap-y-16 mx-auto my-auto px-12 py-12">
                         <style jsx>{`
                             .image-container {
                                 padding-top:10px;
