@@ -127,7 +127,7 @@ const KonfirmasiPembayaranPage = () => {
                                     <input required id="alasanPenolakan" type="text" className="grow" placeholder="Masukkan alasan penolakan" />
                                 </label>
                                 <div className="modal-action">
-                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_tolak').close()}>Cancel</button>
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_tolak').close()}>Batal</button>
                                     <button className="btn btn-error" onClick={() => { handleKonfirmasi(false); document.getElementById('my_modal_tolak').close(); }}>Tolak</button>
                                 </div>
 

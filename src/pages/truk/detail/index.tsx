@@ -83,11 +83,11 @@ const TrukDetailPage = () => {
                     <div className="flex flex-col lg:flex-row  justify-center items-center gap-x-16  gap-y-16 mx-auto my-auto px-12 py-12">
                         <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                             <div className="modal-box">
-                                <h3 className="font-bold text-lg">Delete</h3>
-                                <p className="py-4">Are you sure you want to delete this truck data?</p>
+                                <h3 className="font-bold text-lg">Hapus</h3>
+                                <p className="py-4">Apakah Anda yakin ingin menghapus data truk ini?</p>
                                 <div className="modal-action">
-                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
-                                    <button className="btn btn-error" onClick={() => { handleDelete(id); document.getElementById('my_modal_5').close(); }}>Delete</button>
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Batal</button>
+                                    <button className="btn btn-error" onClick={() => { handleDelete(id); document.getElementById('my_modal_5').close(); }}>Hapus</button>
                                 </div>
 
                             </div>
@@ -106,7 +106,7 @@ const TrukDetailPage = () => {
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                                     </svg>
-                                                    Edit Truck
+                                                    Ubah Truk
                                                 </button>
                                             </div>
                                             <div className="card-actions" text-xs>
@@ -115,7 +115,7 @@ const TrukDetailPage = () => {
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                                                         <path fillRule="evenodd" d="M15 5a2 2 0 00-2-2h-4a2 2 0 00-2 2V7H5a1 1 0 100 2h1v8a2 2 0 002 2h6a2 2 0 002-2V9h1a1 1 0 100-2h-2V5zm-5 0a1 1 0 011-1h2a1 1 0 011 1v1h-4V5zm4 3H6v8h8V8z" clipRule="evenodd" />
                                                     </svg>
-                                                    Delete Truck
+                                                    Hapus Truk
                                                 </button>
                                             </div>
                                         </div>

@@ -136,11 +136,11 @@ const UpdateTrukPage = () => {
                     <div className="flex flex-col lg:flex-row  justify-center items-center gap-x-16  gap-y-16 mx-auto my-auto px-12 py-12">
                         <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                             <div className="modal-box">
-                                <h3 className="font-bold text-lg">Update</h3>
-                                <p className="py-4">Are you sure your data is correct?</p>
+                                <h3 className="font-bold text-lg">Ubah</h3>
+                                <p className="py-4">Apakah Anda yakin data yang dimasukkan sudah benar?</p>
                                 <div className="modal-action">
-                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
-                                    <button className="btn btn-success" onClick={() => { handleUpdate(); document.getElementById('my_modal_5').close(); }}>Update</button>
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Batal</button>
+                                    <button className="btn btn-success" onClick={() => { handleUpdate(); document.getElementById('my_modal_5').close(); }}>Ubah</button>
                                 </div>
 
                             </div>
@@ -247,7 +247,7 @@ const UpdateTrukPage = () => {
                                     </table>
                                     <div className="flex flex-row justify-center align-middle">
                                         <button onClick={() => document.getElementById('my_modal_5').showModal()}
-                                            className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" type="submit">Update</button>
+                                            className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" type="submit">Ubah</button>
                                     </div>
 
 
