@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-const FailAlert = ({ message } : any) => {
+const FailAlert = ({ message }: any) => {
   const [showAlert, setShowAlert] = useState(true);
 
   useEffect(() => {
+    if (showAlert) {
+      window.scrollTo(0, 0);  // Scrolls to the top of the page when alert is shown
+    }
     const timer = setTimeout(() => {
       setShowAlert(false);
     }, 3000);

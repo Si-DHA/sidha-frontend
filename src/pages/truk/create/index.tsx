@@ -106,7 +106,7 @@ const CreateTrukPage = () => {
                 {error ? (
                     <div className="mx-auto my-auto">Error: {error}</div>
                 ) : (
-                    <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+                    <div className="flex flex-col lg:flex-row  justify-center items-center gap-x-16  gap-y-16 mx-auto my-auto px-12 py-12">
                         <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                             <div className="modal-box">
                                 <h3 className="font-bold text-lg">Create</h3>
