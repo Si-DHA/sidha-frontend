@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
 import { getOrderDetailBeforeCheckout } from "@/pages/api/order/getOrderDetailBeforeCheckout";
-import { Order } from "../../model";
+import { Order } from "../../../../app/model";
 import DataTable from "@/app/components/common/datatable/DataTable";
 import { createOrder } from "@/pages/api/order/createOrder";
 
@@ -139,7 +139,7 @@ const PurchaseOrderDetail = () => {
                             {error ? (
                                 <div>{error}</div>
                             ) : (
-                                <DataTable columns={columns} data={orderItems} btnText="Buat Order Baru" type="checkout" biayaPengiriman={totalPrice}/>
+                                <DataTable columns={columns} data={orderItems} btnText="Buat Order Baru" type="checkout" biayaPengiriman={totalPrice} />
                             )}
                         </div>
                     </div>

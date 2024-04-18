@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/app/constant/constant";
-import { Order } from "@/pages/order/model";
+import { Order } from "@/app/model";
 
 export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
     try {
