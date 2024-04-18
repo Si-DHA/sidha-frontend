@@ -81,51 +81,53 @@ const SopirDetailPage = () => {
 
     // Inside your component's return statement
     return (
-        <Drawer userRole='userRole'>
-            <main className="flex flex-col items-center justify-between" data-theme="winter">
-                {alert.show && (alert.type === 'success' ? <SuccessAlert message={alert.message} /> : <FailAlert message={alert.message} />)}
-                {orderItem ? (
-                    <div className="w-full max-w-4xl p-4 bg-white shadow-md rounded-lg">
-                        <h2 className="text-2xl font-bold mb-4">Detail Penawaran Kerja</h2>
-                        <div className="grid grid-cols-2 gap-4">
-                            <p><strong>Asal:</strong> {orderItem.source}</p>
-                            <p><strong>Tujuan:</strong> {orderItem.destination}</p>
-                            <p><strong>Mudah Pecah:</strong> {orderItem.isPecahBelah}</p>
-                            <p><strong>Harga:</strong> {orderItem.price}</p>
-                            <p><strong>Tipe Barang:</strong> {orderItem.tipeBarang}</p>
-                            <p><strong>Tipe Truk:</strong> {orderItem.tipeTruk}</p>
-                            <p><strong>Alamat Pengiriman:</strong> {orderItem.alamatPengiriman}</p>
-                            <p><strong>Alamat Penjemputan:</strong> {orderItem.alamatPenjemputan}</p>
-                            {/* <p><strong>Tanggal Dibuat:</strong> {orderItem.createdDate}</p>
+        <div className="flex flex-col h-screen justify-between" data-theme="winter">
+            <Drawer userRole='userRole'>
+                <div className="flex-grow overflow-auto p-4">
+                    {alert.show && (alert.type === 'success' ? <SuccessAlert message={alert.message} /> : <FailAlert message={alert.message} />)}
+                    {orderItem ? (
+                        <div className="w-full max-w-4xl p-4 bg-white">
+                            <h2 className="text-2xl font-bold mb-4">Detail Penawaran Kerja</h2>
+                            <div className="grid grid-cols-2 gap-4">
+                                <p><strong>Asal:</strong> {orderItem.source}</p>
+                                <p><strong>Tujuan:</strong> {orderItem.destination}</p>
+                                <p><strong>Mudah Pecah:</strong> {orderItem.isPecahBelah}</p>
+                                <p><strong>Harga:</strong> {orderItem.price}</p>
+                                <p><strong>Tipe Barang:</strong> {orderItem.tipeBarang}</p>
+                                <p><strong>Tipe Truk:</strong> {orderItem.tipeTruk}</p>
+                                <p><strong>Alamat Pengiriman:</strong> {orderItem.alamatPengiriman}</p>
+                                <p><strong>Alamat Penjemputan:</strong> {orderItem.alamatPenjemputan}</p>
+                                {/* <p><strong>Tanggal Dibuat:</strong> {orderItem.createdDate}</p>
                             <p><strong>Username Klien:</strong> {orderItem.createdBy}</p> */}
-                        </div>
-                        {!hasAccepted && (
-                            <div className="mt-4">
-                                <input
-                                    type="text"
-                                    placeholder="Dimana lokasi Anda sekarang?"
-                                    value={lokasi}
-                                    onChange={e => setLokasi(e.target.value)}
-                                    className="input input-bordered input-primary w-full mb-2"
-                                />
-                                <button
-                                    onClick={() => handleAccept()}
-                                    className="btn btn-primary w-full"
-                                >
-                                    Terima Tawaran Kerja
-                                </button>
                             </div>
-                        )}
-                    </div>
-                ) : (
-                    <div className="text-center">
-                        <p>Loading job offer details...</p>
-                    </div>
-                )}
+                            {!hasAccepted && (
+                                <div className="mt-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Dimana lokasi Anda sekarang?"
+                                        value={lokasi}
+                                        onChange={e => setLokasi(e.target.value)}
+                                        className="input input-bordered input-primary w-full mb-2"
+                                    />
+                                    <button
+                                        onClick={() => handleAccept()}
+                                        className="btn btn-primary w-full"
+                                    >
+                                        Terima Tawaran Kerja
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="text-center">
+                            <p>Loading job offer details...</p>
+                        </div>
+                    )}
 
-            </main>
+                </div>
+            </Drawer>
             <Footer />
-        </Drawer>
+        </div>
     );
 
 };
