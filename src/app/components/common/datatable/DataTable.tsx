@@ -10,9 +10,10 @@ interface DataTableProps {
   btnText?: string;
   onClick?: () => void;
   type?: string;
+  biayaPengiriman?: any;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, type }) => {
+const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, type, biayaPengiriman }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -98,7 +99,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
               handleRowClickKontrak(row.original.userId);
             } else if (type === 'order') {
               handleRowClickOrder(row.original.idOrder);
-            } 
+            }
           }}
           key={index}>
           <td style={{ textAlign: 'center' }}>{index + 1}</td> {/* Add table cell for numbering */}
@@ -117,10 +118,22 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
     });
   };
 
+  const RenderTableFooterPurchaseOrder = (biayaPengiriman:any) => {
+    return (
+      <tfoot>
+        <tr>
+          <td colSpan={5} style={{ textAlign: 'right' }}>Total Biaya Pengiriman</td>
+          <td style={{ textAlign: 'center' }}>
+            {biayaPengiriman}
+          </td>
+        </tr>
+      </tfoot>);
+  }
+
   return (
     <div style={{ marginBottom: '20px', fontSize: '13px' }} className="overflow-x-auto">
       {/* Search input */}
-      {type != "order" && <div style={{ float: 'left', marginBottom: '10px' }}>
+      {type != "order" && type != "checkout"  && <div style={{ float: 'left', marginBottom: '10px' }}>
         <div style={{ position: 'relative' }}>
           <input
             value={globalFilter || ''}
@@ -151,6 +164,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
       <table className="table table-xs" {...getTableProps()} style={{ borderCollapse: 'separate', width: '100%', borderSpacing: '10 10px', marginBottom: '20px' }}>
         <thead>{renderTableHeader()}</thead>
         <tbody {...getTableBodyProps()}>{RenderTableBody()}</tbody>
+        {type === 'checkout' && RenderTableFooterPurchaseOrder(biayaPengiriman)}
       </table>
       {/* Pagination */}
       <div style={{ float: 'left' }}>
