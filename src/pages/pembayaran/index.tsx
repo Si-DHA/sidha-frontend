@@ -227,7 +227,7 @@ const PembayaranPage = () => {
                                     )}
                                     {(!buktiData || buktiData['status'] !== 1) && (
                                         <div className="flex flex-row w-full max-w-xs justify-center align-middle">
-                                            <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_5').showModal()}>Upload </button>
+                                            <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_5').showModal()}>Unggah </button>
                                         </div>
                                     )}
                                 </div>
