@@ -15,9 +15,10 @@ export const confirmOrder = async (confirmOrder: ConfirmOrder, token: string): P
         });
 
         const responseData = await response.json();
+        // console.log("responseData:", responseData);
 
         if (response.ok) {
-            return responseData['content'];
+            return responseData;
         } else {
             throw new Error(responseData.message);
         }

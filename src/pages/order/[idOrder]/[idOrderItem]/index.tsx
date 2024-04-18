@@ -14,7 +14,7 @@ const OrderItemDetailPage = () => {
   const router = useRouter();
   const { idOrder, idOrderItem } = router.query;
   const [error, setError] = useState('');
-  const [alert, setAlert] = useState(null);
+  // const [alert, setAlert] = useState(null);
   const [imageBongkarUrl, setImageBongkarUrl] = useState("");
   const [imageMuatUrl, setImageMuatUrl] = useState("");
   const [orderItemData, setOrderItemData] = useState(null);
@@ -28,8 +28,6 @@ const OrderItemDetailPage = () => {
   const [isAccepted, setIsAccepted] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
 
-
-
   const confirmOrderItem = async (isAccepted: boolean) => {
     const newOrderId = idOrder as string;
     const newKaryawanId = Cookies.get('idUser');
@@ -42,7 +40,7 @@ const OrderItemDetailPage = () => {
     setIsAccepted(newIsAccepted);
 
     const token = Cookies.get('token');
-    const orderData : ConfirmOrder = {
+    const orderData: ConfirmOrder = {
       orderId: newOrderId,
       karyawanId: newKaryawanId as string,
       orderItems: [
@@ -55,10 +53,14 @@ const OrderItemDetailPage = () => {
     };
 
     try {
-      const confirmResponse = await confirmOrder(orderData, token as string);
-      // Handle the response here
-    } catch (error) {
-      // Handle the error here
+      const response = await confirmOrder(orderData, token as string);
+      if (response["isSuccess"] === false) {
+        throw new Error(response["message"]);
+      }
+      alert('Order item has been confirmed');
+      router.push(`/order/${newOrderId}`);
+    } catch (error: any) {
+      alert('An error occurred: ' + error.message);
     }
   };
 
@@ -126,7 +128,7 @@ const OrderItemDetailPage = () => {
 
   if (!orderItemData) return <div>Loading...</div>;
 
-  const getStatusDescription = (statusCode:any) => {
+  const getStatusDescription = (statusCode: any) => {
     switch (statusCode) {
       case -1:
         return 'Ditolak';
@@ -151,24 +153,16 @@ const OrderItemDetailPage = () => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
   };
 
-  const OrderStatusTracker = ({ statusCode }:any) => {
+  const OrderStatusTracker = ({ statusCode }: any) => {
     const statusNumber = parseInt(statusCode);
-  
+
     if (isNaN(statusNumber)) {
       return <div>Invalid Status Code</div>;
     }
-  
-    if (statusNumber === 1) {
-      return (
-        <div className="flex justify-center space-x-4">
-          1
-        </div>
-      );
-    } else {
-      return <div>{statusNumber}</div>;
-    }
+
+    return null;
   };
-  
+
 
   return (
     <main className="flex flex-col min-h-screen bg-white">
@@ -184,7 +178,7 @@ const OrderItemDetailPage = () => {
               </form>
               <div className="modal-action">
                 <button className="btn mr-2" onClick={() => document.getElementById('modal_tolak')?.close()}>Batal</button>
-                <button className="btn btn-success" onClick={() => { handleConfirmAnswer(false); document.getElementById('modal_tolak')?.close(); }}>Tolak</button>
+                <button className="btn btn-error" onClick={() => { handleConfirmAnswer(false); document.getElementById('modal_tolak')?.close(); }}>Tolak</button>
               </div>
 
             </div>
@@ -306,22 +300,26 @@ const OrderItemDetailPage = () => {
               </dl>
             </div>
 
-            <div className="px-4 py-5 sm:px-6 flex justify-center gap-x-5">
+            <div className=" flex flex-col px-4 py-5 sm:px-6 flex justify-center gap-4">
+              {orderItemData['content']['statusOrder'] == 0 && userRole === 'KARYAWAN' &&
+
+                <div className='flex flex-col gap-2'>
+                  <h3 className='text-lg font-bold text-center'>Konfirmasi Order</h3>
+                  <div className='flex flex-row gap-4'>
+                    <button className='btn btn-success grow ' onClick={() => document.getElementById('modal_terima')?.showModal()}>
+                      Terima
+                    </button>
+                    <button className='btn btn-error grow' onClick={() => document.getElementById('modal_tolak')?.showModal()}>
+                      Tolak
+                    </button>
+                  </div></div>}
               <button
                 onClick={() => router.push(`/order//${idOrder}`)}
                 className="btn btn-secondary"
               >
                 Kembali
               </button>
-              {orderItemData['content']['statusOrder'] == 0 && userRole === 'KARYAWAN' &&
-                <div>
-                  <button className='btn btn-success' onClick={() => document.getElementById('modal_terima')?.showModal()}>
-                    Terima
-                  </button>
-                  <button className='btn btn-danger' onClick={() => document.getElementById('modal_tolak')?.showModal()}>
-                    Tolak
-                  </button>
-                </div>}
+
             </div>
           </div>
 

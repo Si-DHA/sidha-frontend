@@ -16,6 +16,10 @@ export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
         const responseData = await response.json();
 
         if (response.ok) {
+            var newResponse = {
+                data: [] as any[],
+                totalPrice: 0
+            }
             var data = []
             // Tipe Barang 	Fragile 	Tipe Truk 	Rute Pegiriman 	Biaya Pengiriman 
             for (let i = 0; i < responseData.content.orderItems.length; i++) {
@@ -41,7 +45,9 @@ export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
                     biayaPengiriman: responseData.content.orderItems[i].price,
                 });
             }
-            return data;
+            newResponse.data = data;
+            newResponse.totalPrice = responseData.content.totalPrice;
+            return newResponse;
         } else {
             throw new Error(responseData.message);
         }
