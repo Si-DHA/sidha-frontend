@@ -68,7 +68,7 @@ const PurchaseOrderDetail = () => {
         })
     }
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         try {
             if (!token) {
                 throw new Error('Token not found');
@@ -78,10 +78,10 @@ const PurchaseOrderDetail = () => {
                 throw new Error('Order not found');
             }
 
-            const response = createOrder(order, token);
+            const response = await createOrder(order, token);
             if (response !== null) {
                 alert('Order berhasil dibuat');
-                router.push('/order');
+                router.push('/order/klien');
             }
 
         } catch (error: any) {
