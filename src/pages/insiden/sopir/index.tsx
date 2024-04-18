@@ -94,7 +94,7 @@ const IndexPage = () => {
         <>
             <Drawer userRole='userRole'>
             <main className="flex flex-col items-center justify-between" data-theme="winter">
-                    <h2 className="text-2xl font-bold mb-4">Laporan Insiden Anda</h2>
+                    <h2 className="text-2xl font-bold mb-4 mt-6">Laporan Insiden Anda</h2>
                 <DataTable
                     data={insidens}
                     columns={columns}

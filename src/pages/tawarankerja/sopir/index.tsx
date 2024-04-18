@@ -72,41 +72,22 @@ const OrderItemsIndexPage = () => {
 
     return (
         <>
-            <Drawer userRole='userRole'>
-                <main className="flex flex-col items-center justify-between" data-theme="winter">
-                    <h2 className="text-2xl font-bold mb-2">Tawaran Kerja</h2>
-                    <DataTable
-                        data={orderItems}
-                        columns={columns}
-                        loading={loading}
-                        NoDataComponent={() => <div>No available order items</div>}
-                    />
-                    {/* {selectedOfferId && (
-                        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                            <div className="bg-white p-4 rounded-lg shadow-lg">
-                                <h3 className="text-lg font-medium">Accept Job Offer</h3>
-                                <p>Are you sure you want to take this job? Please confirm your current location.</p>
-                                <input
-                                    type="text"
-                                    placeholder="Enter your current location"
-                                    value={location}
-                                    onChange={(e) => setLocation(e.target.value)}
-                                    className="input input-bordered w-full max-w-xs"
-                                />
-                                <div className="flex justify-end mt-4">
-                                    <button className="btn btn-secondary mr-2" onClick={() => setSelectedOfferId('')}>
-                                        Cancel
-                                    </button>
-                                    <button className="btn btn-primary" onClick={confirmAcceptOffer}>
-                                        Confirm
-                                    </button>
-                                </div>
-                            </div>
+            <div className="flex flex-col h-screen justify-between" data-theme="winter">
+                <Drawer userRole='userRole'>
+                    <div className="overflow-auto">
+                        <h2 className="text-center text-2xl font-bold mb-2 mt-6">Tawaran Kerja</h2>
+                        <div className="mx-auto w-full max-w-4xl p-4">
+                            <DataTable
+                                data={orderItems}
+                                columns={columns}
+                                loading={loading}
+                                NoDataComponent={() => <div>No available order items</div>}
+                            />
                         </div>
-                    )} */}
-                </main>
+                    </div>
+                </Drawer>
                 <Footer />
-            </Drawer>
+            </div>
         </>
     );
 };
