@@ -49,7 +49,7 @@ const PurchaseOrderDetail = () => {
                 setError(error.message);
             }
         }
-        if (orderItems.length === 0) {
+        if (order !== null && orderItems.length === 0) {
             fetchData();
         }
     },)
