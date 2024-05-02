@@ -5,7 +5,10 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Drawer from "@/app/components/common/drawer";
 import Cookies from "js-cookie";
+<<<<<<< HEAD
+=======
 import Link from "next/link";
+>>>>>>> 27490fd8fdadc304b49b15f1c193b1e1974860f1
 
 const TrukPage: React.FC = () => {
     const router = useRouter();
@@ -109,9 +112,15 @@ const TrukPage: React.FC = () => {
                             ) : (
                                 <>
                                     {trukData ? ( // Check if trukData is empty
+<<<<<<< HEAD
+                                        <DataTable columns={columns} data={trukData} btnText="Tambah truk" onClick={createTruk} type="truk" />
+                                    ) : (
+                                        <DataTable columns={columns} data={[]} btnText="Tambah truk" onClick={createTruk} type="truk" />
+=======
                                         <DataTable columns={columns} data={trukData} btnText="Tambah truk" onClick={createTruk} />
                                     ) : (
                                         <DataTable columns={columns} data={[]} btnText="Tambah truk" onClick={createTruk} />
+>>>>>>> 27490fd8fdadc304b49b15f1c193b1e1974860f1
                                     )}
                                 </>)}
                         </div>
