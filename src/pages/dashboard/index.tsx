@@ -5,6 +5,11 @@ import Navbar from "@/app/components/common/navbar"
 import Cookies from 'js-cookie';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { BarChart } from "@/app/components/common/chart/barchart";
+import { EditableChart } from "@/app/components/common/chart/editableChart";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 const DashboardPage = () => {
 
@@ -20,63 +25,125 @@ const DashboardPage = () => {
         setUserRole(role || '');
     },)
 
+    const data = [
+        ["Age", "Weight"],
+        ["Week 1", 12],
+        ["Week 2", 5.5],
+        ["Week 3", 14],
+    ];
+
+    const options = {
+        chart: {
+            title: "Company Performance",
+            subtitle: "Sales, Expenses, and Profit: 2014-2017",
+        },
+    };
+
+    const dataProp = [
+        ["Age", "Weight"],
+        ["Week 1", 12],
+        ["Week 2", 5.5],
+        ["Week 3", 14],
+        ["Week 1", 12],
+        ["Week 2", 5.5],
+        ["Week 3", 14],
+        ["Week 1", 12],
+        ["Week 2", 5.5],
+        ["Week 3", 14],
+        ["Week 1", 12],
+        ["Week 2", 5.5],
+        ["Week 3", 14],
+    ];
+
+    const optionsProp = {
+        title: "Age vs. Weight comparison",
+        hAxis: { title: "Age", minValue: 0, maxValue: 15 },
+        vAxis: { title: "Weight", minValue: 0, maxValue: 15 },
+        legend: "none",
+    };
+
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
+        <main
+        className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk"
+      >
             <Drawer userRole={userRole}>
-                <div className="flex flex-col justify-center items-center mih-h-screen">
-                    <div className="flex flex-row justify-center ">
-                        <div className="stats shadow">
+                <div className="flex flex-col  min-h-screen" data-theme="cymk">
+                    <section className="overall-dashboard-item flex flex-col">
+                        <h1 className="text-3xl ml-4">Selamat datang di dashboard</h1>
 
-                            <div className="stat">
-                                <div className="stat-title">Total Pelanggan Baru</div>
-                                <div className="stat-value">89,400</div>
-                                <div className="stat-desc">21% lebih banyak dari bulan lalu</div>
+                        <div className="card-row flex flex-row">
+                            <div className="card rounded-2xl gap-x-2 p-5 m-5  bg-gray-50">
+                                <div className="card-title">Order hari ini</div>
+                                <div className="card-value">10</div>
+
                             </div>
+                            <div className="card rounded-2xl gap-x-2 p-5 m-5  bg-gray-50">
+                                <div className="card-title">Klien baru hari ini</div>
+                                <div className="card-value">10</div>
+                            </div>
+                            <div className="card rounded-2xl gap-x-2 p-5 m-5  bg-gray-50">
+                                <div className="card-title">Kecelakan hari ini</div>
+                                <div className="card-value">10</div>
+                            </div>
+                            <div className="card rounded-2xl gap-x-2 p-5 m-5  bg-gray-50">
+                                <div className="card-title">Pendapatan hari ini</div>
+                                <div className="card-value">10</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="pendapatan-dashboard-item flex flex-col ">
+                        <h1 className="text-3xl ml-4">Grafik pendapatan</h1>
+
+                        <div className="card-row flex flex-row overflow-x-auto">
+
+                            <div className="card rounded-2xl gap-x-2 p-5 m-5 min-w-[500px] bg-white justify-center">
+                                <BarChart data={data} options={options} width="100%" height="300px" />
+                                <div className="card-value">
+                                </div>
+
+                            </div>
+                            <div className="card rounded-2xl gap-x-2 p-5 m-5   bg-white">
+                                <div className="card-title">Kecelakan hari ini</div>
+                                <EditableChart data={dataProp} options={optionsProp} />
+
+                            </div>
+
+
+
+                            <section className="bento-card mx-auto ">
+                                <div className="flex flex-row">
+                                    <div className="w-3/7 bg-gray-200 p-4 rounded-2xl gap-x-2 m-4">
+                                        <div className="card-title">Hari ini</div>
+                                        <div className="card-value">10</div>
+                                    </div>
+                                    <div className="w-4/7 bg-gray-300 p-4 rounded-2xl gap-x-2 m-4">
+                                        <div className="card-title">Minggu ini</div>
+                                        <div className="card-value">10</div>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-row justify-between">
+                                    <div className="w-2/7 bg-gray-200 p-4 rounded-2xl gap-x-2 m-4">
+                                        <div className="card-title">Bulan ini</div>
+                                        <div className="card-value">10</div>
+                                    </div>
+                                    <div className="w-5/7 bg-gray-300 p-4 rounded-2xl gap-x-2 m-4">
+                                        <div className="card-title">Tahun ini</div>
+                                        <div className="card-value">10</div>
+                                    </div>
+                                </div>
+                            </section>
 
                         </div>
-                        <div className="stats shadow">
 
-                            <div className="stat">
-                                <div className="stat-title">Total Transaksi</div>
-                                <div className="stat-value">89,400</div>
-                                <div className="stat-desc">10% lebih banyak dari minggu lalu</div>
-                            </div>
 
-                        </div>
-                    </div>
-                    <div className="flex flex-row justify-center mx-sm gap-y-5">
-                        <div className="stats shadow m-5">
 
-                            <div className="stat bg-neutral text-white">
-                                <div className="stat-figure text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </div>
-                                <div className="stat-title text-accent">Pendapatan</div>
-                                <div className="stat-value t">31 Jt</div>
-                                <div className="stat-desc">Jan 1st - Feb 1st</div>
-                            </div>
 
-                            <div className="stat bg-neutral text-white">
-                                <div className="stat-figure text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="#ffffff" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-                                </div>
-                                <div className="stat-title text-accent ">Order</div>
-                                <div className="stat-value text-white">4,200</div>
-                                <div className="stat-desc">↗︎ 400 (22%)</div>
-                            </div>
 
-                            <div className="stat bg-neutral text-white">
-                                <div className="stat-figure text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
-                                </div>
-                                <div className="stat-title text-accent">Kecelakaan</div>
-                                <div className="stat-value">0</div>
-                                <div className="stat-desc">↘︎ 100 (14%)</div>
-                            </div>
+                    </section>
 
-                        </div>
-                    </div>
                 </div>
             </Drawer>
             <Footer />
