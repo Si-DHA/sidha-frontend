@@ -48,7 +48,7 @@ const InvoiceKlienPage: React.FC = () => {
             Header: 'Nama Perusahaan',
             accessor: 'id',
             Cell: ({ row }) => (
-                <Link href={`/list-user/detail?id=${row.original.id}`}>
+                <Link href={`/list-user/detail?id=${row.original.id}`} style={{textDecoration: 'underline'}}>
                     {row.original.companyName}
                 </Link>
             )
@@ -57,7 +57,7 @@ const InvoiceKlienPage: React.FC = () => {
             Header: 'Nama CP',
             accessor: 'name',
             Cell: ({ row }) => (
-                <Link href={`/list-user/detail?id=${row.original.id}`}>
+                <Link href={`/list-user/detail?id=${row.original.id}`} style={{textDecoration: 'underline'}}>
                     {row.original.name}
                 </Link>
             )
