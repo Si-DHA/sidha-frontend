@@ -1,20 +1,19 @@
 import { BASE_URL } from "@/app/constant/constant";
 
-export const getOrderByKlien = async (idUser:string, token:string): Promise<any> => {
+export const getOrderByKlien = async (idUser: string, token: string): Promise<any> => {
     try {
-        const response = await fetch(BASE_URL+'/order/'+idUser, {
+        const response = await fetch(BASE_URL + '/order/klien/' + idUser, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-                'Authorization': 'Bearer '+token+'',
+                'Authorization': 'Bearer ' + token + '',
             },
         });
 
         const responseData = await response.json();
 
         if (response.ok) {
-            console.log(responseData);
             var data = []
             for (let i = 0; i < responseData.content.length; i++) {
                 data.push({
@@ -25,7 +24,6 @@ export const getOrderByKlien = async (idUser:string, token:string): Promise<any>
                     totalBiayaPengiriman: responseData.content[i].totalPrice,
                 });
             }
-            console.log(data);
             return data;
         } else {
             throw new Error(responseData.message);

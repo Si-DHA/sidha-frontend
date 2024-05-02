@@ -27,6 +27,3 @@ export const tipeBarang : string[] = [
     "Hewan",
     "pertukangan",
     "lainnya"];
-
-export const daftarRute : string[][] = [
-    ["Jakarta", "Bandung"],];

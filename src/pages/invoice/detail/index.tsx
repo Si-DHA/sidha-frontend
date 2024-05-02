@@ -1,17 +1,13 @@
 import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
-import SuccessAlert from "@/app/components/common/SuccessAlert";
-import FailAlert from "@/app/components/common/FailAlert";
-import { viewDetailKontrak } from "../api/kontrak/viewDetailKontrak";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Drawer from "@/app/components/common/drawer";
 import Cookies from "js-cookie";
 import { Inter } from "next/font/google";
 import Link from "next/link";
-import { viewInvoice } from "../api/invoice/viewInvoice";
+import { viewInvoice } from "../../api/invoice/viewInvoice";
 import DataTable from "@/app/components/common/datatable/DataTable";
-import { getKlienFromInvoice } from "../api/invoice/getKlienFromInvoice";
+import { getKlienFromInvoice } from "../../api/invoice/getKlienFromInvoice";
 const inter = Inter({ subsets: ["latin"] });
 
 const InvoiceDetailPage = () => {
@@ -40,7 +36,6 @@ const InvoiceDetailPage = () => {
       id = idUserLoggedin;
     }
 
-
     setUserRole(role || '');
   }, [isLoggedIn, router])
 
@@ -55,16 +50,17 @@ const InvoiceDetailPage = () => {
         const mappedInvoiceData = mapInvoiceData(invoiceDataResponse['content']);
         setInvoiceData(mappedInvoiceData);
 
-        if (rawData?.invoice?.buktiDP == null || rawData?.invoice?.buktiDP.status < 1) {
-          setStatus('Belum Bayar DP');
-        } else if (rawData?.invoice?.buktiPelunasan == null || rawData?.invoice?.buktiPelunasan?.status < 1) {
-          setStatus('Menunggu Pelunasan');
+        var invoice = invoiceDataResponse['content']['invoice'];
+
+        if (!invoice.buktiDp || invoice.buktiDp.status < 1) {
+          setStatus('Belum Bayar DP'); // If buktiDp is null or status is less than 1
+        } else if (!invoice.buktiPelunasan || invoice.buktiPelunasan.status < 1) {
+          setStatus('Menunggu Pelunasan'); // If buktiPelunasan is null or status is less than 1
         } else {
-          setStatus('Lunas');
+          setStatus('Lunas'); // If all conditions are met
         }
 
       } catch (error: any) {
-        router.push('/404');
         setError(error.message);
       }
     };
@@ -118,11 +114,19 @@ const InvoiceDetailPage = () => {
   }];
 
   const goToPembayaranDP = () => {
-    router.push(`pembayaran?id=${id}&isPelunasan=false`);
+    router.push(`/pembayaran?id=${id}&isPelunasan=false`);
   }
 
   const goToPelunasan = () => {
-    router.push(`pembayaran?id=${id}&isPelunasan=true`);
+    router.push(`/pembayaran?id=${id}&isPelunasan=true`);
+  }
+
+  const goToKonfirmasiPembayaranDP = () => {
+    router.push(`/pembayaran/konfirmasi?id=${id}&isPelunasan=false`);
+  }
+
+  const goToKonfirmasiPembayaranPelunasan = () => {
+    router.push(`/pembayaran/konfirmasi?id=${id}&isPelunasan=true`);
   }
 
 
@@ -130,9 +134,6 @@ const InvoiceDetailPage = () => {
     <main
       className={`flex min-h-screen flex-col  ${inter.className}`} data-theme="cmyk"
     >
-
-
-
       {invoiceData ? (
         <div>
           <Drawer userRole={userRole}>
@@ -141,21 +142,37 @@ const InvoiceDetailPage = () => {
               {error ? (<div>{error}</div>) : (<>
                 {invoiceData ? (
                   <>
-                    {status === 'Belum Bayar DP' ? (
+                    {status === 'Belum Bayar DP' && userRole === 'KLIEN' ? (
                       <DataTable
                         columns={columns}
                         data={invoiceData}
                         type="invoice"
-                        btnText="Bayar DP" 
+                        btnText="Bayar DP"
                         onClick={goToPembayaranDP}
                       />
-                    ) : status === 'Menunggu Pelunasan' ? (
+                    ) : status === 'Menunggu Pelunasan' && userRole == 'KLIEN' ? (
                       <DataTable
                         columns={columns}
                         data={invoiceData}
                         type="invoice"
                         btnText="Bayar Pelunasan"
                         onClick={goToPelunasan}
+                      />
+                    ) : status === 'Belum Bayar DP' && userRole === 'KARYAWAN' ? (
+                      <DataTable
+                        columns={columns}
+                        data={invoiceData}
+                        type="invoice"
+                        btnText="Cek Pembayaran DP"
+                        onClick={goToKonfirmasiPembayaranDP}
+                      />
+                    ) : status === 'Menunggu Pelunasan' && userRole == 'KARYAWAN' ? (
+                      <DataTable
+                        columns={columns}
+                        data={invoiceData}
+                        type="invoice"
+                        btnText="Cek Pembayaran Pelunasan"
+                        onClick={goToKonfirmasiPembayaranPelunasan}
                       />
                     ) : (
                       <DataTable

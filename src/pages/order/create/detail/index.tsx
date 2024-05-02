@@ -3,11 +3,15 @@ import Footer from "@/app/components/common/footer";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
+import { getOrderDetailBeforeCheckout } from "@/pages/api/order/getOrderDetailBeforeCheckout";
 
 const PurchaseOrderDetail = () => {
 
     var isLoggedIn = Cookies.get('isLoggedIn');
+    var token = Cookies.get('token');
     const [userRole, setUserRole] = useState('');
+    const [error, setError] = useState('');
+    const [orderData, setOrderData] = useState();
     const router = useRouter();
 
     useEffect(() => {
@@ -18,15 +22,32 @@ const PurchaseOrderDetail = () => {
         setUserRole(role || '');
     },)
 
-    const [modal, setModal]:any = useState(null);
+    // const order = JSON.parse(router.query.order as string);
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             if (!token) {
+    //                 throw new Error('Token not found');
+    //             }
+    //             const response = await getOrderDetailBeforeCheckout(order, token);
+    //             setOrderData(response);
+    //         } catch (error: any) {
+    //             setError(error.message);
+    //         }
+    //     }
+    // }, [])
+
+    const [modal, setModal]: any = useState(null);
     const handleModal = () => {
         modal.showModal()
     }
-    
+
     useEffect(() => {
         setModal(document.getElementById('modal_confirm'));
-        
     }, [])
+
+
 
     const handleBack = () => {
         router.push('/order/create');
