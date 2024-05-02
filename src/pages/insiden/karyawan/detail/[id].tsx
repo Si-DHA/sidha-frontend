@@ -150,7 +150,6 @@ const KaryawanInsidenDetailPage = () => {
             <Footer />
         </main>
     );
-
 };
 
 export default KaryawanInsidenDetailPage;

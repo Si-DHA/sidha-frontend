@@ -67,6 +67,7 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
             <ul className="menu p-4 w-80 min-h-full bg-base-200">
 
               <ul className="menu bg-base-200 w-56 rounded-box">
+              <li><Link href="/dashboard/klien">Dashboard</Link></li>
                 <li>
                   <h2 className="menu-title text-neutral">Dokumen Kontrak</h2>
                   <ul>
