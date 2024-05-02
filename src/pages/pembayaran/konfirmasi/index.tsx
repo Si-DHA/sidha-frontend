@@ -98,8 +98,10 @@ const KonfirmasiPembayaranPage = () => {
                 </div>
                 {error ? (
                     <div className="mx-auto my-auto">Error: {error}</div>
+                ) : invoiceData === null ? (
+                    <div className="mx-auto my-auto">Loading..</div>
                 ) : invoiceData && (
-                    <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+                    <div className="flex flex-col lg:flex-row  justify-center items-center gap-x-16  gap-y-16 mx-auto my-auto px-12 py-12">
                         <style jsx>{`
                             .image-container {
                                 padding-top:10px;
@@ -125,7 +127,7 @@ const KonfirmasiPembayaranPage = () => {
                                     <input required id="alasanPenolakan" type="text" className="grow" placeholder="Masukkan alasan penolakan" />
                                 </label>
                                 <div className="modal-action">
-                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_tolak').close()}>Cancel</button>
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_tolak').close()}>Batal</button>
                                     <button className="btn btn-error" onClick={() => { handleKonfirmasi(false); document.getElementById('my_modal_tolak').close(); }}>Tolak</button>
                                 </div>
 

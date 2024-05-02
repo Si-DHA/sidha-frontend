@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from "next/router";
-import Drawer from "@/app/components/common/Drawer";
+import Drawer from "@/app/components/common/drawer";
 
 
 export default function RegisterPage() {

@@ -9,10 +9,11 @@ interface DataTableProps {
   columns: any[];
   btnText?: string;
   onClick?: () => void;
-  type: string;
+  type?: string;
+  biayaPengiriman?: any;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, type }) => {
+const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, type, biayaPengiriman }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -67,23 +68,22 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
   const RenderTableBody = () => {
     const router = useRouter();
     const handleRowClick = (idTruk: any) => {
-      router.push(`truk/detail?id=${idTruk}`);
+      router.push(`/truk/detail?id=${idTruk}`);
     };
 
     const handleRowClickUser = (idUser: any) => {
-        router.push(`list-user/detail?id=${idUser}`);
+      router.push(`/list-user/detail?id=${idUser}`);
     }
 
     const handleRowClickKontrak = (idUser: any) => {
       router.push(`/kontrak?id=${idUser}`);
-  }
-
-
-    const handleRowClickOrder = (idOrder: any) => {
-      router.push(`order/detail?id=${idOrder}`);
     }
 
-    return page.map((row:any, index) => {
+    const handleRowClickOrder = (idOrder: any) => {
+      router.push(`/order/${idOrder}`);
+    }
+
+    return page.map((row: any, index) => {
       prepareRow(row);
       return (
         <tr
@@ -95,19 +95,18 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
               handleRowClick(row.original.idTruk);
             } else if (type === 'user') {
               handleRowClickUser(row.original.id);
-            } else if (type === "kontrak"){
+            } else if (type === "kontrak") {
               handleRowClickKontrak(row.original.userId);
-            
             } else if (type === 'order') {
               handleRowClickOrder(row.original.idOrder);
             }
           }}
           key={index}>
           <td style={{ textAlign: 'center' }}>{index + 1}</td> {/* Add table cell for numbering */}
-          {row.cells.map((cell:any, index:any) => {
-            if (cell.column.id === 'expiredKir' || cell.column.id === 'createdAt' ) { // Replace 'datetimeColumn' with the actual ID of your datetime column
+          {row.cells.map((cell: any, index: any) => {
+            if (cell.column.id === 'expiredKir' || cell.column.id === 'createdAt') { // Replace 'datetimeColumn' with the actual ID of your datetime column
               const date = new Date(cell.value); // Convert datetime string to Date object
-              const options :any= { day: '2-digit', month: '2-digit', year: 'numeric' };
+              const options: any = { day: '2-digit', month: '2-digit', year: 'numeric' };
               const formattedDate = date.toLocaleDateString('en-GB', options); // Format date to string (e.g., 'MM/DD/YYYY')
               return <td style={{ textAlign: 'center' }} {...cell.getCellProps()} key={index} >{formattedDate}</td>; // Render formatted date
             } else {
@@ -119,10 +118,22 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
     });
   };
 
+  const RenderTableFooterPurchaseOrder = (biayaPengiriman:any) => {
+    return (
+      <tfoot>
+        <tr>
+          <td colSpan={5} style={{ textAlign: 'right' }}>Total Biaya Pengiriman</td>
+          <td style={{ textAlign: 'center' }}>
+            {biayaPengiriman}
+          </td>
+        </tr>
+      </tfoot>);
+  }
+
   return (
     <div style={{ marginBottom: '20px', fontSize: '13px' }} className="overflow-x-auto">
       {/* Search input */}
-      <div style={{ float: 'left', marginBottom: '10px' }}>
+      {type != "order" && type != "checkout"  && <div style={{ float: 'left', marginBottom: '10px' }}>
         <div style={{ position: 'relative' }}>
           <input
             value={globalFilter || ''}
@@ -144,7 +155,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
             <FontAwesomeIcon icon={faSearch} />
           </span>
         </div>
-      </div>
+      </div>}
       {btnText && onClick &&
         <div style={{ float: 'right', marginBottom: '15px' }}>
           <button className="btn btn-primary" onClick={onClick}>{btnText}</button>
@@ -153,6 +164,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
       <table className="table table-xs" {...getTableProps()} style={{ borderCollapse: 'separate', width: '100%', borderSpacing: '10 10px', marginBottom: '20px' }}>
         <thead>{renderTableHeader()}</thead>
         <tbody {...getTableBodyProps()}>{RenderTableBody()}</tbody>
+        {type === 'checkout' && RenderTableFooterPurchaseOrder(biayaPengiriman)}
       </table>
       {/* Pagination */}
       <div style={{ float: 'left' }}>

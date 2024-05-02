@@ -53,10 +53,6 @@ const DaftarPurchaseOrderPage = () => {
                 Header: 'Id Order',
                 accessor: 'idOrder',
             },
-            // {
-            //     Header: 'Customer',
-            //     accessor: 'customer',
-            // },
             {
                 Header: 'Tanggal Pemesanan',
                 accessor: 'tanggalPemesanan',
@@ -134,8 +130,3 @@ const DaftarPurchaseOrderPage = () => {
 }
 
 export default DaftarPurchaseOrderPage
-
-function handleConfirmOrder(value: string): void {
-    console.log(value)
-}
-

@@ -11,6 +11,13 @@ interface InsidenRow {
     id: string;
     createdAt: string;
     kategori: string;
+    orderItem?: {
+        id: string;
+        rute: Array<{
+            source: string;
+            destination: string;
+        }>;
+    };
 }
 
 const CustomNoDataComponent = () => (
@@ -64,6 +71,12 @@ const IndexPage = () => {
             accessor: 'status',
         },
         {
+            Header: 'Rute',
+            accessor: (row: InsidenRow) => row.orderItem && row.orderItem.rute.length > 0 
+                ? `${row.orderItem.rute[0].source} to ${row.orderItem.rute[0].destination}`
+                : 'N/A', 
+        },
+        {
             Header: 'Actions',
             accessor: 'id',
             Cell: ({ value }) => (
@@ -81,7 +94,7 @@ const IndexPage = () => {
         <>
             <Drawer userRole='userRole'>
             <main className="flex flex-col items-center justify-between" data-theme="winter">
-                    <h2 className="text-2xl font-bold mb-4">Laporan Insiden Anda</h2>
+                    <h2 className="text-2xl font-bold mb-4 mt-6">Laporan Insiden Anda</h2>
                 <DataTable
                     data={insidens}
                     columns={columns}

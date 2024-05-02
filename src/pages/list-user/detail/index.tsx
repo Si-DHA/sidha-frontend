@@ -8,7 +8,7 @@ import Footer from "@/app/components/common/footer";
 import Image from "next/image";
 import Link from 'next/link';
 import Cookies from "js-cookie";
-import Drawer from '@/app/components/common/Drawer';
+import Drawer from '@/app/components/common/drawer';
 import { BASE_URL } from '@/app/constant/constant';
 import { deleteUser } from '@/pages/api/user/deleteUser';
 import SuccessAlert from '@/app/components/common/SuccessAlert';
