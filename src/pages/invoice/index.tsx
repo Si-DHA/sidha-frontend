@@ -102,7 +102,7 @@ const InvoiceListPage: React.FC = () => {
             Header: 'ID Order',
             accessor: 'orderId',
             Cell : ({ value }) => 
-                <Link href={`/order/klien/${value}`}>{value}</Link>
+                <Link href={`/order/klien/${value}`} style={{textDecoration: 'underline'}}>{value}</Link>
         },
         {
             Header: 'Total DP',
