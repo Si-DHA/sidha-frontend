@@ -7,7 +7,7 @@ import SuccessAlert from '@/app/components/common/SuccessAlert';
 import FailAlert from '@/app/components/common/FailAlert';
 import { getBuktiFoto } from '@/pages/api/insiden/getBuktiFoto'
 import Drawer from "@/app/components/common/drawer";
-import Cookies from "js-cookie";
+import Cookies from 'js-cookie';
 
 const KaryawanInsidenDetailPage = () => {
     const router = useRouter();
@@ -16,10 +16,9 @@ const KaryawanInsidenDetailPage = () => {
     const [selectedStatus, setSelectedStatus] = useState('');
     const [alert, setAlert] = useState(null);
     const [buktiFotoUrl, setBuktiFotoUrl] = useState(null);
-    const [error, setError] = useState('');
-
-    var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
+    const [error, setError] = useState('');
+    var isLoggedIn = Cookies.get('isLoggedIn');
   
     useEffect(() => {
       if (!isLoggedIn) {
@@ -35,6 +34,8 @@ const KaryawanInsidenDetailPage = () => {
     }, [isLoggedIn, router])
 
     useEffect(() => {
+        const fetchUserRole = Cookies.get('role');
+        setUserRole(fetchUserRole || 'defaultRole');
         if (id) {
             getInsidenById(id as string)
                 .then(data => {
@@ -84,7 +85,7 @@ const KaryawanInsidenDetailPage = () => {
                     <dl>
                         {insiden.orderItem && (
                             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt className="text-sm font-medium text-gray-500">ID</dt>
+                                <dt className="text-sm font-medium text-gray-500">ID Order Item</dt>
                                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.id}
                                 </dd>
                             </div>
@@ -92,7 +93,7 @@ const KaryawanInsidenDetailPage = () => {
                         {insiden.orderItem && (
                             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                 <dt className="text-sm font-medium text-gray-500">Asal - Tujuan</dt>
-                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.rute[0].source} to {insiden.orderItem.rute[0].destination}
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.rute[0].source} - {insiden.orderItem.rute[0].destination}
                                 </dd>
                             </div>
                         )}

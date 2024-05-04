@@ -31,6 +31,7 @@ const AcceptedOrderItemsIndexPage = () => {
     }, [isLoggedIn, router])
 
     useEffect(() => {
+        setUserRole(Cookies.get('role') || 'defaultRole');
         setLoading(true);
         getTawaranKerjaAccepted().then(data => {
             if (data && Array.isArray(data)) {
