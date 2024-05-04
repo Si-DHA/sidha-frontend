@@ -75,7 +75,7 @@ const InsidenDetailPage = () => {
 
   return (
     <main className="flex flex-col items-center justify-between" data-theme="winter">
-      <Drawer userRole='sopir'>
+      <Drawer userRole='userRole'>
         {alert}
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">
@@ -85,7 +85,7 @@ const InsidenDetailPage = () => {
             {insiden.orderItem && (
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Asal - Tujuan</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.rute[0].source} to {insiden.orderItem.rute[0].destination}
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.rute[0].source} - {insiden.orderItem.rute[0].destination}
                 </dd>
               </div>
             )}
