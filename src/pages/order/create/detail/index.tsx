@@ -16,6 +16,7 @@ const PurchaseOrderDetail = () => {
     const [error, setError] = useState('');
     const [order, setOrder] = useState<Order | null>(null);
     const [orderItems, setOrderItems] = useState<any[]>([]);
+    const [totalPrice, setTotalPrice] = useState(0);
     const router = useRouter();
 
     useEffect(() => {
@@ -42,12 +43,13 @@ const PurchaseOrderDetail = () => {
                     throw new Error('Token not found');
                 }
                 const response = await getOrderDetailBeforeCheckout(order, token);
-                setOrderItems(response);
+                setOrderItems(response.data);
+                setTotalPrice(response.totalPrice);
             } catch (error: any) {
                 setError(error.message);
             }
         }
-        if (orderItems.length === 0) {
+        if (order !== null && orderItems.length === 0) {
             fetchData();
         }
     },)
@@ -68,7 +70,7 @@ const PurchaseOrderDetail = () => {
         })
     }
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         try {
             if (!token) {
                 throw new Error('Token not found');
@@ -78,10 +80,10 @@ const PurchaseOrderDetail = () => {
                 throw new Error('Order not found');
             }
 
-            const response = createOrder(order, token);
+            const response = await createOrder(order, token);
             if (response !== null) {
                 alert('Order berhasil dibuat');
-                router.push('/order');
+                router.push('/order/klien');
             }
 
         } catch (error: any) {
@@ -137,7 +139,7 @@ const PurchaseOrderDetail = () => {
                             {error ? (
                                 <div>{error}</div>
                             ) : (
-                                <DataTable columns={columns} data={orderItems} btnText="Buat Order Baru" type="" />
+                                <DataTable columns={columns} data={orderItems} btnText="Buat Order Baru" type="checkout" biayaPengiriman={totalPrice}/>
                             )}
                         </div>
                     </div>

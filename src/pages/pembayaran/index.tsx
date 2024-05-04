@@ -115,7 +115,7 @@ const PembayaranPage = () => {
                 ) : invoiceData === null ? (
                     <div className="mx-auto my-auto">Loading..</div>
                 ) : invoiceData && (
-                    <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+                    <div className="flex flex-col lg:flex-row  justify-center items-center gap-x-16  gap-y-16 mx-auto my-auto px-12 py-12">
                         <style jsx>{`
                             .image-container {
                                 padding-top:10px;
@@ -136,11 +136,11 @@ const PembayaranPage = () => {
 
                         <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                             <div className="modal-box">
-                                <h3 className="font-bold text-lg">Delete</h3>
-                                <p className="py-4">Are you sure you want to upload this?</p>
+                                <h3 className="font-bold text-lg">Unggah</h3>
+                                <p className="py-4">Apakah Anda yakin ingin mengunggah ini?</p>
                                 <div className="modal-action">
-                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
-                                    <button className="btn btn-success" onClick={() => { uploadBuktiImage(); document.getElementById('my_modal_5').close(); }}>Upload</button>
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Batal</button>
+                                    <button className="btn btn-success" onClick={() => { uploadBuktiImage(); document.getElementById('my_modal_5').close(); }}>Unggah</button>
                                 </div>
 
                             </div>
@@ -227,7 +227,7 @@ const PembayaranPage = () => {
                                     )}
                                     {(!buktiData || buktiData['status'] !== 1) && (
                                         <div className="flex flex-row w-full max-w-xs justify-center align-middle">
-                                            <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_5').showModal()}>Upload </button>
+                                            <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_5').showModal()}>Unggah </button>
                                         </div>
                                     )}
                                 </div>

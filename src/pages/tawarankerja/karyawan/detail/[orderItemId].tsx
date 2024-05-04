@@ -17,7 +17,23 @@ const KaryawanDetailPage = () => {
   const router = useRouter();
   const { orderItemId } = router.query;
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+  const [error, setError] = useState('');
+
+  var isLoggedIn = Cookies.get('isLoggedIn');
   const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/login');
+    }
+    const role = Cookies.get('role');
+    if (role === 'KARYAWAN') {
+      setUserRole(role);
+    } else {
+      setError('You are not allowed to access this page');
+    }
+
+  }, [isLoggedIn, router])
 
   useEffect(() => {
     setUserRole(Cookies.get('role') || 'defaultRole');
@@ -25,7 +41,6 @@ const KaryawanDetailPage = () => {
     if (confirmedId) {
       setConfirmationStatus(true);
       setSelectedSopirId(confirmedId);
-      // Optionally, also fetch and set the sopir details if needed
     }
 
     if (orderItemId) {
@@ -64,58 +79,58 @@ const KaryawanDetailPage = () => {
   };
 
   return (
-    <Drawer userRole={userRole}>      
-    <main className="flex flex-col items-center justify-between" data-theme="winter">
-      {alert.show && (alert.type === 'success' ? <SuccessAlert message={alert.message} /> : <FailAlert message={alert.message} />)}
-      {orderItemDetails ? (
-        <>
-          <div className="flex-1 pr-4 max-w-lg">
-            <h2 className="text-2xl font-bold mb-4">Detail Penawaran Kerja</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <p><strong>Asal:</strong> {orderItemDetails.rute[0]?.source ?? 'N/A'}</p>
-              <p><strong>Tujuan:</strong> {orderItemDetails.rute[0]?.destination ?? 'N/A'}</p>
-              <p><strong>Harga:</strong> Rp{orderItemDetails.price?.toLocaleString('id-ID')}</p>
-              <p><strong>Mudah Pecah:</strong> {orderItemDetails.isPecahBelah ? 'Yes' : 'No'}</p>
-              <p><strong>Tipe Barang:</strong> {orderItemDetails.tipeBarang}</p>
-              <p><strong>Tipe Truk:</strong> {orderItemDetails.tipeTruk}</p>
-              <p><strong>Alamat Pengiriman:</strong> {orderItemDetails.rute[0]?.alamatPengiriman ?? 'N/A'}</p>
-              <p><strong>Alamat Penjemputan:</strong> {orderItemDetails.rute[0]?.alamatPenjemputan ?? 'N/A'}</p>
+    <Drawer userRole={userRole}>
+      <main className="flex flex-col items-center justify-between" data-theme="winter">
+        {alert.show && (alert.type === 'success' ? <SuccessAlert message={alert.message} /> : <FailAlert message={alert.message} />)}
+        {orderItemDetails ? (
+          <>
+            <div className="flex-1 pr-4 max-w-lg">
+              <h2 className="text-2xl font-bold mb-4">Detail Penawaran Kerja</h2>
+              <div className="grid grid-cols-2 gap-4">
+                <p><strong>Asal:</strong> {orderItemDetails.rute[0]?.source ?? 'N/A'}</p>
+                <p><strong>Tujuan:</strong> {orderItemDetails.rute[0]?.destination ?? 'N/A'}</p>
+                <p><strong>Harga:</strong> Rp{orderItemDetails.price?.toLocaleString('id-ID')}</p>
+                <p><strong>Mudah Pecah:</strong> {orderItemDetails.isPecahBelah ? 'Yes' : 'No'}</p>
+                <p><strong>Tipe Barang:</strong> {orderItemDetails.tipeBarang}</p>
+                <p><strong>Tipe Truk:</strong> {orderItemDetails.tipeTruk}</p>
+                <p><strong>Alamat Pengiriman:</strong> {orderItemDetails.rute[0]?.alamatPengiriman ?? 'N/A'}</p>
+                <p><strong>Alamat Penjemputan:</strong> {orderItemDetails.rute[0]?.alamatPenjemputan ?? 'N/A'}</p>
+              </div>
             </div>
-          </div>
-          <div className="mt-4">
-            <h3 className="text-xl mb-2 mt-2 font-semibold">Select Sopir for this Order</h3>
-            <select
-              value={selectedSopirId}
-              onChange={(e) => setSelectedSopirId(e.target.value)}
-              className="select select-bordered w-full max-w-xs mb-4"
-              disabled={confirmationStatus}
-            >
-              <option disabled value="">Select Sopir</option>
-              {sopirOffers.map((offer) => (
-                <option key={offer.id} value={offer.id}>
-                  {offer.sopir.name} - {offer.lokasi}
-                </option>
-              ))}
-            </select>
-            <button
-              onClick={handleConfirmSopir}
-              className="btn btn-primary mb-4"
-              disabled={confirmationStatus || !selectedSopirId}
-            >
-              Confirm Sopir
-            </button>
-            {confirmedSopir && (
-              <p className="text-green-500 mt-2 mb-4">
-                <strong>{confirmedSopir.sopir.name}</strong> dari <strong>{confirmedSopir.lokasi}</strong> telah dikonfirmasi untuk pekerjaan ini.
-              </p>
+            <div className="mt-4">
+              <h3 className="text-xl mb-2 mt-2 font-semibold">Select Sopir for this Order</h3>
+              <select
+                value={selectedSopirId}
+                onChange={(e) => setSelectedSopirId(e.target.value)}
+                className="select select-bordered w-full max-w-xs mb-4"
+                disabled={confirmationStatus}
+              >
+                <option disabled value="">Select Sopir</option>
+                {sopirOffers.map((offer) => (
+                  <option key={offer.id} value={offer.id}>
+                    {offer.sopir.name} - {offer.lokasi}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={handleConfirmSopir}
+                className="btn btn-primary mb-4"
+                disabled={confirmationStatus || !selectedSopirId}
+              >
+                Confirm Sopir
+              </button>
+              {confirmedSopir && (
+                <p className="text-green-500 mt-2 mb-4">
+                  <strong>{confirmedSopir.sopir.name}</strong> dari <strong>{confirmedSopir.lokasi}</strong> telah dikonfirmasi untuk pekerjaan ini.
+                </p>
 
-            )}
-          </div>
-        </>
-      ) : (
-        <p>Loading order details...</p>
-      )}
-    </main>
+              )}
+            </div>
+          </>
+        ) : (
+          <p>Loading order details...</p>
+        )}
+      </main>
       <Footer />
     </Drawer>
   );

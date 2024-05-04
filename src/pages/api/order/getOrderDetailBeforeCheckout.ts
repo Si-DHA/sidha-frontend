@@ -3,12 +3,14 @@ import { Order } from "@/pages/order/model";
 
 export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
     try {
+        // console.log("token " + token)
+        // console.log ("request body " + JSON.stringify(req))
         const response = await fetch(BASE_URL + '/order/price', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-                'Authorization': 'Bearer ' + token + '',
+                'Authorization': 'Bearer ' + token,
             },
             body: JSON.stringify(req),
         });
@@ -16,6 +18,11 @@ export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
         const responseData = await response.json();
 
         if (response.ok) {
+            console.log("success ")
+            var newResponse = {
+                data: [] as any[],
+                totalPrice: 0
+            }
             var data = []
             // Tipe Barang 	Fragile 	Tipe Truk 	Rute Pegiriman 	Biaya Pengiriman 
             for (let i = 0; i < responseData.content.orderItems.length; i++) {
@@ -41,8 +48,11 @@ export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
                     biayaPengiriman: responseData.content.orderItems[i].price,
                 });
             }
-            return data;
+            newResponse.data = data;
+            newResponse.totalPrice = responseData.content.totalPrice;
+            return newResponse;
         } else {
+            console.log("failed " + responseData.message)
             throw new Error(responseData.message);
         }
     } catch (error: any) {

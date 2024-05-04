@@ -28,12 +28,19 @@ const KaryawanInsidenIndexPage = () => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const karyawanId = Cookies.get('idUser');
-    const [userRole, setUserRole] = useState('');
+    const [error, setError] = useState('');
 
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+  
     useEffect(() => {
-        setUserRole(Cookies.get('role') || 'defaultRole');
-        if (karyawanId) {
-            getAllInsidens()
+      if (!isLoggedIn) {
+        router.push('/login');
+      }
+      const role = Cookies.get('role');
+      if (role === 'KARYAWAN') {
+        setUserRole(role);
+        getAllInsidens()
                 .then(data => {
                     console.log("Insiden Data:", data); // Log the insidenData array
                     setInsidens(data);
@@ -43,11 +50,11 @@ const KaryawanInsidenIndexPage = () => {
                     console.error('Fetching error:', error);
                     setLoading(false);
                 });
-        } else {
-            router.push('/login');
-        }
-    }, [karyawanId, router]);
-
+      } else {
+        setError('You are not allowed to access this page');
+      }
+  
+    }, [isLoggedIn, karyawanId, router])
 
     const columns = [
         {

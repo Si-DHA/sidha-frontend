@@ -49,7 +49,7 @@ const KontrakDetailPage = () => {
           const kontrakDataResponse = await viewDetailKontrak(id || "");
           setKontrakData(kontrakDataResponse['content']);
         }
- 
+
       } catch (error: any) {
         router.push('/404');
         setError(error.message);
@@ -61,9 +61,19 @@ const KontrakDetailPage = () => {
 
 
   const formatDate = (dateTimeString: any) => {
-    const date = new Date(dateTimeString); // Convert datetime string to Date object
-    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return date.toLocaleDateString('en-GB', options);
+    const options = {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      timeZoneName: 'short'
+    };
+
+    const date = new Date(dateTimeString);
+    const dateLocale = date.toLocaleDateString('id-ID', options);
+    return dateLocale.replace(',', ' -');
   }
 
   return (
@@ -73,7 +83,7 @@ const KontrakDetailPage = () => {
 
 
 
-      {kontrakData ? (
+      {kontrakData && kontrakData.kontrakUrl ? (
         <div>
           <Drawer userRole={userRole}>
             <div className="py-12">
@@ -87,22 +97,22 @@ const KontrakDetailPage = () => {
                   <h4 className="text-slate-900 text-[24px] font-semibold">Detail Kontrak:</h4>
 
 
-                  <div className="flex flex-col sm:flex-row justify-between align-middle">
+                  <div className="flex flex-col sm:flex-row justify-between items-center">
                     <div className="flex flex-col">
                       <div className="flex flex-row gap-x-8 ">
                         <div className="font-semibold">Nama Perusahaan : </div>
                         <div> {kontrakData.user.companyName}</div>
                       </div>
                       <div className="flex flex-row gap-x-8 ">
-                        <div className="font-semibold">Tanggal Penerbitan :</div>
+                        <div className="font-semibold">Terakhir diubah :</div>
                         <div>
-                          {formatDate(kontrakData.createdAt)}
+                          {formatDate(kontrakData.updatedAt)}
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col">
-                      <div className="btn btn-primary"  >
+                    <div className="flex flex-col gap-x-2 gap-y-2">
+                      <div className="btn btn-sm btn-primary"  >
                         <svg xmlns="http://www</svg>.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
                           <path d="M4 4C4 3.44772 4.44772 3 5 3H14H14.5858C14.851 3 15.1054 3.10536 15.2929 3.29289L19.7071 7.70711C19.8946 7.89464 20 8.149 20 8.41421V20C20 20.5523 19.5523 21 19 21H5C4.44772 21 4 20.5523 4 20V4Z" stroke="#200E32" strokeWidth="2" strokeLinecap="round" />
                           <path d="M20 8H15V3" stroke="#200E32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -111,6 +121,14 @@ const KontrakDetailPage = () => {
                         </svg>
                         <Link href={kontrakData.kontrakUrl}>Unduh Dokumen</Link>
                       </div>
+
+                      {userRole === 'KARYAWAN' && id != null ?
+                        <div className="btn btn-primary btn-sm">
+                          <Link href={"/kontrak/edit?id=" + id}>Perbaharui Dokumen</Link>
+                        </div>
+                        :
+                        <div className="a"></div>
+                      }
                     </div>
                   </div>
                 </div>
@@ -132,27 +150,27 @@ const KontrakDetailPage = () => {
 
       ) : (
         <div>
-        <Drawer userRole={userRole}>
-          <div className="py-12">
-            <div className="flex flex-col">
+          <Drawer userRole={userRole}>
+            <div className="py-12">
+              <div className="flex flex-col">
 
-              <div className="flex flex-col gap-y-10 align-middle items-center  mx-auto py-5">
-                <h4 className="text-slate-900 text-[32px] font-bold">Tidak ada data kontrak yang ditampilkan</h4>
-                <div>
-                <div className="btn btn-primary btn-sm"><Link href={"/dashboard"}>Kembali ke Dashboard</Link></div>
+                <div className="flex flex-col gap-y-10 align-middle items-center  mx-auto py-5">
+                  <h4 className="text-slate-900 text-[32px] font-bold">Tidak ada data kontrak yang ditampilkan</h4>
+                  <div>
+                    <div className="btn btn-primary btn-sm"><Link href={"/dashboard"}>Kembali ke Dashboard</Link></div>
 
+                  </div>
                 </div>
+
               </div>
-
             </div>
-          </div>
 
-          
 
-        </Drawer>
-        <Footer />
 
-      </div>
+          </Drawer>
+          <Footer />
+
+        </div>
 
       )}
 

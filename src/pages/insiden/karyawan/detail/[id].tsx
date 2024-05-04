@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getInsidenById } from '@/pages/api/insiden/getInsidenById';
 import { updateStatus } from '@/pages/api/insiden/updateStatus';
-import Navbar from '@/app/components/common/navbar';
 import Footer from '@/app/components/common/footer';
 import SuccessAlert from '@/app/components/common/SuccessAlert';
 import FailAlert from '@/app/components/common/FailAlert';
@@ -18,6 +17,21 @@ const KaryawanInsidenDetailPage = () => {
     const [alert, setAlert] = useState(null);
     const [buktiFotoUrl, setBuktiFotoUrl] = useState(null);
     const [userRole, setUserRole] = useState('');
+    const [error, setError] = useState('');
+    var isLoggedIn = Cookies.get('isLoggedIn');
+  
+    useEffect(() => {
+      if (!isLoggedIn) {
+        router.push('/login');
+      }
+      const role = Cookies.get('role');
+      if (role === 'KARYAWAN') {
+        setUserRole(role);
+      } else {
+        setError('You are not allowed to access this page');
+      }
+  
+    }, [isLoggedIn, router])
 
     useEffect(() => {
         const fetchUserRole = Cookies.get('role');
@@ -62,7 +76,8 @@ const KaryawanInsidenDetailPage = () => {
 
     return (
         <main className="flex flex-col items-center justify-between" data-theme="winter">
-            <Drawer userRole={userRole}>                {alert}
+            <Drawer userRole={userRole}>
+                {alert}
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                     <div className="px-4 py-5 sm:px-6">
                         <h3 className="text-xl text-center font-bold mb-2">Detail Laporan Insiden</h3>
@@ -153,7 +168,6 @@ const KaryawanInsidenDetailPage = () => {
             <Footer />
         </main>
     );
-
 };
 
 export default KaryawanInsidenDetailPage;
