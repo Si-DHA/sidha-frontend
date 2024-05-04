@@ -54,6 +54,7 @@ const OrderItemPage = () => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const { idOrder } = router.query;
+    console.log("idOrder:", idOrder);
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
 

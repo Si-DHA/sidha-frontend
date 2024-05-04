@@ -28,10 +28,19 @@ const KaryawanInsidenIndexPage = () => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const karyawanId = Cookies.get('idUser');
+    const [error, setError] = useState('');
 
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+  
     useEffect(() => {
-        if (karyawanId) {
-            getAllInsidens()
+      if (!isLoggedIn) {
+        router.push('/login');
+      }
+      const role = Cookies.get('role');
+      if (role === 'KARYAWAN') {
+        setUserRole(role);
+        getAllInsidens()
                 .then(data => {
                     console.log("Insiden Data:", data); // Log the insidenData array
                     setInsidens(data);
@@ -41,11 +50,11 @@ const KaryawanInsidenIndexPage = () => {
                     console.error('Fetching error:', error);
                     setLoading(false);
                 });
-        } else {
-            router.push('/login');
-        }
-    }, [karyawanId, router]);
-
+      } else {
+        setError('You are not allowed to access this page');
+      }
+  
+    }, [isLoggedIn, karyawanId, router])
 
     const columns = [
         {
@@ -97,7 +106,7 @@ const KaryawanInsidenIndexPage = () => {
     return (
         <>
             
-            <Drawer userRole='userRole'>
+            <Drawer userRole={userRole}>
             <main className="flex flex-col items-center justify-between" data-theme="winter">
                     <h2 className="text-2xl font-bold mb-4">Laporan Insiden</h2>
                 <DataTable
