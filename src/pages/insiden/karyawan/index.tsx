@@ -28,8 +28,10 @@ const KaryawanInsidenIndexPage = () => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const karyawanId = Cookies.get('idUser');
+    const [userRole, setUserRole] = useState('');
 
     useEffect(() => {
+        setUserRole(Cookies.get('role') || 'defaultRole');
         if (karyawanId) {
             getAllInsidens()
                 .then(data => {
@@ -97,9 +99,9 @@ const KaryawanInsidenIndexPage = () => {
     return (
         <>
             
-            <Drawer userRole='userRole'>
+            <Drawer userRole={userRole}>
             <main className="flex flex-col items-center justify-between" data-theme="winter">
-                    <h2 className="text-2xl font-bold mb-4">Laporan Insiden</h2>
+                    <h2 className="text-2xl font-bold mb-4 mt-6">Laporan Insiden</h2>
                 <DataTable
                     data={insidens}
                     columns={columns}

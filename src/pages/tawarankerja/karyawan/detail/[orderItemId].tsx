@@ -62,7 +62,7 @@ const KaryawanDetailPage = () => {
   };
 
   return (
-    <Drawer userRole="karyawan">
+    <Drawer userRole='userRole'>
       <main className="flex flex-col items-center justify-between" data-theme="winter">
         {alert.show && (alert.type === 'success' ? <SuccessAlert message={alert.message} /> : <FailAlert message={alert.message} />)}
         {orderItemDetails ? (
