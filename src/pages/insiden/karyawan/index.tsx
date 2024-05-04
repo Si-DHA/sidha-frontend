@@ -27,34 +27,25 @@ const KaryawanInsidenIndexPage = () => {
     const [insidens, setInsidens] = useState<InsidenRow[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-    const karyawanId = Cookies.get('idUser');
-    const [error, setError] = useState('');
+    const isLoggedIn = Cookies.get('isLoggedIn');
+    const userRole = Cookies.get('role');
 
-    var isLoggedIn = Cookies.get('isLoggedIn');
-    const [userRole, setUserRole] = useState('');
-  
     useEffect(() => {
-      if (!isLoggedIn) {
-        router.push('/login');
-      }
-      const role = Cookies.get('role');
-      if (role === 'KARYAWAN') {
-        setUserRole(role);
+        if (!isLoggedIn || userRole !== 'KARYAWAN') {
+            router.push('/login');
+            return;
+        }
         getAllInsidens()
-                .then(data => {
-                    console.log("Insiden Data:", data); // Log the insidenData array
-                    setInsidens(data);
-                    setLoading(false);
-                })
-                .catch(error => {
-                    console.error('Fetching error:', error);
-                    setLoading(false);
-                });
-      } else {
-        setError('You are not allowed to access this page');
-      }
-  
-    }, [isLoggedIn, karyawanId, router])
+            .then(data => {
+                setInsidens(data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Fetching error:', error);
+                setLoading(false);
+            });
+
+    }, [isLoggedIn, userRole, router]);
 
     const columns = [
         {

@@ -14,6 +14,22 @@ const OrderItemsIndexPage = () => {
     const [location, setLocation] = useState('');
     const [selectedOfferId, setSelectedOfferId] = useState('');
     const sopirId = Cookies.get('idUser');
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        if (role === 'SOPIR') {
+            setUserRole(role);
+        } else {
+            setError('You are not allowed to access this page');
+        }
+
+    }, [isLoggedIn, router])
 
     useEffect(() => {
         setLoading(true);

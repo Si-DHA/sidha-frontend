@@ -7,6 +7,7 @@ import Modal from "@/app/components/common/modal";
 import Drawer from "@/app/components/common/drawer";
 import Footer from '@/app/components/common/footer';
 import Cookies from 'js-cookie';
+import router from 'next/router';
 
 const FAQAdminPage = () => {
     const [faqs, setFAQs] = useState([]);
@@ -16,11 +17,26 @@ const FAQAdminPage = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteFAQId, setDeleteFAQId] = useState(null);
     const [userRole, setUserRole] = useState('');
+    const [error, setError] = useState('');
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        if (role === 'ADMIN') {
+            setUserRole(role);
+        } else {
+            setError('You are not allowed to access this page');
+        }
 
+    }, [isLoggedIn, router])
     useEffect(() => {
         fetchFAQs();
         setUserRole(Cookies.get('role') || '');
     }, []);
+    
 
 
     const fetchFAQs = async () => {
