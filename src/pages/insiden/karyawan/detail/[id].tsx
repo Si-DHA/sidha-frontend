@@ -8,6 +8,7 @@ import SuccessAlert from '@/app/components/common/SuccessAlert';
 import FailAlert from '@/app/components/common/FailAlert';
 import { getBuktiFoto } from '@/pages/api/insiden/getBuktiFoto'
 import Drawer from "@/app/components/common/drawer";
+import Cookies from 'js-cookie';
 
 const KaryawanInsidenDetailPage = () => {
     const router = useRouter();
@@ -16,8 +17,11 @@ const KaryawanInsidenDetailPage = () => {
     const [selectedStatus, setSelectedStatus] = useState('');
     const [alert, setAlert] = useState(null);
     const [buktiFotoUrl, setBuktiFotoUrl] = useState(null);
+    const [userRole, setUserRole] = useState('');
 
     useEffect(() => {
+        const fetchUserRole = Cookies.get('role');
+        setUserRole(fetchUserRole || 'defaultRole');
         if (id) {
             getInsidenById(id as string)
                 .then(data => {
@@ -58,8 +62,7 @@ const KaryawanInsidenDetailPage = () => {
 
     return (
         <main className="flex flex-col items-center justify-between" data-theme="winter">
-            <Drawer userRole='userRole'>
-                {alert}
+            <Drawer userRole={userRole}>                {alert}
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                     <div className="px-4 py-5 sm:px-6">
                         <h3 className="text-xl text-center font-bold mb-2">Detail Laporan Insiden</h3>

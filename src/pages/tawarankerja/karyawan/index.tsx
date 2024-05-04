@@ -10,8 +10,10 @@ const AcceptedOrderItemsIndexPage = () => {
     const [tawaranKerja, setTawaranKerja] = useState([]);
     const [loading, setLoading] = useState(true);
     const sopirId = Cookies.get('idUser');
+    const [userRole, setUserRole] = useState('');
 
     useEffect(() => {
+        setUserRole(Cookies.get('role') || 'defaultRole');
         setLoading(true);
         getTawaranKerjaAccepted().then(data => {
             if (data && Array.isArray(data)) {
@@ -60,7 +62,7 @@ const AcceptedOrderItemsIndexPage = () => {
     return (
         <>
             <div className="flex flex-col h-screen justify-between" data-theme="winter">
-                <Drawer userRole='userRole'>
+            <Drawer userRole={userRole}>
                     <div className="overflow-auto">
                         <h2 className="text-2xl font-bold mb-1 text-center mt-6">Tawaran Kerja</h2>
                         <h5 className="text-center text-l mb-2">Segera konfirmasi sopir untuk pengantaran dibawah!</h5>

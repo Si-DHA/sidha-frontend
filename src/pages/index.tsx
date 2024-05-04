@@ -1,22 +1,41 @@
-import Layout from "@/app/components/common/layout"
+import Layout from "@/app/components/common/layout";
 import { Inter } from "next/font/google";
+import React, { useState, useEffect } from 'react';
+import { getAllFAQ } from '@/pages/api/faq/getAllFAQ';
 
 const inter = Inter({ subsets: ["latin"] });
 
-const IndexPage = () => (
-    <main className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk">
-        <Layout title="Home | Next.js + TypeScript Example">
-            <Visi />
-            <Services />
-            <Featured />
-            <Customer />
-            <FAQ />
-            {/* <Contact /> */}
-        </Layout>
-    </main>
-)
+const IndexPage = () => {
+    const [faqs, setFaqs] = useState([]);
 
-export default IndexPage
+    useEffect(() => {
+        async function fetchFAQs() {
+            try {
+                const data = await getAllFAQ();
+                setFaqs(data);
+            } catch (error) {
+                console.error('Failed to fetch FAQs', error);
+            }
+        }
+
+        fetchFAQs();
+    }, []);
+
+    return (
+        <main className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk">
+            <Layout title="Home | Next.js + TypeScript Example">
+                <Visi />
+                <Services />
+                <Featured />
+                <Customer />
+                <FAQ data={faqs} />
+            </Layout>
+        </main>
+    );
+}
+
+export default IndexPage;
+
 
 /// Page Sections
 const Visi = () => (<div className="relative pt-16 pb-32 flex content-center items-center justify-center"
@@ -358,68 +377,60 @@ const Customer = () => <section className="pt-20 pb-48">
     </div>
 </section>
 
-const FAQ = () => <section className="pb-20 relative block bg-blue-900">
-    <div
-        className="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20"
-        style={{ height: "80px" }}
-    >
-        <svg
-            className="absolute bottom-0 overflow-hidden"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-            version="1.1"
-            viewBox="0 0 2560 100"
-            x="0"
-            y="0"
-        >
-            <polygon
-                className="text-blue-900 fill-current"
-                points="2560 0 2560 100 0 100"
-            ></polygon>
-        </svg>
-    </div>
+const FAQ = ({ data }) => {
+    if (!Array.isArray(data)) {
+        console.error('Expected data to be an array but received:', typeof data);
+        return null;
+    }
 
-    <div className="container mx-auto px-4 lg:pt-24 lg:pb-24">
-        <div className="flex flex-wrap text-center justify-center">
-            <div className="w-full lg:w-6/12 px-4">
-                <h2 className="text-4xl font-bold text-white">
-                    Frequently Asked Question
-                </h2>
-                <p className="text-lg leading-relaxed mt-4 mb-4 text-white">
-                    Temukan jawaban dari pertanyaanmu terkait PT Dwi Harapan Agung di sini!
-                </p>
+    return (
+        <section className="pb-20 relative block bg-blue-900">
+            <div
+                className="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20"
+                style={{ height: "80px" }}
+            >
+                <svg
+                    className="absolute bottom-0 overflow-hidden"
+                    xmlns="http://www.w3.org/2000/svg"
+                    preserveAspectRatio="none"
+                    version="1.1"
+                    viewBox="0 0 2560 100"
+                    x="0"
+                    y="0"
+                >
+                    <polygon
+                        className="text-blue-900 fill-current"
+                        points="2560 0 2560 100 0 100"
+                    ></polygon>
+                </svg>
             </div>
-        </div>
-        <div className="flex flex-wrap mt-12 justify-center">
-            <div className="join join-vertical w-full bg-white">
-                <div className="collapse collapse-arrow join-item">
-                    <input type="radio" name="my-accordion-4" defaultChecked />
-                    <div className="collapse-title text-lg font-medium">
-                        Bagaimana cara saya masuk ke website?
-                    </div>
-                    <div className="collapse-content">
-                        <p>Hubungi PT Dwi Harapan Agung melalui +62718371838</p>
-                    </div>
-                </div>
-                <div className="collapse collapse-arrow join-item border border-base-300">
-                    <input type="radio" name="my-accordion-4" />
-                    <div className="collapse-title text-lg font-medium">
-                        Bagaimana cara saya memesan layanan PT Dwi Harapan Agung?
-                    </div>
-                    <div className="collapse-content">
-                        <p>Login atau masuk ke website melalui akun yang diberikan, pilih rute, dan order</p>
+            <div className="container mx-auto px-4 lg:pt-24 lg:pb-24">
+                <div className="flex flex-wrap text-center justify-center">
+                    <div className="w-full lg:w-6/12 px-4">
+                        <h2 className="text-4xl font-bold text-white">
+                            Frequently Asked Questions
+                        </h2>
+                        <p className="text-lg leading-relaxed mt-4 mb-4 text-white">
+                            Temukan jawaban dari pertanyaanmu terkait PT Dwi Harapan Agung di sini!
+                        </p>
                     </div>
                 </div>
-                <div className="collapse collapse-arrow join-item border border-base-300">
-                    <input type="radio" name="my-accordion-4" />
-                    <div className="collapse-title text-lg font-medium">
-                        Apakah PT Dwi Harapan Agung melayani pengiriman ke seluruh kota di Indonesia?
-                    </div>
-                    <div className="collapse-content">
-                        <p>Ya, kami melayani pengiriman ke seluruh kota di Indonesia</p>
+                <div className="flex flex-wrap mt-12 justify-center">
+                    <div className="join join-vertical w-full bg-white">
+                        {data.map(faq => (
+                            <div key={faq.id} className="collapse collapse-arrow join-item">
+                                <input type="radio" name="faq-accordion" />
+                                <div className="collapse-title text-lg font-medium">
+                                    {faq.question}
+                                </div>
+                                <div className="collapse-content">
+                                    <p>{faq.answer}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
+    );
+};
