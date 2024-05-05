@@ -65,7 +65,7 @@ const TrukPage: React.FC = () => {
             Cell: ({ row }) => (
                 <>
                     {row.original.sopir ? (
-                        <Link href={`/list-user/detail?id=${row.original.sopir.id}`}>
+                        <Link href={`/list-user/detail?id=${row.original.sopir.id}`} style={{textDecoration: 'underline'}}>
                             {row.original.sopir.name}
                         </Link>
                     ) : (
@@ -90,7 +90,7 @@ const TrukPage: React.FC = () => {
     ];
 
     const createTruk = () => {
-        router.push('/truk/create'); // Replace '/your-next-page' with the path to your next page
+        router.push('/truk/create'); 
     };
 
 

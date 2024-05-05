@@ -80,7 +80,9 @@ const InvoiceDetailPage = () => {
   }
 
   const mapInvoiceData = (data) => {
-    const mappedData = data.orderItems.map(item => {
+    const mappedData = data.orderItems
+    .filter(item => item.statusOrder >= 2)
+    .map(item => {
       const dp = item.price * 0.6; // 20% of price
       const sisa = item.price * 0.4; // 80% of price
       totalDp += dp;

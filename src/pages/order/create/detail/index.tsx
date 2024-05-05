@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
 import { getOrderDetailBeforeCheckout } from "@/pages/api/order/getOrderDetailBeforeCheckout";
-import { Order } from "../../../../app/model";
+import { Order } from "../../../../app/components/model";
 import DataTable from "@/app/components/common/datatable/DataTable";
 import { createOrder } from "@/pages/api/order/createOrder";
 
@@ -49,7 +49,7 @@ const PurchaseOrderDetail = () => {
                 setError(error.message);
             }
         }
-        if (orderItems.length === 0) {
+        if (order !== null && orderItems.length === 0) {
             fetchData();
         }
     },)

@@ -3,8 +3,8 @@ import Footer from "@/app/components/common/footer"
 import Cookies from 'js-cookie';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Order, OrderItem, Rute } from "../../../app/model";
-import { tipeBarang, tipeTruk } from "../../../app/data";
+import { Order, OrderItem, Rute } from "../../../app/components/model";
+import { tipeBarang, tipeTruk } from "../../../app/components/data";
 import { getPossibleRute } from "@/pages/api/order/getPossibleRute";
 
 const CreatePurchaseOrderPage = () => {
