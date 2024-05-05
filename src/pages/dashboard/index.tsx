@@ -75,6 +75,9 @@ const DashboardPage = () => {
         }
         const role = Cookies.get('role');
         setUserRole(role || '');
+        if(role == "KLIEN") {
+            router.push('/dashboard/klien');
+        }
 
 
     },)

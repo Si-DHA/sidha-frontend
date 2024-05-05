@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/app/constant/constant";
-import { Order } from "@/pages/order/model";
+import { Order } from "@/app/components/model";
 
 export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
     try {
@@ -32,7 +32,7 @@ export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
                 }
 
                 var rutePengiriman = ''
-                
+
                 for (let j = 0; j < responseData.content.orderItems[i].rute.length; j++) {
                     rutePengiriman += responseData.content.orderItems[i].rute[j].source + ' - ' + responseData.content.orderItems[i].rute[j].destination
                     if (j < responseData.content.orderItems[i].rute.length - 1) {
