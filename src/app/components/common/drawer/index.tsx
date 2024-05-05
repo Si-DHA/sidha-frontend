@@ -42,6 +42,13 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
 
                   </ul>
                 </li>
+
+                <li>
+                  <h2 className="menu-title text-neutral"><a>FAQ</a></h2>
+                  <ul>
+                    <li><Link href="/faq">Kelola FAQ</Link></li>
+                  </ul>
+                </li>
               </ul>
             </ul>
           </div>

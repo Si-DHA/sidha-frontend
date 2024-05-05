@@ -36,6 +36,7 @@ const KaryawanDetailPage = () => {
   }, [isLoggedIn, router])
 
   useEffect(() => {
+    setUserRole(Cookies.get('role') || 'defaultRole');
     const confirmedId = localStorage.getItem(`confirmedSopir-${orderItemId}`);
     if (confirmedId) {
       setConfirmationStatus(true);

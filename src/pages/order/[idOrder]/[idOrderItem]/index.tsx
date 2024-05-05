@@ -8,7 +8,7 @@ import Footer from "@/app/components/common/footer";
 import Drawer from "@/app/components/common/drawer";
 import { confirmOrder } from '@/pages/api/order/confirmOrder';
 import { GrStatusPlaceholder } from 'react-icons/gr';
-import { ConfirmOrder } from '../../model';
+import { ConfirmOrder } from '../../../../app/components/model';
 
 const OrderItemDetailPage = () => {
   const router = useRouter();
