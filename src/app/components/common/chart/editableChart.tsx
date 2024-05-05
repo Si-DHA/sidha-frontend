@@ -51,11 +51,11 @@ export const EditableChart: React.FC<EditableChartProps> = ({ data, options }) =
 
   return (
     <>
-      <button onClick={onEditClick}>Edit Chart</button>
+      <button className="btn btn-success" onClick={onEditClick}>Edit Chart</button>
       <Chart
-        chartType="LineChart"
-        width="80%"
-        height="400px"
+        chartType="BarChart"
+        width="100%"
+        height="200px"
         data={data}
         options={options}
         chartPackages={["corechart", "controls", "charteditor"]}
