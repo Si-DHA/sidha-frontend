@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/app/constant/constant";
-import { ConfirmOrder } from "@/pages/order/model";
+import { ConfirmOrder } from "@/app/components/model";
 
 
 export const confirmOrder = async (confirmOrder: ConfirmOrder, token: string): Promise<any> => {

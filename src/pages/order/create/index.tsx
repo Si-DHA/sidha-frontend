@@ -3,8 +3,8 @@ import Footer from "@/app/components/common/footer"
 import Cookies from 'js-cookie';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Order, OrderItem, Rute } from "../model";
-import { tipeBarang, tipeTruk } from "../data";
+import { Order, OrderItem, Rute } from "../../../app/components/model";
+import { tipeBarang, tipeTruk } from "../../../app/components/data";
 import { getPossibleRute } from "@/pages/api/order/getPossibleRute";
 
 const CreatePurchaseOrderPage = () => {
@@ -246,7 +246,7 @@ const CreatePurchaseOrderPage = () => {
                         <span className="label-text">Tipe Barang<span className="text-s text-red-500">*</span></span>
 
                     </div>
-                    <select required className="select select-bordered" onChange={(e) => handleOnChangeTipeBarang(e, index)} defaultValue={orderItem[index].tipeBarang !== ''? orderItem[index].tipeBarang:undefined}>
+                    <select required className="select select-bordered" onChange={(e) => handleOnChangeTipeBarang(e, index)} defaultValue={orderItem[index].tipeBarang !== '' ? orderItem[index].tipeBarang : undefined}>
                         <option disabled selected>Pilih satu</option>
                         {tipeBarang.map((tipe, idx) => (
                             <option key={idx}>
@@ -266,7 +266,7 @@ const CreatePurchaseOrderPage = () => {
                         <span className="label-text">Tipe Truk<span className="text-s text-red-500">*</span></span>
 
                     </div>
-                    <select className="select select-bordered" required onChange={(e) => handleOnChangeTipeTruk(e, index)} defaultValue={orderItem[index].tipeTruk !== ''? orderItem[index].tipeTruk:undefined}>
+                    <select className="select select-bordered" required onChange={(e) => handleOnChangeTipeTruk(e, index)} defaultValue={orderItem[index].tipeTruk !== '' ? orderItem[index].tipeTruk : undefined}>
                         <option disabled selected>Pilih satu</option>
                         {tipeTruk.map((tipe, index) => (
                             <option key={index} >
