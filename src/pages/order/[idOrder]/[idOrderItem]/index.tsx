@@ -194,17 +194,6 @@ const OrderItemDetailPage = () => {
 
             </div>
           </dialog>
-          <dialog id="modal_terima" className="modal modal-bottom sm:modal-middle">
-            <div className="modal-box">
-              <h3 className="font-bold text-lg">Terima</h3>
-              <p>Anda yakin akan menerima order ini?</p>
-              <div className="modal-action">
-                <button className="btn mr-2" onClick={() => document.getElementById('modal_terima')?.close()}>Batal</button>
-                <button className="btn btn-success" onClick={() => { handleConfirmAnswer(true); document.getElementById('modal_terima')?.close(); }}>Yakin</button>
-              </div>
-
-            </div>
-          </dialog>
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
             <div className="px-4 py-5 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900">Order Item {idOrderItem}</h3>
@@ -351,9 +340,6 @@ const OrderItemDetailPage = () => {
                 <div className='flex flex-col gap-2'>
                   <h3 className='text-lg font-bold text-center'>Konfirmasi Order</h3>
                   <div className='flex flex-row gap-4'>
-                    <button className='btn btn-success grow ' onClick={() => document.getElementById('modal_terima')?.showModal()}>
-                      Terima
-                    </button>
                     <button className='btn btn-error grow' onClick={() => document.getElementById('modal_tolak')?.showModal()}>
                       Tolak
                     </button>
