@@ -105,7 +105,7 @@ const FAQAdminPage = () => {
                                     <h3 className="text-lg font-semibold text-gray-700">
                                         {isEditing ? 'Edit FAQ' : 'Add FAQ'}
                                     </h3>
-                                    <input
+                                    <textarea
                                         type="text"
                                         name="question"
                                         value={currentFAQ.question}
