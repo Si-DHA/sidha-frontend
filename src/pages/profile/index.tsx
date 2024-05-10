@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react';
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import Drawer from "@/app/components/common/drawer";
+import { viewTrukByIdsopir } from "../api/truk/viewTrukByIdSopir";
 
 
 export default function ProfilePage() {
@@ -18,7 +19,8 @@ export default function ProfilePage() {
   console.log(id);
   const [userData, setUserData] = useState<any>(null);
   const [userId, setUserId] = useState(id);
-  const [imageUrl, setImageUrl] = useState(''); 
+  const [imageUrl, setImageUrl] = useState('');
+  const [trukData, setTrukData] = useState(null);
 
 
   var isLoggedIn = Cookies.get('isLoggedIn');
@@ -31,6 +33,18 @@ export default function ProfilePage() {
     }
     const role = Cookies.get('role');
     setUserRole(role || '');
+
+    if (role === "SOPIR") {
+      const fetchTruckData = async () => {
+        try {
+          const data = await viewTrukByIdsopir(Cookies.get('idUser') || '');
+          setTrukData(data.content);
+        } catch (error) {
+          console.error('Error fetching truck data:', error);
+        }
+      };
+      fetchTruckData();
+    }
   }, [isLoggedIn, router])
 
 
@@ -77,6 +91,22 @@ export default function ProfilePage() {
             </div>
             <div className="card-body  justify-center items-center ">
               <h2 className="card-title text-[24px]">{userData.name} </h2>
+              {userRole === 'SOPIR' ? (
+                trukData ? (
+                  <div className="mt-2 text-center">
+                    <p className="mb-2">
+                      Plat Truk:{' '} 
+                      <Link href={`/truk/detail/?id=${trukData['idTruk']}`} style={{textDecoration: 'underline'}}>
+                       {trukData['licensePlate']}
+                      </Link>
+                    </p>
+                    <p className="mt-2">Tipe Truk: {trukData['type']}</p>
+                  </div>
+                ) : (
+                  <p className="mt-2 text-center">Belum memiliki truk</p>
+                )
+              ) : null}
+
               <div className="flex flex-col  items-center pt-8 flex-wrap gap-y-4">
 
                 <div className="card-actions" text-xs>
@@ -105,7 +135,7 @@ export default function ProfilePage() {
 
                   </button>
                 </div>
-                
+
 
               </div>
 
@@ -164,10 +194,10 @@ export default function ProfilePage() {
           </div>
         </div>
 
-      </Drawer>
+      </Drawer >
 
       <Footer />
-    </main>
+    </main >
   );
 }
 

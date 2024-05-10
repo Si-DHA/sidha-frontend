@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getInsidenById } from '@/pages/api/insiden/getInsidenById';
 import { updateStatus } from '@/pages/api/insiden/updateStatus';
-import Navbar from '@/app/components/common/navbar';
 import Footer from '@/app/components/common/footer';
 import SuccessAlert from '@/app/components/common/SuccessAlert';
 import FailAlert from '@/app/components/common/FailAlert';
 import { getBuktiFoto } from '@/pages/api/insiden/getBuktiFoto'
 import Drawer from "@/app/components/common/drawer";
+import Cookies from 'js-cookie';
 
 const KaryawanInsidenDetailPage = () => {
     const router = useRouter();
@@ -16,8 +16,26 @@ const KaryawanInsidenDetailPage = () => {
     const [selectedStatus, setSelectedStatus] = useState('');
     const [alert, setAlert] = useState(null);
     const [buktiFotoUrl, setBuktiFotoUrl] = useState(null);
+    const [userRole, setUserRole] = useState('');
+    const [error, setError] = useState('');
+    var isLoggedIn = Cookies.get('isLoggedIn');
 
     useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        if (role === 'KARYAWAN') {
+            setUserRole(role);
+        } else {
+            setError('You are not allowed to access this page');
+        }
+
+    }, [isLoggedIn, router])
+
+    useEffect(() => {
+        const fetchUserRole = Cookies.get('role');
+        setUserRole(fetchUserRole || 'defaultRole');
         if (id) {
             getInsidenById(id as string)
                 .then(data => {
@@ -58,7 +76,7 @@ const KaryawanInsidenDetailPage = () => {
 
     return (
         <main className="flex flex-col items-center justify-between" data-theme="winter">
-            <Drawer userRole='userRole'>
+            <Drawer userRole={userRole}>
                 {alert}
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                     <div className="px-4 py-5 sm:px-6">
@@ -67,7 +85,7 @@ const KaryawanInsidenDetailPage = () => {
                     <dl>
                         {insiden.orderItem && (
                             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt className="text-sm font-medium text-gray-500">ID</dt>
+                                <dt className="text-sm font-medium text-gray-500">ID Order Item</dt>
                                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.id}
                                 </dd>
                             </div>
@@ -75,7 +93,7 @@ const KaryawanInsidenDetailPage = () => {
                         {insiden.orderItem && (
                             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                 <dt className="text-sm font-medium text-gray-500">Asal - Tujuan</dt>
-                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.rute[0].source} to {insiden.orderItem.rute[0].destination}
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.rute[0].source} - {insiden.orderItem.rute[0].destination}
                                 </dd>
                             </div>
                         )}
@@ -139,6 +157,7 @@ const KaryawanInsidenDetailPage = () => {
                             Back
                         </button>
                         <button
+                            disabled={insiden.status == 'COMPLETED' || insiden.status == 'CANCELLED'}
                             onClick={handleUpdateStatus}
                             className="btn btn-primary"
                         >
@@ -150,7 +169,6 @@ const KaryawanInsidenDetailPage = () => {
             <Footer />
         </main>
     );
-
 };
 
 export default KaryawanInsidenDetailPage;

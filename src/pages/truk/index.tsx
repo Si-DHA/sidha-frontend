@@ -65,7 +65,7 @@ const TrukPage: React.FC = () => {
             Cell: ({ row }) => (
                 <>
                     {row.original.sopir ? (
-                        <Link href={`/list-user/detail?id=${row.original.sopir.id}`}>
+                        <Link href={`/list-user/detail?id=${row.original.sopir.id}`} style={{textDecoration: 'underline'}}>
                             {row.original.sopir.name}
                         </Link>
                     ) : (

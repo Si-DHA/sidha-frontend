@@ -6,6 +6,7 @@ import Footer from "@/app/components/common/footer";
 import DataTable from "@/app/components/common/datatable/DataTable";
 import { getTawaranKerja } from '@/pages/api/tawaran-kerja/getTawaranKerja';
 import { getAcceptedOffersBySopir } from '@/pages/api/tawaran-kerja/getAcceptedOffersBySopir';
+import { getOrderByOrderItem } from '@/pages/api/order/getOrderByOrderItem';
 
 const OrderItemsIndexPage = () => {
     const [orderItems, setOrderItems] = useState([]);
@@ -13,37 +14,65 @@ const OrderItemsIndexPage = () => {
     const [location, setLocation] = useState('');
     const [selectedOfferId, setSelectedOfferId] = useState('');
     const sopirId = Cookies.get('idUser');
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        if (role === 'SOPIR') {
+            setUserRole(role);
+        } else {
+            setError('You are not allowed to access this page');
+        }
+
+    }, [isLoggedIn, router])
 
     useEffect(() => {
         setLoading(true);
+        // Fetching order items
         getTawaranKerja().then(data => {
-            if (data && Array.isArray(data)) { // Ensure data is an array
-                setOrderItems(data.map(item => ({
+            if (data && Array.isArray(data)) {
+                const orderItems = data.map(item => ({
                     ...item,
                     source: item.rute.length > 0 ? item.rute[0].source : 'N/A',
                     destination: item.rute.length > 0 ? item.rute[0].destination : 'N/A',
                     isPecahBelah: item.isPecahBelah,
                     price: item.price || 'N/A',
-                    createdDate: item.orderItemHistories.length > 0 ? new Date(item.orderItemHistories[0].createdDate).toLocaleString('id-ID') : 'N/A'
-                })));
+                    tipeTruk: item.tipeTruk
+                }));
+                // Fetching additional data for each order item
+                Promise.all(
+                    orderItems.map(async item => {
+                        const orderData = await getOrderByOrderItem(item.id);
+                        if (orderData && orderData.content) {
+                            // Merge tanggalPengiriman with the order item
+                            return {
+                                ...item,
+                                tanggalPengiriman: orderData.content.tanggalPengiriman,
+                            };
+                        }
+                        return item;
+                    })
+                ).then(mergedOrderItems => {
+                    setOrderItems(mergedOrderItems);
+                }).catch(error => {
+                    console.error('Fetching additional data error:', error);
+                }).finally(() => {
+                    setLoading(false);
+                });
             } else {
                 console.error('Invalid format for order items:', data);
+                setLoading(false);
             }
         }).catch(error => {
             console.error('Fetching error:', error);
-        }).finally(() => {
             setLoading(false);
         });
-        if (sopirId) {
-            getAcceptedOffersBySopir(sopirId).then(acceptedOffers => {
-                const acceptedIds = acceptedOffers.content.map(offer => offer.orderItem.id);
-                setOrderItems(prevItems => prevItems.map(item => ({
-                    ...item,
-                    hasAccepted: acceptedIds.includes(item.id),
-                })));
-            });
-        }
-    }, [sopirId]);
+    }, []);    
 
     const handleDetailClick = (id, hasAccepted) => {
         const detailUrl = hasAccepted ? `/tawarankerja/sopir/detail/${id}/accept` : `/tawarankerja/sopir/detail/${id}`;
@@ -55,7 +84,13 @@ const OrderItemsIndexPage = () => {
         { Header: 'Tujuan', accessor: 'destination' },
         { Header: 'Mudah Pecah', accessor: 'isPecahBelah', Cell: ({ value }) => value ? 'Yes' : 'No' },
         { Header: 'Harga', accessor: 'price', Cell: ({ value }) => value !== 'N/A' ? `Rp${parseInt(value).toLocaleString('id-ID')}` : 'N/A' },
-        { Header: 'Tanggal Dibuat', accessor: 'createdDate' },
+        { Header: 'Tipe Truk', accessor: 'tipeTruk' },
+        { Header: 'Tanggal Pengiriman', accessor: 'tanggalPengiriman', 
+        Cell: ({ value }) => {
+            // Extract date part (format: "03-05-2024 12:00:00") and return only the date
+            const dateOnly = value.split(' ')[0];
+            return dateOnly || 'N/A';
+        }},
         {
             Header: 'Details',
             accessor: 'id',
@@ -69,6 +104,7 @@ const OrderItemsIndexPage = () => {
             ),
         },
     ];
+    
 
     return (
         <>

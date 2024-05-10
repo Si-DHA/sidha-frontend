@@ -17,13 +17,30 @@ const KaryawanDetailPage = () => {
   const router = useRouter();
   const { orderItemId } = router.query;
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+  const [error, setError] = useState('');
+
+  var isLoggedIn = Cookies.get('isLoggedIn');
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/login');
+    }
+    const role = Cookies.get('role');
+    if (role === 'KARYAWAN') {
+      setUserRole(role);
+    } else {
+      setError('You are not allowed to access this page');
+    }
+
+  }, [isLoggedIn, router])
+
+  useEffect(() => {
+    setUserRole(Cookies.get('role') || 'defaultRole');
     const confirmedId = localStorage.getItem(`confirmedSopir-${orderItemId}`);
     if (confirmedId) {
       setConfirmationStatus(true);
       setSelectedSopirId(confirmedId);
-      // Optionally, also fetch and set the sopir details if needed
     }
 
     if (orderItemId) {
@@ -62,7 +79,7 @@ const KaryawanDetailPage = () => {
   };
 
   return (
-    <Drawer userRole="karyawan">
+    <Drawer userRole={userRole}>
       <main className="flex flex-col items-center justify-between" data-theme="winter">
         {alert.show && (alert.type === 'success' ? <SuccessAlert message={alert.message} /> : <FailAlert message={alert.message} />)}
         {orderItemDetails ? (
@@ -104,9 +121,9 @@ const KaryawanDetailPage = () => {
               </button>
               {confirmedSopir && (
                 <p className="text-green-500 mt-2 mb-4">
-                <strong>{confirmedSopir.sopir.name}</strong> dari <strong>{confirmedSopir.lokasi}</strong> telah dikonfirmasi untuk pekerjaan ini.
-              </p>
-              
+                  <strong>{confirmedSopir.sopir.name}</strong> dari <strong>{confirmedSopir.lokasi}</strong> telah dikonfirmasi untuk pekerjaan ini.
+                </p>
+
               )}
             </div>
           </>
