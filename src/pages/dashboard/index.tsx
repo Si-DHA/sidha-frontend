@@ -1,12 +1,9 @@
 import Drawer from "@/app/components/common/drawer";
-import FixedDrawer from "@/app/components/common/drawer";
 import Footer from "@/app/components/common/footer"
-import Navbar from "@/app/components/common/navbar"
 import Cookies from 'js-cookie';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { BarChart } from "@/app/components/common/chart/barchart";
-import { EditableChart } from "@/app/components/common/chart/editableChart";
 import { Inter } from "next/font/google";
 import { getTotalNewClient } from "../api/dashboard/user/getTotalNewClient";
 import { getTotalRevenue } from "../api/dashboard/order/getTotalRevenue";

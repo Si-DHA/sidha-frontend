@@ -1,5 +1,4 @@
-import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
+import Cookies from "js-cookie";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
 import { BASE_URL } from '@/app/constant/constant';
@@ -8,6 +7,7 @@ import { deleteImageBongkar } from '@/pages/api/order/deleteImageBongkar';
 import { viewOrderItemById } from '@/pages/api/order/viewOrderItemById';
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Drawer from "@/app/components/common/drawer";
 
 const BuktiBongkarPage = () => {
     const router = useRouter();
@@ -18,6 +18,22 @@ const BuktiBongkarPage = () => {
     const [orderItemData, setOrderItemData] = useState(null);
     const [buktiData, setBuktiData] = useState(null);
     const [imageUploaded, setImageUploaded] = useState(null);
+
+    var isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        if (role === 'SOPIR') {
+            setUserRole(role);
+        } else {
+            setError('You are not allowed to access this page');
+        }
+
+    }, [isLoggedIn, router])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -104,11 +120,11 @@ const BuktiBongkarPage = () => {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="cmyk">
-            <Navbar />
-            <div className="flex flex-row">
-                {alert}
-            </div>
-            <style jsx>{`
+            <Drawer userRole={userRole}>
+                <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
+                    {alert}
+                </div>
+                <style jsx>{`
                 .image-container {
                     padding-top:10px;
                     max-width: 200px;
@@ -125,82 +141,74 @@ const BuktiBongkarPage = () => {
                 .btn {
                     padding: 5px 10px;
                 }
-
-                .btn-danger {
-                    background-color: red;
-                    color: white;
-                }
-                .btn-primary {
-                    color: white;
-                }
             `}</style>
-            {error ? (
-                <div>Error: {error}</div>
-            ) : orderItemData && (
-                <div className="flex flex-row gap-y-12 gap-x-12">
-                    <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-                        <div className="modal-box">
-                            <h3 className="font-bold text-lg">Unggah</h3>
-                            <p className="py-4">Apakah Anda yakin akan mengunggah ini?</p>
-                            <div className="modal-action">
-                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Batal</button>
-                                <button className="btn btn-success" onClick={() => { uploadBuktiImage(); document.getElementById('my_modal_5').close(); }}>Unggah</button>
+                {error ? (
+                    <div className="mx-auto my-auto">Error: {error}</div>
+                ) : orderItemData && (
+                    <div className="flex flex-col lg:flex-row  justify-center items-center gap-x-16  gap-y-16 mx-auto my-auto px-12 py-12">
+                        <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+                            <div className="modal-box">
+                                <h3 className="font-bold text-lg">Unggah</h3>
+                                <p className="py-4">Apakah Anda yakin akan mengunggah ini?</p>
+                                <div className="modal-action">
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Batal</button>
+                                    <button className="btn btn-success" onClick={() => { uploadBuktiImage(); document.getElementById('my_modal_5').close(); }}>Unggah</button>
+                                </div>
                             </div>
-                        </div>
-                    </dialog>
-                    <dialog id="my_modal_6" className="modal modal-bottom sm:modal-middle">
-                        <div className="modal-box">
-                            <h3 className="font-bold text-lg">Hapus</h3>
-                            <p className="py-4">Apakah Anda yaking akan menghapus ini?</p>
-                            <div className="modal-action">
-                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_6').close()}>Batal</button>
-                                <button className="btn btn-success" onClick={() => { handleDelete(); document.getElementById('my_modal_6').close(); }}>Hapus</button>
+                        </dialog>
+                        <dialog id="my_modal_6" className="modal modal-bottom sm:modal-middle">
+                            <div className="modal-box">
+                                <h3 className="font-bold text-lg">Hapus</h3>
+                                <p className="py-4">Apakah Anda yaking akan menghapus ini?</p>
+                                <div className="modal-action">
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_6').close()}>Batal</button>
+                                    <button className="btn btn-success" onClick={() => { handleDelete(); document.getElementById('my_modal_6').close(); }}>Hapus</button>
+                                </div>
                             </div>
-                        </div>
-                    </dialog>
-                    <div className="card w-96 bg-base-100 shadow-md">
-                        <div className="card-body items-center text-center">
-                            <h3 className="text-xl font-semibold mb-4">Unggah Bukti Bongkar</h3>
+                        </dialog>
+                        <div className="card w-96 bg-base-100 shadow-md">
+                            <div className="card-body items-center text-center">
+                                <h3 className="text-xl font-semibold mb-4">Unggah Bukti Bongkar</h3>
 
-                            <label className="form-control w-full max-w-xs">
-                                <input
-                                    disabled={orderItemData.statusOrder < 3 || orderItemData.statusOrder > 4}
-                                    id="buktiImage" type="file" accept="image/*" className="file-input file-input-bordered w-full max-w-xs" onChange={handleFileChange} />
-                                <div className="label">
-                                    <span className="label-text-alt">max. size: 10Mb</span>
-                                    <span className="label-text-alt">.jpg/.jpeg/.png</span>
-                                </div>
-                            </label>
-                            {imageUrl && (
-                                <div className="mt-4 mb-5">
-                                    <div className="image-container">
-                                        <img src={imageUrl} alt="Bukti Bongkar" />
+                                <label className="form-control w-full max-w-xs">
+                                    <input
+                                        disabled={orderItemData.statusOrder < 3 || orderItemData.statusOrder > 4}
+                                        id="buktiImage" type="file" accept="image/*" className="file-input file-input-bordered w-full max-w-xs" onChange={handleFileChange} />
+                                    <div className="label">
+                                        <span className="label-text-alt">max. size: 10Mb</span>
+                                        <span className="label-text-alt">.jpg/.jpeg/.png</span>
                                     </div>
+                                </label>
+                                {imageUrl && (
+                                    <div className="mt-4 mb-5">
+                                        <div className="image-container">
+                                            <img src={imageUrl} alt="Bukti Bongkar" />
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="flex flex-row w-full max-w-xs justify-center align-middle">
+                                    <button
+                                        disabled={orderItemData.statusOrder < 3 || orderItemData.statusOrder > 4}
+                                        className="btn btn-xs btn-primary sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_5').showModal()}>Unggah </button>
                                 </div>
-                            )}
-                            <div className="flex flex-row w-full max-w-xs justify-center align-middle">
-                                <button
-                                    disabled={orderItemData.statusOrder < 3 || orderItemData.statusOrder > 4}
-                                    className="btn btn-xs btn-primary sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_5').showModal()}>Unggah </button>
-                            </div>
-                            <div className="flex flex-row w-full max-w-xs justify-center align-middle">
-                                <button
-                                    disabled={orderItemData.statusOrder < 3 || orderItemData.statusOrder > 4}
-                                    className="btn btn-xs btn-error sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_6').showModal()}>Hapus </button>
-                            </div>
-                            <div className="flex flex-row w-full max-w-xs justify-center align-middle">
-                                <button
-                                    onClick={() => router.push(`/order/sopir`)}
-                                    className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow"
-                                >
-                                    Back
-                                </button>
+                                <div className="flex flex-row w-full max-w-xs justify-center align-middle">
+                                    <button
+                                        disabled={orderItemData.statusOrder < 3 || orderItemData.statusOrder > 4}
+                                        className="btn btn-xs btn-error sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_6').showModal()}>Hapus </button>
+                                </div>
+                                <div className="flex flex-row w-full max-w-xs justify-center align-middle">
+                                    <button
+                                        onClick={() => router.push(`/order/sopir`)}
+                                        className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow"
+                                    >
+                                        Kembali
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-            <Footer />
+                )}
+            </Drawer>
         </main>
     );
 }

@@ -154,14 +154,14 @@ const KaryawanInsidenDetailPage = () => {
                             onClick={() => router.push('/insiden/karyawan')}
                             className="btn btn-secondary mr-4"
                         >
-                            Back
+                            Kembali
                         </button>
                         <button
                             disabled={insiden.status == 'COMPLETED' || insiden.status == 'CANCELLED'}
                             onClick={handleUpdateStatus}
                             className="btn btn-primary"
                         >
-                            Update Status
+                            Perbarui Status
                         </button>
                     </div>
                 </div>
