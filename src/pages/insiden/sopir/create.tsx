@@ -86,7 +86,7 @@ const CreateInsidenPage = () => {
                                 className="w-full mt-1 p-2 border-2 rounded-md"
                             >
                                 <option value="">Select an Order Item</option>
-                                {orderItems.filter(item => item.orderItem.statusOrder < 5).map((item) => (
+                                {orderItems.filter(item => item.orderItem.statusOrder < 5 && item.orderItem.statusOrder >= 1).map((item) => (
                                     <option key={item.orderItem.id} value={item.orderItem.id}>
                                         {item.orderItem.rute[0].source} - {item.orderItem.rute[0].destination}
                                     </option>

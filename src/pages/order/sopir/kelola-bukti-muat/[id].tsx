@@ -140,22 +140,22 @@ const BuktiMuatPage = () => {
                 <div className="flex flex-row gap-y-12 gap-x-12">
                     <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                         <div className="modal-box">
-                            <h3 className="font-bold text-lg">Upload</h3>
-                            <p className="py-4">Are you sure you want to upload this?</p>
+                            <h3 className="font-bold text-lg">Unggah</h3>
+                            <p className="py-4">Apakah Anda yakin akan mengunggah ini?</p>
                             <div className="modal-action">
-                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
-                                <button className="btn btn-success" onClick={() => { uploadBuktiImage(); document.getElementById('my_modal_5').close(); }}>Upload</button>
+                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Batal</button>
+                                <button className="btn btn-success" onClick={() => { uploadBuktiImage(); document.getElementById('my_modal_5').close(); }}>Unggah</button>
                             </div>
 
                         </div>
                     </dialog>
                     <dialog id="my_modal_6" className="modal modal-bottom sm:modal-middle">
                         <div className="modal-box">
-                            <h3 className="font-bold text-lg">Delete</h3>
-                            <p className="py-4">Are you sure you want to delete this?</p>
+                            <h3 className="font-bold text-lg">Hapus</h3>
+                            <p className="py-4">Apakah Anda yakin akan menghapus ini?</p>
                             <div className="modal-action">
-                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_6').close()}>Cancel</button>
-                                <button className="btn btn-success" onClick={() => { handleDelete(); document.getElementById('my_modal_6').close(); }}>Delete</button>
+                                <button className="btn mr-2" onClick={() => document.getElementById('my_modal_6').close()}>Batal</button>
+                                <button className="btn btn-success" onClick={() => { handleDelete(); document.getElementById('my_modal_6').close(); }}>Hapus</button>
                             </div>
                         </div>
                     </dialog>
@@ -164,7 +164,9 @@ const BuktiMuatPage = () => {
                             <h3 className="text-xl font-semibold mb-4">Unggah Bukti Muat</h3>
 
                             <label className="form-control w-full max-w-xs">
-                                <input id="buktiImage" type="file" accept="image/*" className="file-input file-input-bordered w-full max-w-xs" onChange={handleFileChange} />
+                                <input
+                                    disabled={orderItemData.statusOrder < 1 || orderItemData.statusOrder > 2}
+                                    id="buktiImage" type="file" accept="image/*" className="file-input file-input-bordered w-full max-w-xs" onChange={handleFileChange} />
                                 <div className="label">
                                     <span className="label-text-alt">max. size: 10Mb</span>
                                     <span className="label-text-alt">.jpg/.jpeg/.png</span>
@@ -178,10 +180,14 @@ const BuktiMuatPage = () => {
                                 </div>
                             )}
                             <div className="flex flex-row w-full max-w-xs justify-center align-middle">
-                                <button className="btn btn-xs btn-primary sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_5').showModal()}>Upload </button>
+                                <button
+                                    disabled={orderItemData.statusOrder < 1 || orderItemData.statusOrder > 2}
+                                    className="btn btn-xs btn-primary sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_5').showModal()}>Unggah </button>
                             </div>
                             <div className="flex flex-row w-full max-w-xs justify-center align-middle">
-                                <button className="btn btn-xs btn-danger sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_6').showModal()}>Delete </button>
+                                <button
+                                    disabled={orderItemData.statusOrder < 1 || orderItemData.statusOrder > 2}
+                                    className="btn btn-xs btn-error sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" onClick={() => document.getElementById('my_modal_6').showModal()}>Hapus </button>
                             </div>
                             <div className="flex flex-row w-full max-w-xs justify-center align-middle">
                                 <button
