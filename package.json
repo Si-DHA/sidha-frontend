@@ -31,7 +31,11 @@
     "react-google-charts": "^4.0.1",
     "react-hook-form": "^7.51.2",
     "react-icons": "^5.0.1",
+<<<<<<< HEAD
     "react-pdf": "^8.0.2",
+=======
+    "react-pdf": "^0.0.10",
+>>>>>>> 70cce70577106a556f4d35cf0acd28581575754d
     "react-select": "^5.8.0",
     "react-table": "^7.8.0",
     "webpack": "^5.91.0"
