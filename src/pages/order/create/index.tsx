@@ -284,7 +284,6 @@ const CreatePurchaseOrderPage = () => {
                 {orderItem[index].rute.map((_, ruteIndex) => (
                     <RuteOrderForm key={ruteIndex} ruteIndex={ruteIndex} orderItemIndex={index} />
                 ))}
-                <div className="btn w-full" onClick={() => handleAddRute(index)}>Tambah Rute</div>
                 {index > 0 && (
                     <div className="btn btn-error w-full" onClick={() => handleRemoveOrderItem(index)}>Hapus Order Item</div>
                 )}

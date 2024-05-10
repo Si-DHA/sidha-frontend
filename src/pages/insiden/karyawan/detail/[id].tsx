@@ -19,18 +19,18 @@ const KaryawanInsidenDetailPage = () => {
     const [userRole, setUserRole] = useState('');
     const [error, setError] = useState('');
     var isLoggedIn = Cookies.get('isLoggedIn');
-  
+
     useEffect(() => {
-      if (!isLoggedIn) {
-        router.push('/login');
-      }
-      const role = Cookies.get('role');
-      if (role === 'KARYAWAN') {
-        setUserRole(role);
-      } else {
-        setError('You are not allowed to access this page');
-      }
-  
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        if (role === 'KARYAWAN') {
+            setUserRole(role);
+        } else {
+            setError('You are not allowed to access this page');
+        }
+
     }, [isLoggedIn, router])
 
     useEffect(() => {
@@ -157,6 +157,7 @@ const KaryawanInsidenDetailPage = () => {
                             Back
                         </button>
                         <button
+                            disabled={insiden.status == 'COMPLETED' || insiden.status == 'CANCELLED'}
                             onClick={handleUpdateStatus}
                             className="btn btn-primary"
                         >

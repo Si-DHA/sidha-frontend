@@ -6,6 +6,8 @@ import Footer from '@/app/components/common/footer';
 import DataTable from '@/app/components/common/datatable/DataTable';
 import { getInsidensBySopir } from '@/pages/api/insiden/getInsidensBySopir';
 import Drawer from '@/app/components/common/drawer';
+import { format } from 'date-fns';
+import idLocale from 'date-fns/locale/id';
 
 interface InsidenRow {
     id: string;
@@ -53,13 +55,7 @@ const IndexPage = () => {
     const columns = [
         {
             Header: 'Tanggal Pembuatan',
-            accessor: row => new Date(row.updatedAt || row.createdAt).toLocaleString('id-ID', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-            }),
+            accessor: row => format(new Date(row.updatedAt || row.createdAt), 'dd MMMM yyyy, HH:mm', { locale: idLocale }),
             Cell: ({ value }) => value,
         },
         {

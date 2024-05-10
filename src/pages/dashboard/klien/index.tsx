@@ -198,21 +198,21 @@ const DashboardKlienPage = () => {
                     <div className="container mx-auto">
                         {/* Display completed order item count */}
                         <div className="bg-white rounded-lg p-4 shadow-md mb-4">
-                            <h2 className="text-lg font-semibold mb-2">Completed Order Item</h2>
+                            <h2 className="text-lg font-semibold mb-2">Jumlah Order Item Selesai</h2>
                             <p>{completedOrderItemCount}</p>
                         </div>
                         {/* Display daily, monthly, and yearly expenditure */}
                         <div className="grid grid-cols-3 gap-4">
                             <div className="bg-white rounded-lg p-4 shadow-md">
-                                <h2 className="text-lg font-semibold mb-2">Daily Expenditure</h2>
+                                <h2 className="text-lg font-semibold mb-2">Pengeluaran Harian</h2>
                                 <p>{formatPrice(dailyExpenditure)}</p>
                             </div>
                             <div className="bg-white rounded-lg p-4 shadow-md">
-                                <h2 className="text-lg font-semibold mb-2">Monthly Expenditure</h2>
+                                <h2 className="text-lg font-semibold mb-2">Pengeluaran Bulanan</h2>
                                 <p>{formatPrice(monthlyExpenditure)}</p>
                             </div>
                             <div className="bg-white rounded-lg p-4 shadow-md">
-                                <h2 className="text-lg font-semibold mb-2">Yearly Expenditure</h2>
+                                <h2 className="text-lg font-semibold mb-2">Pengeluaran Tahunan</h2>
                                 <p>{formatPrice(yearlyExpenditure)}</p>
                             </div>
                         </div>
