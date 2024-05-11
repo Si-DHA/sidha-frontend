@@ -8,11 +8,11 @@ import Drawer from "@/app/components/common/drawer";
 const getStatusDescription = (statusCode) => {
     switch (statusCode) {
         case -1:
-            return 'Ditolak';
+            return <div className="badge badge-error text-xs">Ditolak</div>;
         case 0:
-            return <div className="badge badge-error">Menunggu Konfirmasi</div>;
+            return <div className="badge badge-warning text-xs">Menunggu Konfirmasi</div>;
         case 1:
-            return <div className="badge badge-success">Telah Dikonfirmasi</div>;
+            return <div className="badge badge-success text-xs">Telah Dikonfirmasi</div>;
         case 2:
             return 'Menunggu DP';
         case 3:
