@@ -27,22 +27,18 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                     <li><Link href="/list-user?role=karyawan">Daftar Karyawan</Link></li>
                   </ul>
                 </li>
-
-                <li>
-                  <h2 className="menu-title text-neutral"><a>Data Truk</a></h2><ul>
-                    <li><Link href="/truk">Daftar Truk</Link></li>
-                  </ul>
-                </li>
-
                 <li>
                   <h2 className="menu-title text-neutral"><a>Registrasi Akun</a></h2>
                   <ul>
                     <li><Link href="/register/karyawan">Registrasi Karyawan</Link></li>
                     <li><Link href="/register/sopir">Registrasi Sopir</Link></li>
-
                   </ul>
                 </li>
-
+                <li>
+                  <h2 className="menu-title text-neutral"><a>Data Truk</a></h2><ul>
+                    <li><Link href="/truk">Daftar Truk</Link></li>
+                  </ul>
+                </li>
                 <li>
                   <h2 className="menu-title text-neutral"><a>FAQ</a></h2>
                   <ul>
@@ -68,7 +64,6 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
             <ul className="menu p-4 w-80 min-h-full bg-base-200">
 
               <ul className="menu bg-base-200 w-56 rounded-box">
-                <li><Link href="/dashboard/klien">Dashboard</Link></li>
                 <li>
                   <h2 className="menu-title text-neutral">Dokumen Kontrak</h2>
                   <ul>
@@ -137,7 +132,10 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                 </li>
 
                 <li>
-                  <h2 className="menu-title text-neutral"><Link href="/penawaranharga">Daftar Penawaran Harga</Link></h2>
+                  <h2 className="menu-title text-neutral">Penawaran Harga</h2>
+                  <ul>
+                    <li><Link href="/penawaranharga">Daftar Penawaran Harga</Link></li>
+                  </ul>
                   <ul>
                     <li><Link href="/penawaranharga/create">Tambah Penawaran Baru</Link></li>
                   </ul>
