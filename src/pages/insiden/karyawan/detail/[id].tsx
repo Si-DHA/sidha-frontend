@@ -19,18 +19,18 @@ const KaryawanInsidenDetailPage = () => {
     const [userRole, setUserRole] = useState('');
     const [error, setError] = useState('');
     var isLoggedIn = Cookies.get('isLoggedIn');
-  
+
     useEffect(() => {
-      if (!isLoggedIn) {
-        router.push('/login');
-      }
-      const role = Cookies.get('role');
-      if (role === 'KARYAWAN') {
-        setUserRole(role);
-      } else {
-        setError('You are not allowed to access this page');
-      }
-  
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        if (role === 'KARYAWAN') {
+            setUserRole(role);
+        } else {
+            setError('You are not allowed to access this page');
+        }
+
     }, [isLoggedIn, router])
 
     useEffect(() => {
@@ -140,29 +140,36 @@ const KaryawanInsidenDetailPage = () => {
                         <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">Status</dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                <select value={selectedStatus} onChange={handleStatusChange} className="w-full p-2 border border-gray-300 rounded-md">
-                                    <option value="PENDING">Pending</option>
-                                    <option value="ON_PROGRESS">On Progress</option>
-                                    <option value="COMPLETED">Completed</option>
-                                    <option value="CANCELLED">Cancelled</option>
-                                </select>
+                                {insiden.status === 'COMPLETED' || insiden.status === 'CANCELLED' ? (
+                                    <span>{insiden.status}</span>
+                                ) : (
+                                    <select value={selectedStatus} onChange={handleStatusChange} className="w-full p-2 border border-gray-300 rounded-md">
+                                        <option value="PENDING">Pending</option>
+                                        <option value="ON_PROGRESS">On Progress</option>
+                                        <option value="COMPLETED">Completed</option>
+                                        <option value="CANCELLED">Cancelled</option>
+                                    </select>
+                                )}
                             </dd>
                         </div>
                     </dl>
-                    <div className="px-4 py-5 sm:px-6 flex justify-end">
+                    <div className="px-4 py-5 sm:px-6 flex justify-between">
                         <button
                             onClick={() => router.push('/insiden/karyawan')}
-                            className="btn btn-secondary mr-4"
+                            className="btn btn-secondary"
                         >
-                            Back
+                            Kembali
                         </button>
-                        <button
-                            onClick={handleUpdateStatus}
-                            className="btn btn-primary"
-                        >
-                            Update Status
-                        </button>
+                        {insiden.status !== 'COMPLETED' && insiden.status !== 'CANCELLED' && (
+                            <button
+                                onClick={handleUpdateStatus}
+                                className="btn btn-primary"
+                            >
+                                Perbarui Status
+                            </button>
+                        )}
                     </div>
+
                 </div>
             </Drawer>
             <Footer />

@@ -19,7 +19,7 @@ const FAQAdminPage = () => {
     const [userRole, setUserRole] = useState('');
     const [error, setError] = useState('');
     var isLoggedIn = Cookies.get('isLoggedIn');
-    
+
     useEffect(() => {
         if (!isLoggedIn) {
             router.push('/login');
@@ -36,7 +36,7 @@ const FAQAdminPage = () => {
         fetchFAQs();
         setUserRole(Cookies.get('role') || '');
     }, []);
-    
+
 
 
     const fetchFAQs = async () => {
@@ -95,9 +95,9 @@ const FAQAdminPage = () => {
             <Drawer userRole={userRole}>
                 <div className="flex flex-col min-h-screen">
                     <main className="flex-grow flex flex-col items-center justify-start" data-theme="winter">
-                        <h2 className="text-2xl font-bold my-6">Manage FAQs</h2>
-                        <button onClick={() => { setShowModal(true); setIsEditing(false); setCurrentFAQ({ id: null, question: '', answer: '' }); }} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
-                            Add FAQ
+                        <h2 className="text-2xl font-bold my-6">Kelola FAQ</h2>
+                        <button onClick={() => { setShowModal(true); setIsEditing(false); setCurrentFAQ({ id: null, question: '', answer: '' }); }} className="btn btn-primary mb-4">
+                            Tambah FAQ
                         </button>
                         {showModal && (
                             <Modal onClose={closeModal} title={`${isEditing ? 'Edit' : 'Add'} FAQ`}>
@@ -105,12 +105,12 @@ const FAQAdminPage = () => {
                                     <h3 className="text-lg font-semibold text-gray-700">
                                         {isEditing ? 'Edit FAQ' : 'Add FAQ'}
                                     </h3>
-                                    <input
+                                    <textarea
                                         type="text"
                                         name="question"
                                         value={currentFAQ.question}
                                         onChange={handleInputChange}
-                                        placeholder="Enter FAQ question"
+                                        placeholder="Masukkan pertanyaan FAQ"
                                         required
                                         className="p-2 border rounded w-full"
                                     />
@@ -118,17 +118,17 @@ const FAQAdminPage = () => {
                                         name="answer"
                                         value={currentFAQ.answer}
                                         onChange={handleInputChange}
-                                        placeholder="Enter FAQ answer"
+                                        placeholder="Masukkan jawaban FAQ"
                                         required
                                         className="p-2 border rounded w-full"
                                         rows="4"
                                     />
                                     <div className="flex justify-end space-x-2">
-                                        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                            {isEditing ? 'Update' : 'Add'}
+                                        <button type="button" onClick={closeModal} className="btn">
+                                            Batal
                                         </button>
-                                        <button type="button" onClick={closeModal} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                                            Cancel
+                                        <button type="submit" className="btn btn-primary">
+                                            {isEditing ? 'Ubah' : 'Tambah'}
                                         </button>
                                     </div>
                                 </form>
@@ -138,13 +138,14 @@ const FAQAdminPage = () => {
                         {showDeleteModal && (
                             <Modal onClose={() => setShowDeleteModal(false)} title="Confirm Delete">
                                 <div className="p-4 space-y-4">
-                                    <p>Are you sure you want to delete this FAQ?</p>
+                                    <h3 className="font-bold text-lg">Hapus</h3>
+                                    <p>Apakah Anda yakin menghapus FAQ ini?</p>
                                     <div className="flex justify-end space-x-2">
-                                        <button onClick={handleDelete} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                                            Delete
+                                        <button onClick={() => setShowDeleteModal(false)} className="btn">
+                                            Batal
                                         </button>
-                                        <button onClick={() => setShowDeleteModal(false)} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                                            Cancel
+                                        <button onClick={handleDelete} className="btn btn-error">
+                                            Hapus
                                         </button>
                                     </div>
                                 </div>
@@ -159,11 +160,11 @@ const FAQAdminPage = () => {
                                             <p>{faq.answer}</p>
                                         </div>
                                         <div className="flex space-x-2">
-                                            <button onClick={() => handleEditClick(faq)} className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded">
-                                                Edit
+                                            <button onClick={() => handleEditClick(faq)} className="btn btn-success btn-sm">
+                                                Ubah
                                             </button>
-                                            <button onClick={() => handleDeleteConfirm(faq.id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">
-                                                Delete
+                                            <button onClick={() => handleDeleteConfirm(faq.id)} className="btn btn-error btn-sm">
+                                                Hapus
                                             </button>
                                         </div>
                                     </div>

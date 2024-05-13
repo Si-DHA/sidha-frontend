@@ -109,9 +109,9 @@ const TrukPage: React.FC = () => {
                             ) : (
                                 <>
                                     {trukData ? ( // Check if trukData is empty
-                                        <DataTable columns={columns} data={trukData} btnText="Tambah truk" onClick={createTruk} />
+                                        <DataTable columns={columns} data={trukData} btnText="Tambah truk" onClick={createTruk} type="truk" />
                                     ) : (
-                                        <DataTable columns={columns} data={[]} btnText="Tambah truk" onClick={createTruk} />
+                                        <DataTable columns={columns} data={[]} btnText="Tambah truk" onClick={createTruk} type="truk" />
                                     )}
                                 </>)}
                         </div>

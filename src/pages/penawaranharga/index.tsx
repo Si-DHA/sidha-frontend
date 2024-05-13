@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import Navbar from '@/app/components/common/navbar';
 import Footer from '@/app/components/common/footer';
 import DataTable from "@/app/components/common/datatable/DataTable";
 import Cookies from "js-cookie";
@@ -37,15 +36,14 @@ const PenawaranHargaPage = () => {
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
 
-  
     useEffect(() => {
-      if (!isLoggedIn) {
-        router.push('/login');
-      }
-      const role = Cookies.get('role');
-      setUserRole(role || '');
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        setUserRole(role || '');
     },)
-  
+
 
     useEffect(() => {
         const fetchPenawaranHarga = '/api/viewAllPenawaranHarga';
@@ -105,23 +103,23 @@ const PenawaranHargaPage = () => {
 
     return (
         <main className={`flex min-h-screen flex-col`} data-theme="winter">
-            <Drawer userRole='userRole'>
-            <div className="flex-1 py-6 px-4">
-                <div className="container mx-auto">
-                    <div className="text-center lg:text-left">
-                        <h1 className="text-3xl font-bold">Daftar Penawaran Harga</h1>
-                        <br />
+            <Drawer userRole={userRole}>
+                <div className="flex-1 py-6 px-4">
+                    <div className="container mx-auto">
+                        <div className="text-center lg:text-left">
+                            <h1 className="text-3xl font-bold">Daftar Penawaran Harga</h1>
+                            <br />
+                        </div>
+                        <DataTable
+                            data={penawaranHarga}
+                            columns={columns}
+                            loading={loading}
+                            NoDataComponent={CustomNoDataComponent}
+                            btnText="Tambah Nama Klien" onClick={() => router.push('/penawaranharga/create')}
+                            type='penawaranHarga'
+                        />
                     </div>
-                    <DataTable
-                        data={penawaranHarga}
-                        columns={columns}
-                        loading={loading}
-                        NoDataComponent={CustomNoDataComponent}
-                        btnText="Tambah Nama Klien" onClick={() => router.push('/penawaranharga/create')}
-                        type='penawaranHarga'
-                    />
                 </div>
-            </div>
             </Drawer>
             <Footer />
         </main>

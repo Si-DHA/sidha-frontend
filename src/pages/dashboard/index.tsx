@@ -1,12 +1,9 @@
 import Drawer from "@/app/components/common/drawer";
-import FixedDrawer from "@/app/components/common/drawer";
 import Footer from "@/app/components/common/footer"
-import Navbar from "@/app/components/common/navbar"
 import Cookies from 'js-cookie';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { BarChart } from "@/app/components/common/chart/barchart";
-import { EditableChart } from "@/app/components/common/chart/editableChart";
 import { Inter } from "next/font/google";
 import { getTotalNewClient } from "../api/dashboard/user/getTotalNewClient";
 import { getTotalRevenue } from "../api/dashboard/order/getTotalRevenue";
@@ -21,6 +18,9 @@ import { getWeeklyTotalInsidenInMonth } from "../api/dashboard/insiden/getWeekly
 import { getYearlyTotalInsidenInRange } from "../api/dashboard/insiden/getYearlyTotalInsidenInRange";
 import { getMonthlyTotalNewClientInYear } from "../api/dashboard/user/getMonthlyTotalNewClientInYear";
 import { getYearlyTotalNewClientInRange } from "../api/dashboard/user/getYearlyTotalNewClientInRange";
+import { getWeeklyCompletedOrderInMonth } from "../api/dashboard/order-completed/getWeeklyCompletedOrderInMonth";
+import { getMonthlyCompletedOrderInYear } from "../api/dashboard/order-completed/getMonthlyCompletedOrderInYear";
+import { getYearlyCompletedOrderInRange } from "../api/dashboard/order-completed/getYearlyCompletedOrderInRange";
 const inter = Inter({ subsets: ["latin"] });
 
 type ChartReturnValue = {
@@ -66,6 +66,11 @@ const DashboardPage = () => {
     const [totalOrderWeek, setTotalOrderWeek] = useState(0);
     const [totalOrderMonth, setTotalOrderMonth] = useState(0);
     const [totalOrderYear, setTotalOrderYear] = useState(0);
+    const [weeklyTotalOrder, setWeeklyTotalOrder] = useState<ChartReturnValue | null>(null);
+    const [monthlyTotalOrder, setMonthlyTotalOrder] = useState<ChartReturnValue | null>(null);
+    const [yearlyTotalOrder, setYearlyTotalOrder] = useState<ChartReturnValue | null>(null);
+    const [totalOrderPeriod, setTotalOrderPeriod] = useState("week");
+    const [totalOrderData, setTotalOrderData] = useState<ChartReturnValue | null>(null);;
 
     const router = useRouter();
 
@@ -204,6 +209,29 @@ const DashboardPage = () => {
         fetchAccidentData();
 
     }, [totalAccidentPeriod]);
+
+    useEffect(() => {
+        const fetchTotalOrder = async () => {
+            const date = new Date();
+            const currentMonth = date.getMonth() + 1; // getMonth() is zero-based, so we add 1
+            const currentYear = date.getFullYear();
+            if (totalOrderPeriod == "week") {
+                getWeeklyCompletedOrderInMonth(currentMonth, currentYear).then((data: any) => {
+                    setTotalOrderData(data);
+                });
+            } else if (totalOrderPeriod == "month") {
+                getMonthlyCompletedOrderInYear(currentYear, currentYear).then((data: any) => {
+                    setTotalOrderData(data);
+                });
+            } else {
+                getYearlyCompletedOrderInRange(currentYear - 5, currentYear).then((data: any) => {
+                    setTotalOrderData(data);
+                });
+            }
+        };
+        fetchTotalOrder();
+
+    }, [totalOrderPeriod]);
 
     useEffect(() => {
         const fetchTotalNewClientData = async () => {
@@ -429,7 +457,7 @@ const DashboardPage = () => {
                                 <div className="card-content mt-4 gap-x-10 pb-5">
                                     Pilih rentang waktu :
                                     <br />
-                                    <select className="select select-success w-50% max-w-xs" value={totalClientPeriod} onChange={(e) => setTotalClientPeriod(e.target.value)}>
+                                    <select className="select select-success w-50% max-w-xs" value={totalOrderPeriod} onChange={(e) => setTotalOrderPeriod(e.target.value)}>
                                         <option value="week">Minggu</option>
                                         <option value="month">Bulan</option>
                                         <option value="year">Tahun</option>
@@ -439,7 +467,7 @@ const DashboardPage = () => {
 
                                 <div className="card-chart flex-col min-w-[500px]">
 
-                                    {totalClientData && <BarChart data={totalClientData.data} options={totalClientData.options} />}
+                                    {totalOrderData && <BarChart data={totalOrderData.data} options={totalOrderData.options} />}
                                 </div>
                             </div>
                         </div>
