@@ -36,13 +36,11 @@ const CreateInsidenPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         // Make sure all the required fields are filled out
         if (!sopirId || !selectedOrderItem) {
             setError('Please make sure all fields are filled out correctly.');
             return;
         }
-
         // Create a new FormData object
         const formData = new FormData();
         formData.append('sopirId', sopirId);
@@ -61,8 +59,8 @@ const CreateInsidenPage = () => {
             setError(error.message); // Make sure error.message is not undefined
             setAlert(<FailAlert message={error.message || 'Unknown error occurred'} />);
         }
-
     };
+    
 
 
     const handleFileChange = (e) => {
@@ -76,6 +74,23 @@ const CreateInsidenPage = () => {
                     <h2 className="text-2xl font-bold text-center my-6">Lapor Insiden</h2>
                     {alert}
                     <form onSubmit={handleSubmit}>
+                    <div className="mb-4">
+                            <label htmlFor="orderItem" className="block text-sm font-medium text-gray-700">Order Item:</label>
+                            <select
+                                id="orderItem"
+                                value={selectedOrderItem}
+                                onChange={(e) => setSelectedOrderItem(e.target.value)}
+                                required
+                                className="w-full mt-1 p-2 border-2 rounded-md"
+                            >
+                                <option value="">Select an Order Item</option>
+                                {orderItems.map((item) => (
+                                    <option key={item.orderItem.id} value={item.orderItem.id}>
+                                        {item.orderItem.rute[0].source} - {item.orderItem.rute[0].destination}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                         <div className="mb-4">
                             <label htmlFor="orderItem" className="block text-sm font-medium text-gray-700">Order Item:</label>
                             <select
