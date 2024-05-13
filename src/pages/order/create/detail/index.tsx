@@ -7,6 +7,8 @@ import { getOrderDetailBeforeCheckout } from "@/pages/api/order/getOrderDetailBe
 import { Order } from "../../../../app/components/model";
 import DataTable from "@/app/components/common/datatable/DataTable";
 import { createOrder } from "@/pages/api/order/createOrder";
+import SuccessAlert from "@/app/components/common/SuccessAlert";
+import FailAlert from "@/app/components/common/FailAlert";
 
 const PurchaseOrderDetail = () => {
 
@@ -18,6 +20,8 @@ const PurchaseOrderDetail = () => {
     const [orderItems, setOrderItems] = useState<any[]>([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const router = useRouter();
+    const [loading, setLoading] = useState(true);
+    const [alert, setAlert] = useState(null);
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -26,6 +30,10 @@ const PurchaseOrderDetail = () => {
 
         const role = Cookies.get('role');
         setUserRole(role || '');
+
+        if (role !== 'KLIEN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini')
+        }
 
         if (router.query.order === undefined) {
             router.push('/order/create');
@@ -40,13 +48,15 @@ const PurchaseOrderDetail = () => {
         const fetchData = async () => {
             try {
                 if (!token) {
-                    throw new Error('Token not found');
+                    throw new Error('Token tidak ditemukan');
                 }
                 const response = await getOrderDetailBeforeCheckout(order, token);
                 setOrderItems(response.data);
                 setTotalPrice(response.totalPrice);
             } catch (error: any) {
                 setError(error.message);
+            } finally {
+                setLoading(false);
             }
         }
         if (order !== null && orderItems.length === 0) {
@@ -82,14 +92,24 @@ const PurchaseOrderDetail = () => {
 
             const response = await createOrder(order, token);
             if (response !== null) {
-                alert('Order berhasil dibuat');
-                router.push('/order/klien');
+                setAlert(<SuccessAlert message="Order berhasil dibuat" />);
+                setTimeout(() => {
+                    router.push('/order/klien');
+                }, 3000);
             }
 
         } catch (error: any) {
+            setAlert(<FailAlert message={error.message || "Gagal checkout order"} />);
+            setTimeout(() => {
+                setAlert(null);
+            }, 3000);
             setError(error.message);
         }
     }
+
+    const formatPrice = (price: number): string => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+    };
 
     const columns = [
         {
@@ -111,6 +131,7 @@ const PurchaseOrderDetail = () => {
         {
             Header: 'Biaya Pengiriman',
             accessor: 'biayaPengiriman',
+            Cell: ({ value }) => formatPrice(value),
         }
     ]
 
@@ -123,15 +144,20 @@ const PurchaseOrderDetail = () => {
                     <div className="modal-action">
                         <form method="dialog" className='space-x-4'>
                             <button className="btn px-8">Batal</button>
-                            <button className="btn btn-error px-6" onClick={handleCheckout}>Checkout Sekarang</button>
+                            <button className="btn btn-success px-6" onClick={handleCheckout}>Checkout Sekarang</button>
                         </form>
                     </div>
                 </div>
             </dialog>
             <Drawer userRole={userRole}>
+                <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
+                    {alert}
+                </div>
                 <div className="flex flex-col gap-2 justify-center items-center mih-h-screen p-8">
                     <h1 className="text-3xl font-bold text-center ">Detail Purchase Order</h1>
-                    <h2 className="text-l text-center ">Tanggal Pengiriman: {order?.tanggalPengiriman}</h2>
+                    {order?.tanggalPengiriman &&
+                        <h2 className="text-l text-center ">Tanggal Pengiriman: {(order?.tanggalPengiriman).split(' ')[0]}</h2>
+                    }
                 </div>
                 <div className="flex flex-col gap-6 mx-4 my-4 ">
                     <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
@@ -139,7 +165,7 @@ const PurchaseOrderDetail = () => {
                             {error ? (
                                 <div>{error}</div>
                             ) : (
-                                <DataTable columns={columns} data={orderItems} btnText="Buat Order Baru" type="checkout" biayaPengiriman={totalPrice} />
+                                <DataTable columns={columns} data={orderItems} btnText="Buat Order Baru" type="checkout" loading={loading} biayaPengiriman={formatPrice(totalPrice)} />
                             )}
                         </div>
                     </div>

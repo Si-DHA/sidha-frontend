@@ -1,5 +1,4 @@
 import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
 import DataTable from "@/app/components/common/datatable/DataTable";
 import React, { useEffect, useState } from "react";
 import { Router, useRouter } from "next/router";
@@ -15,14 +14,17 @@ const DaftarKontrakPage: React.FC = () => {
   const [kontrakData, setKontrakData] = useState([]); // State to hold truck data
   var isLoggedIn = Cookies.get('isLoggedIn');
   const [userRole, setUserRole] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isLoggedIn) {
       router.push('/login');
     }
     const role = Cookies.get('role');
-
     setUserRole(role || '');
+    if (role !== 'KARYAWAN') {
+      setError('Anda tidak diperbolehkan mengakses halaman ini');
+    }
   }, [isLoggedIn, router])
 
   useEffect(() => {
@@ -34,6 +36,8 @@ const DaftarKontrakPage: React.FC = () => {
         }
       } catch (error: any) {
         setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -58,24 +62,38 @@ const DaftarKontrakPage: React.FC = () => {
         <div className="btn btn-primary btn-xs mx-2" onClick={() => handleDownloadClick(value)}>Download</div>
         <div className="btn btn-primary btn-xs" >Detail</div>
       </div>
-
     ),
   }
-
-
   ];
 
 
-  return (<main className={`flex min-h-screen flex-col   ${inter.className}`} data-theme="cmyk">
+  return (<main className={`flex min-h-screen flex-col items-center justify-between ${inter.className}`} data-theme="cmyk">
     <Drawer userRole={userRole}>
-      <div className="flex flex-col  align-middle justify-center items-center mx-auto gap-y-4">
-        <h1 className="card-title">Daftar Dokumen Surat Kontrak PT DHA</h1>
-        {error ? (<div>{error}</div>) : (<>
-          {kontrakData ? (
-            <DataTable columns={columns} data={kontrakData}
-              type="kontrak" />) : (
-            <DataTable columns={columns} data={[]} type="kontrak" />)}
-        </>)}
+      <div className="flex flex-col justify-center items-center mih-h-screen p-8">
+        <h1 className="text-3xl font-bold text-center ">Daftar Dokumen Surat Kontrak PT DHA</h1>
+      </div>
+
+      <div className="flex flex-col gap-6 mx-4 my-4 ">
+        <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
+          <div className="overflow-x-auto w-full">
+            {error ? (
+              <div>{error}</div>
+            ) : (
+              <>
+                {kontrakData ? (
+                  <DataTable 
+                    columns={columns} 
+                    data={kontrakData}
+                    loading={loading}
+                    type="kontrak" />) : (
+                  <DataTable 
+                    columns={columns} 
+                    data={[]} 
+                    loading={loading}
+                    type="kontrak" />)}
+              </>)}
+          </div>
+        </div>
       </div>
     </Drawer>
     <Footer />
