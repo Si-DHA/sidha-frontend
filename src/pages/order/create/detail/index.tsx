@@ -7,6 +7,8 @@ import { getOrderDetailBeforeCheckout } from "@/pages/api/order/getOrderDetailBe
 import { Order } from "../../../../app/components/model";
 import DataTable from "@/app/components/common/datatable/DataTable";
 import { createOrder } from "@/pages/api/order/createOrder";
+import SuccessAlert from "@/app/components/common/SuccessAlert";
+import FailAlert from "@/app/components/common/FailAlert";
 
 const PurchaseOrderDetail = () => {
 
@@ -19,6 +21,7 @@ const PurchaseOrderDetail = () => {
     const [totalPrice, setTotalPrice] = useState(0);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
+    const [alert, setAlert] = useState(null);
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -89,11 +92,17 @@ const PurchaseOrderDetail = () => {
 
             const response = await createOrder(order, token);
             if (response !== null) {
-                alert('Order berhasil dibuat');
-                router.push('/order/klien');
+                setAlert(<SuccessAlert message="Order berhasil dibuat" />);
+                setTimeout(() => {
+                    router.push('/order/klien');
+                }, 3000);
             }
 
         } catch (error: any) {
+            setAlert(<FailAlert message={error.message || "Gagal checkout order"} />);
+            setTimeout(() => {
+                setAlert(null);
+            }, 3000);
             setError(error.message);
         }
     }
@@ -135,15 +144,20 @@ const PurchaseOrderDetail = () => {
                     <div className="modal-action">
                         <form method="dialog" className='space-x-4'>
                             <button className="btn px-8">Batal</button>
-                            <button className="btn btn-error px-6" onClick={handleCheckout}>Checkout Sekarang</button>
+                            <button className="btn btn-success px-6" onClick={handleCheckout}>Checkout Sekarang</button>
                         </form>
                     </div>
                 </div>
             </dialog>
             <Drawer userRole={userRole}>
+                <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
+                    {alert}
+                </div>
                 <div className="flex flex-col gap-2 justify-center items-center mih-h-screen p-8">
                     <h1 className="text-3xl font-bold text-center ">Detail Purchase Order</h1>
-                    <h2 className="text-l text-center ">Tanggal Pengiriman: {order?.tanggalPengiriman}</h2>
+                    {order?.tanggalPengiriman &&
+                        <h2 className="text-l text-center ">Tanggal Pengiriman: {(order?.tanggalPengiriman).split(' ')[0]}</h2>
+                    }
                 </div>
                 <div className="flex flex-col gap-6 mx-4 my-4 ">
                     <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
