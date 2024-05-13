@@ -341,7 +341,7 @@ const DashboardKlienPage = () => {
                             <DataTable
                                 columns={columns}
                                 data={orderItem}
-                                progressPending={loading}
+                                loading={loading}
                                 noDataComponent={<CustomNoDataComponent />}
                             />
                         </div>

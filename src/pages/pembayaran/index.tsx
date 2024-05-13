@@ -29,10 +29,9 @@ const PembayaranPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'KLIEN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'KLIEN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])

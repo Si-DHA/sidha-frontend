@@ -14,6 +14,7 @@ const InvoiceListPage: React.FC = () => {
     const router = useRouter();
     const [error, setError] = useState('');
     const [invoiceData, setInvoiceData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
@@ -24,14 +25,13 @@ const InvoiceListPage: React.FC = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
+        setUserRole(role || '');
         if (role === 'KLIEN') {
-            setUserRole(role);
             setCompanyName(Cookies.get('companyName'));
         } else if (role === 'KARYAWAN') {
-            setUserRole(role);
             setCompanyName(queryParameters?.get('companyName'));
         } else {
-            setError('You are not allowed to access this page');
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -47,9 +47,10 @@ const InvoiceListPage: React.FC = () => {
                         setInvoiceData(mappedData);
                     }
                 }
-
             } catch (error: any) {
                 setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -101,8 +102,8 @@ const InvoiceListPage: React.FC = () => {
         {
             Header: 'ID Order',
             accessor: 'orderId',
-            Cell : ({ value }) => 
-                <Link href={`/order/klien/${value}`} style={{textDecoration: 'underline'}}>{value}</Link>
+            Cell: ({ value }) =>
+                <Link href={`/order/klien/${value}`} style={{ textDecoration: 'underline' }}>{value}</Link>
         },
         {
             Header: 'Total DP',
@@ -126,7 +127,7 @@ const InvoiceListPage: React.FC = () => {
             }
         },
         {
-            Header: 'Kelola',
+            Header: 'Detail',
             Cell: ({ row }) => (
                 <div className="flex justify-center space-x-4">
                     <button
@@ -154,17 +155,12 @@ const InvoiceListPage: React.FC = () => {
                                 <div>{error}</div>
                             ) : (
                                 <>
-                                    {invoiceData ? ( // Check if trukData is empty
-                                        <DataTable 
-                                            columns={columns} 
-                                            data={invoiceData} 
-                                        />
-                                    ) : (
-                                        <DataTable 
-                                            columns={columns} 
-                                            data={[]} 
-                                        />
-                                    )}
+                                    <DataTable
+                                        columns={columns}
+                                        data={invoiceData}
+                                        loading={loading}
+                                        type='invoice'
+                                    />
                                 </>)}
                         </div>
                     </div>

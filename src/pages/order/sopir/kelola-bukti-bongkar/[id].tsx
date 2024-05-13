@@ -27,10 +27,9 @@ const BuktiBongkarPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'SOPIR') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'SOPIR') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])

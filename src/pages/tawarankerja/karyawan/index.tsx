@@ -13,7 +13,6 @@ const AcceptedOrderItemsIndexPage = () => {
     const [tawaranKerja, setTawaranKerja] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
 
@@ -22,10 +21,9 @@ const AcceptedOrderItemsIndexPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'KARYAWAN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'KARYAWAN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -62,7 +60,7 @@ const AcceptedOrderItemsIndexPage = () => {
                 setLoading(false);
             }
         }).catch(error => {
-            console.error('Fetching error:', error);
+            setError('Fetching error: ' + error.message);
             setLoading(false);
         });
     }, []);
@@ -77,9 +75,9 @@ const AcceptedOrderItemsIndexPage = () => {
                 return (
                     <>
                         {row.original.sopir ? (
-                            <Link 
+                            <Link
                                 href={`/list-user/detail?id=${row.original.sopir.id}`}
-                                style={{textDecoration: 'underline'}}
+                                style={{ textDecoration: 'underline' }}
                             >
                                 {row.original.sopir.name}
                             </Link>
@@ -89,7 +87,7 @@ const AcceptedOrderItemsIndexPage = () => {
                     </>
                 );
             }
-        },        
+        },
         { Header: 'Sudah dikonfirmasi', accessor: 'isDikonfirmasiKaryawan', Cell: ({ value }) => value ? 'Sudah' : 'Belum' },
         {
             Header: 'Tanggal Pengiriman', accessor: 'tanggalPengiriman',
@@ -100,30 +98,33 @@ const AcceptedOrderItemsIndexPage = () => {
             }
         },
         {
-            Header: 'Details',
+            Header: 'Detail',
             accessor: 'id',
             Cell: ({ value }) => (
-                <button
-                    onClick={() => router.push(`/tawarankerja/karyawan/detail/${value}`)}
-                    className="btn btn-primary"
-                >
-                    Detail
-                </button>
+                <div className="flex justify-center space-x-4">
+                    <button
+                        onClick={() => router.push(`/tawarankerja/karyawan/detail/${value}`)}
+                        className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        Detail
+                    </button>
+                </div>
             ),
         },
     ];
 
 
-
     return (
-        <>
-            <div className="flex flex-col h-screen justify-between" data-theme="winter">
-                <Drawer userRole={userRole}>
-                    <div className="overflow-auto">
-                        <h2 className="text-2xl font-bold mb-1 text-center mt-6">Tawaran Kerja</h2>
-                        <h5 className="text-center text-l mb-2">Segera konfirmasi sopir untuk pengantaran dibawah!</h5>
-                        <div className="mx-auto w-full max-w-4xl p-4">
+        <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
+            <Drawer userRole={userRole}>
+                <div className="flex flex-col justify-center items-center mih-h-screen p-8">
+                    <h1 className="text-3xl font-bold text-center ">Tawaran Kerja</h1>
+                    <h5 className="text-center text-l mb-2 mt-3">Segera konfirmasi sopir untuk pengantaran dibawah!</h5>
+                </div>
 
+                <div className="flex flex-col gap-6 mx-4 my-4 ">
+                    <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
+                        <div className="overflow-x-auto w-full">
                             {error ? (
                                 <div>{error}</div>
                             ) : (
@@ -132,18 +133,24 @@ const AcceptedOrderItemsIndexPage = () => {
                                         <DataTable
                                             data={tawaranKerja}
                                             columns={columns}
+                                            loading={loading}
+                                            type='tawaran kerja'
                                         />
                                     ) : (
-                                        <div>Belum terdapat tawaran kerja yang perlu dikonfirmasi</div>
+                                        <DataTable
+                                            data={tawaranKerja}
+                                            columns={[]}
+                                            loading={loading}
+                                            type='tawaran kerja'
+                                        />
                                     )}
-                                </>
-                            )}
+                                </>)}
                         </div>
                     </div>
-                </Drawer>
-                <Footer />
-            </div>
-        </>
+                </div>
+            </Drawer>
+            <Footer />
+        </main>
     );
 };
 

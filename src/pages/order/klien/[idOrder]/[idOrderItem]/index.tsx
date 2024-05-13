@@ -105,13 +105,13 @@ const OrderItemDetailPage = () => {
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleString('id-ID', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
         });
-      };
+    };
 
     return (
         <main className="flex flex-col min-h-screen bg-white">
@@ -246,7 +246,10 @@ const OrderItemDetailPage = () => {
                                                 </svg>
                                             </div>
                                             <div className="timeline-end timeline-box mb-5">
-                                            <span className="font-bold">{history.createdBy}</span>: {history.description}
+                                                {history.createdBy && history.createdBy !== '' &&
+                                                    <span><span className="font-bold">{history.createdBy}</span><span>:{' '}</span></span>
+                                                }
+                                                {history.description}
                                             </div>
                                             {history.id !== orderItemData['content']['orderItemHistories'][orderItemData['content']['orderItemHistories'].length - 1].id && (
                                                 <hr className="bg-success" />
