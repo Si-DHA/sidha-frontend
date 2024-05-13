@@ -65,7 +65,7 @@ const OrderItemsIndexPage = () => {
                 setLoading(false);
             }
         }).catch(error => {
-            console.error('Fetching error:', error);
+            setError('Fetching error: ' + error.message);
             setLoading(false);
         });
     }, []);
@@ -84,21 +84,22 @@ const OrderItemsIndexPage = () => {
         {
             Header: 'Tanggal Pengiriman', accessor: 'tanggalPengiriman',
             Cell: ({ value }) => {
-                // Extract date part (format: "03-05-2024 12:00:00") and return only the date
                 const dateOnly = value.split(' ')[0];
                 return dateOnly || 'N/A';
             }
         },
         {
-            Header: 'Details',
+            Header: 'Detail',
             accessor: 'id',
             Cell: ({ value, row }) => (
-                <button
-                    onClick={() => handleDetailClick(value, row.original.hasAccepted)}
-                    className="btn btn-primary"
-                >
-                    Detail
-                </button>
+                <div className="flex justify-center space-x-4">
+                    <button
+                        onClick={() => handleDetailClick(value, row.original.hasAccepted)}
+                        className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        Detail
+                    </button>
+                </div>
             ),
         },
     ];

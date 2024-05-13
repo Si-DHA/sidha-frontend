@@ -112,7 +112,7 @@ const ViewAllOrdersPage: React.FC = () => {
             Cell: ({ value }) => value.split(' ')[0],
         },
         {
-            Header: 'Kelola',
+            Header: 'Detail',
             Cell: ({ row }) => (
                 <div className="flex justify-center space-x-4">
                     <button

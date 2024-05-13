@@ -5,6 +5,8 @@ import Drawer from "@/app/components/common/drawer";
 import Footer from "@/app/components/common/footer";
 import DataTable from "@/app/components/common/datatable/DataTable";
 import { getTawaranKerjaAccepted } from '@/pages/api/tawaran-kerja/getTawaranKerjaAccepted';
+import { getOrderByOrderItem } from '@/pages/api/order/getOrderByOrderItem';
+
 
 const AcceptedOrderItemsIndexPage = () => {
   const [tawaranKerja, setTawaranKerja] = useState([]);
@@ -28,28 +30,53 @@ const AcceptedOrderItemsIndexPage = () => {
 
   useEffect(() => {
     setLoading(true);
-    getTawaranKerjaAccepted().then(data => {
-      if (data && Array.isArray(data)) {
-        // Filter to include only those items accepted by the logged-in driver
-        const filteredData = data.filter(tawaran => tawaran.sopir?.id === sopirId).map(tawaran => ({
-          ...tawaran.orderItem,
-          source: tawaran.orderItem.rute?.[0]?.source ?? 'N/A',
-          destination: tawaran.orderItem.rute?.[0]?.destination ?? 'N/A',
-          isPecahBelah: tawaran.orderItem.isPecahBelah ?? false,
-          price: tawaran.orderItem.price ?? 'N/A',
-          createdDate: tawaran.orderItem.orderItemHistories?.[0]?.createdDate
-            ? new Date(tawaran.orderItem.orderItemHistories[0].createdDate).toLocaleString('id-ID')
-            : 'N/A'
-        }));
-        setTawaranKerja(filteredData);
-      } else {
-        console.error('Invalid format for order items:', data);
+    const fetchData = async () => {
+      try {
+        const data = await getTawaranKerjaAccepted();
+        if (data && Array.isArray(data)) {
+          // Filter to include only those items accepted by the logged-in driver
+          const filteredData = data.filter(tawaran => tawaran.sopir?.id === sopirId).map(tawaran => ({
+            ...tawaran.orderItem,
+            source: tawaran.orderItem.rute?.[0]?.source ?? 'N/A',
+            destination: tawaran.orderItem.rute?.[0]?.destination ?? 'N/A',
+            isPecahBelah: tawaran.orderItem.isPecahBelah ?? false,
+            price: tawaran.orderItem.price ?? 'N/A',
+          }));
+
+          // Fetching additional data for each order item
+          let completedCount = 0;
+          const mergedTawaran = await Promise.all(
+            filteredData.map(async item => {
+              try {
+                const orderData = await getOrderByOrderItem(item.id);
+                if (orderData && orderData.content) {
+                  // Merge tanggalPengiriman with the order item
+                  console.log("tgl pengiriman " + orderData.content.tanggalPengiriman);
+                  return {
+                    ...item,
+                    tanggalPengiriman: orderData.content.tanggalPengiriman,
+                  };
+                }
+                return item;
+              } catch (error) {
+                console.error('Error fetching additional data:', error.message);
+                throw error;
+              }
+            })
+          );
+
+          setTawaranKerja(mergedTawaran);
+        } else {
+          console.error('Invalid format for order items:', data);
+        }
+      } catch (error: any) {
+        setError('Fetching error: ' + error.message);
+      } finally {
+        setLoading(false);
       }
-    }).catch(error => {
-      setError('Fetching error: ' + error.message);
-    }).finally(() => {
-      setLoading(false);
-    });
+    };
+
+    fetchData();
   }, [sopirId]);
 
   const columns = [
@@ -57,17 +84,25 @@ const AcceptedOrderItemsIndexPage = () => {
     { Header: 'Tujuan', accessor: 'destination' },
     { Header: 'Mudah Pecah', accessor: 'isPecahBelah', Cell: ({ value }) => value ? 'Yes' : 'No' },
     { Header: 'Harga', accessor: 'price', Cell: ({ value }) => value !== 'N/A' ? `Rp${parseInt(value).toLocaleString('id-ID')}` : 'N/A' },
-    { Header: 'Tanggal Pembuatan', accessor: 'createdDate' },
     {
-      Header: 'Details',
+      Header: 'Tanggal Pengiriman', accessor: 'tanggalPengiriman',
+      Cell: ({ value }) => {
+        const dateOnly = value.split(' ')[0];
+        return dateOnly || 'N/A';
+      }
+    },
+    {
+      Header: 'Detail',
       accessor: 'id',  // Assuming `id` now directly relates to `orderItem.id`
       Cell: ({ value }) => (
-        <button
-          onClick={() => router.push(`/tawarankerja/sopir/detail/${value}/accept`)}
-          className="btn btn-primary"
-        >
-          Detail
-        </button>
+        <div className="flex justify-center space-x-4">
+          <button
+            onClick={() => router.push(`/tawarankerja/sopir/detail/${value}/accept`)}
+            className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            Detail
+          </button>
+        </div>
       ),
     },
   ];

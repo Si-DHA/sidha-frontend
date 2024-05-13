@@ -139,14 +139,7 @@ const DataTable: React.FC<DataTableProps> = ({
           key={index}>
           <td style={{ textAlign: 'center' }}>{index + 1}</td> {/* Add table cell for numbering */}
           {row.cells.map((cell: any, index: any) => {
-            if (cell.column.id === 'expiredKir') { // Replace 'datetimeColumn' with the actual ID of your datetime column
-              const date = new Date(cell.value); // Convert datetime string to Date object
-              const options: any = { day: '2-digit', month: '2-digit', year: 'numeric' };
-              const formattedDate = date.toLocaleDateString('id-ID', options); // Format date to string (e.g., 'MM/DD/YYYY')
-              return <td style={{ textAlign: 'center' }} {...cell.getCellProps()} key={index} >{formattedDate}</td>; // Render formatted date
-            } else {
-              return <td style={{ textAlign: 'center' }}{...cell.getCellProps()} key={index} >{cell.render('Cell')}</td>; // Render other cells as usual
-            }
+            return <td style={{ textAlign: 'center' }}{...cell.getCellProps()} key={index} >{cell.render('Cell')}</td>; // Render other cells as usual
           })}
         </tr>
       );
@@ -252,7 +245,7 @@ const DataTable: React.FC<DataTableProps> = ({
             </span>{' '}
           </div>
           <div style={{ float: 'right' }}>
-            <select
+            <select className='rounded-lg'
               value={pageSize}
               onChange={(e) => {
                 setPageSize(Number(e.target.value));

@@ -7,6 +7,8 @@ import { deletePenawaranHargaItem } from '@/pages/api/deletePenawaranHargaItem';
 import { updatePenawaranHargaItem } from '@/pages/api/updatePenawaranHargaItem';
 import Cookies from "js-cookie";
 import Drawer from "@/app/components/common/drawer";
+import SuccessAlert from "@/app/components/common/SuccessAlert";
+import FailAlert from "@/app/components/common/FailAlert";
 
 interface Klien {
   id: string;
@@ -42,6 +44,7 @@ const PenawaranHargaItemPage = () => {
   const [error, setError] = useState('');
   var isLoggedIn = Cookies.get('isLoggedIn');
   const [userRole, setUserRole] = useState('');
+  const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -71,7 +74,7 @@ const PenawaranHargaItemPage = () => {
         if (currentKlien && currentKlien.companyName) {
           setCompanyName(currentKlien.companyName);
         }
-      } catch (error:any) {
+      } catch (error: any) {
         setError(error.message);
       }
     };
@@ -125,10 +128,17 @@ const PenawaranHargaItemPage = () => {
       try {
         const response = await updatePenawaranHargaItem(bodyData);
         toggleEdit(item.idPenawaranHargaItem); // Exit editing mode for the item regardless of success or failure
-        await fetchItems(); // Re-fetch items to update the list
+        setAlert(<SuccessAlert message="Harga rute berhasil diubah" />);
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       } catch (error: any) {
         setError(`Failed to update item: ${error instanceof Error ? error.message : 'An unknown error occurred'}`);
         toggleEdit(item.idPenawaranHargaItem); // Exit editing mode for the item regardless of success or failure
+        setAlert(<FailAlert message={error.message || "Gagal mengubah harga rute"} />);
+        setTimeout(() => {
+          setAlert(null);
+        }, 3000);
       }
     }
   };
@@ -142,10 +152,17 @@ const PenawaranHargaItemPage = () => {
       // Filter out the deleted item from the list
       setItems(items.filter(item => item.idPenawaranHargaItem !== itemId));
       setIsDeleteModalVisible(false);
-      await fetchItems();
+      setAlert(<SuccessAlert message="Harga rute berhasil dihapus" />);
+      setTimeout(() => {
+        window.location.reload()
+      }, 3000);
       // Close the modal on successful deletion
     } catch (error) {
       setError(`Failed to delete item: ${error instanceof Error ? error.message : 'An unknown error occurred'}`);
+      setAlert(<FailAlert message={error.message || "Gagal menghapus harga rute"} />);
+      setTimeout(() => {
+        setAlert(null);
+      }, 3000);
     }
   };
 
@@ -300,6 +317,9 @@ const PenawaranHargaItemPage = () => {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
       <Drawer userRole={userRole}>
+        <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
+          {alert}
+        </div>
         <div className="flex flex-col justify-center items-center mih-h-screen p-8">
           <h1 className="text-3xl font-bold text-center ">Daftar Rute Penawaran {companyName}</h1>
         </div>

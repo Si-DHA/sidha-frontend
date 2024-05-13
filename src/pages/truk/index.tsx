@@ -62,13 +62,14 @@ const TrukPage: React.FC = () => {
         {
             Header: 'Expired KIR',
             accessor: 'expiredKir',
+            Cell: ({ value }) => (formatDate(value))
         },
         {
             Header: 'Sopir',
             Cell: ({ row }) => (
                 <>
                     {row.original.sopir ? (
-                        <Link href={`/list-user/detail?id=${row.original.sopir.id}`} style={{textDecoration: 'underline'}}>
+                        <Link href={`/list-user/detail?id=${row.original.sopir.id}`} style={{ textDecoration: 'underline' }}>
                             {row.original.sopir.name}
                         </Link>
                     ) : (
@@ -78,7 +79,7 @@ const TrukPage: React.FC = () => {
             )
         },
         {
-            Header: 'Kelola',
+            Header: 'Detail',
             Cell: ({ row }) => (
                 <div className="flex justify-center space-x-4">
                     <button
@@ -92,8 +93,16 @@ const TrukPage: React.FC = () => {
         },
     ];
 
+    const formatDate = (date) => {
+        const dateObj = new Date(date);
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        const year = dateObj.getFullYear();
+        return `${day}-${month}-${year}`;
+    };
+
     const createTruk = () => {
-        router.push('/truk/create'); 
+        router.push('/truk/create');
     };
 
 
@@ -111,13 +120,13 @@ const TrukPage: React.FC = () => {
                                 <div>{error}</div>
                             ) : (
                                 <>
-                                    <DataTable 
-                                            columns={columns} 
-                                            data={trukData} 
-                                            btnText="Tambah truk" 
-                                            onClick={createTruk}
-                                            loading={loading}
-                                            type='truk' />
+                                    <DataTable
+                                        columns={columns}
+                                        data={trukData}
+                                        btnText="Tambah truk"
+                                        onClick={createTruk}
+                                        loading={loading}
+                                        type='truk' />
                                 </>)}
                         </div>
                     </div>

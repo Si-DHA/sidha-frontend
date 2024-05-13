@@ -98,15 +98,17 @@ const AcceptedOrderItemsIndexPage = () => {
             }
         },
         {
-            Header: 'Details',
+            Header: 'Detail',
             accessor: 'id',
             Cell: ({ value }) => (
-                <button
-                    onClick={() => router.push(`/tawarankerja/karyawan/detail/${value}`)}
-                    className="btn btn-primary"
-                >
-                    Detail
-                </button>
+                <div className="flex justify-center space-x-4">
+                    <button
+                        onClick={() => router.push(`/tawarankerja/karyawan/detail/${value}`)}
+                        className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        Detail
+                    </button>
+                </div>
             ),
         },
     ];
