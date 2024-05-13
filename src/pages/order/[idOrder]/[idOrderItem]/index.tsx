@@ -324,9 +324,9 @@ const OrderItemDetailPage = () => {
                       </div>
                       <div className="timeline-end timeline-box mb-5">
                         {history.createdBy && history.createdBy !== '' &&
-                          <span className="font-bold">{history.createdBy}:</span>
+                          <span className="font-bold">{history.createdBy}:{' '}</span>
                         }
-                        {' '}{history.description}
+                        {history.description}
                       </div>
                       {history.id !== orderItemData['content']['orderItemHistories'][orderItemData['content']['orderItemHistories'].length - 1].id && (
                         <hr className="bg-success" />
