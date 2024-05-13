@@ -73,7 +73,7 @@ const ListUserPage: React.FC = () => {
         Header: 'Email', accessor: 'email',
     }, {
         Header: 'Peran', accessor: 'role',
-        Cell : ({value}) => <div className="badge badge-success">{toTitleCase(value)}</div>
+        Cell : ({value}) => <div className="badge badge-success text-xs">{toTitleCase(value)}</div>
     }, {
         Header: 'Alamat', accessor: 'address',
     }, {
@@ -81,7 +81,7 @@ const ListUserPage: React.FC = () => {
     }, {
         Header: 'Status',
         accessor: 'isDeleted',
-        Cell: ({ value }) => value ? <div className="badge badge-error">Tidak Aktif</div> : <div className="badge badge-success">Aktif</div>
+        Cell: ({ value }) => value ? <div className="badge badge-error text-xs">Tidak Aktif</div> : <div className="badge badge-success text-xs">Aktif</div>
     },
     
 

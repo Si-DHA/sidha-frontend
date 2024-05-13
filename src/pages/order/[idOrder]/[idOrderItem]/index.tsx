@@ -8,7 +8,7 @@ import Footer from "@/app/components/common/footer";
 import Drawer from "@/app/components/common/drawer";
 import { confirmOrder } from '@/pages/api/order/confirmOrder';
 import { GrStatusPlaceholder } from 'react-icons/gr';
-import { ConfirmOrder } from '../../model';
+import { ConfirmOrder } from '../../../../app/components/model';
 
 const OrderItemDetailPage = () => {
   const router = useRouter();
@@ -163,6 +163,17 @@ const OrderItemDetailPage = () => {
     return null;
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
 
   return (
     <main className="flex flex-col min-h-screen bg-white">
@@ -179,17 +190,6 @@ const OrderItemDetailPage = () => {
               <div className="modal-action">
                 <button className="btn mr-2" onClick={() => document.getElementById('modal_tolak')?.close()}>Batal</button>
                 <button className="btn btn-error" onClick={() => { handleConfirmAnswer(false); document.getElementById('modal_tolak')?.close(); }}>Tolak</button>
-              </div>
-
-            </div>
-          </dialog>
-          <dialog id="modal_terima" className="modal modal-bottom sm:modal-middle">
-            <div className="modal-box">
-              <h3 className="font-bold text-lg">Terima</h3>
-              <p>Anda yakin akan menerima order ini?</p>
-              <div className="modal-action">
-                <button className="btn mr-2" onClick={() => document.getElementById('modal_terima')?.close()}>Batal</button>
-                <button className="btn btn-success" onClick={() => { handleConfirmAnswer(true); document.getElementById('modal_terima')?.close(); }}>Yakin</button>
               </div>
 
             </div>
@@ -300,15 +300,49 @@ const OrderItemDetailPage = () => {
               </dl>
             </div>
 
+            {/* Riwayat Purchase Order section */}
+            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="text-sm font-medium text-gray-500">Riwayat</dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                <ul className="timeline timeline-vertical timeline-compact">
+                  {orderItemData['content']['orderItemHistories'].map((history) => (
+                    <li key={history.id}>
+                      <div className="timeline-start">{formatDate(history.createdDate)}</div>
+                      <div className="timeline-middle">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="w-5 h-5"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      <div className="timeline-end timeline-box mb-5">
+                        {history.createdBy && history.createdBy !== '' &&
+                          <span className="font-bold">{history.createdBy}:</span>
+                        }
+                        {' '}{history.description}
+                      </div>
+                      {history.id !== orderItemData['content']['orderItemHistories'][orderItemData['content']['orderItemHistories'].length - 1].id && (
+                        <hr className="bg-success" />
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+
             <div className=" flex flex-col px-4 py-5 sm:px-6 flex justify-center gap-4">
               {orderItemData['content']['statusOrder'] == 0 && userRole === 'KARYAWAN' &&
 
                 <div className='flex flex-col gap-2'>
                   <h3 className='text-lg font-bold text-center'>Konfirmasi Order</h3>
                   <div className='flex flex-row gap-4'>
-                    <button className='btn btn-success grow ' onClick={() => document.getElementById('modal_terima')?.showModal()}>
-                      Terima
-                    </button>
                     <button className='btn btn-error grow' onClick={() => document.getElementById('modal_tolak')?.showModal()}>
                       Tolak
                     </button>

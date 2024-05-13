@@ -158,11 +158,12 @@ const UpdateInsidenPage = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="buktiFoto" className="block text-sm font-medium text-gray-700">Upload Bukti</label>
+              <label htmlFor="buktiFoto" className="block text-sm font-medium text-gray-700">Unggah Bukti</label>
               <input
                 id="buktiFoto"
                 type="file"
                 onChange={handleFileChange}
+                accept="image/jpeg, image/png, image/gif, image/bmp, image/tiff, image/webp, image/heif, image/heic"
                 className="w-full mt-1 p-2 border-2 rounded-md file:bg-blue-500 file:text-white file:border-none file:px-4 file:py-2 file:rounded-md file:cursor-pointer"
               />
             </div>

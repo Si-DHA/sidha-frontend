@@ -1,14 +1,16 @@
 import { BASE_URL } from "@/app/constant/constant";
-import { Order } from "@/pages/order/model";
+import { Order } from "@/app/components/model";
 
 export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
     try {
+        // console.log("token " + token)
+        // console.log ("request body " + JSON.stringify(req))
         const response = await fetch(BASE_URL + '/order/price', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-                'Authorization': 'Bearer ' + token + '',
+                'Authorization': 'Bearer ' + token,
             },
             body: JSON.stringify(req),
         });
@@ -16,6 +18,7 @@ export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
         const responseData = await response.json();
 
         if (response.ok) {
+            console.log("success ")
             var newResponse = {
                 data: [] as any[],
                 totalPrice: 0
@@ -29,7 +32,7 @@ export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
                 }
 
                 var rutePengiriman = ''
-                
+
                 for (let j = 0; j < responseData.content.orderItems[i].rute.length; j++) {
                     rutePengiriman += responseData.content.orderItems[i].rute[j].source + ' - ' + responseData.content.orderItems[i].rute[j].destination
                     if (j < responseData.content.orderItems[i].rute.length - 1) {
@@ -49,6 +52,7 @@ export const getOrderDetailBeforeCheckout = async (req: any, token: string) => {
             newResponse.totalPrice = responseData.content.totalPrice;
             return newResponse;
         } else {
+            console.log("failed " + responseData.message)
             throw new Error(responseData.message);
         }
     } catch (error: any) {

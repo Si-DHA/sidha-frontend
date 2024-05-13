@@ -1,10 +1,10 @@
 import { BASE_URL } from "@/app/constant/constant";
-import { Order } from "@/pages/order/model";
+import { Order } from "@/app/components/model";
 
 
 export const createOrder = async (order: Order, token: string): Promise<any> => {
     try {
-        const response = await fetch(BASE_URL+'/order/create', {
+        const response = await fetch(BASE_URL + '/order/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

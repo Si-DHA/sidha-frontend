@@ -78,6 +78,7 @@ const ViewAllOrderItemsPage: React.FC = () => {
       case 3:
         return 'Menunggu Bukti Bongkar';
       case 4:
+      case 5:
         return 'Pengantaran Selesai';
       default:
         return 'Unknown Status';
@@ -110,7 +111,7 @@ const ViewAllOrderItemsPage: React.FC = () => {
     {
       Header: 'Keterangan',
       accessor: 'keterangan',
-      Cell: ({ value }) => value ? value : 'Tidak ada keterangan',
+      Cell: ({ value }) => value ? value : '-',
     },
     {
       Header: 'Rute',
@@ -130,40 +131,42 @@ const ViewAllOrderItemsPage: React.FC = () => {
       Cell: ({ row }) => (
         <div className="flex justify-center space-x-4">
           <button
+            disabled={row.original.statusOrder < 1}
             onClick={() => router.push(`/order/sopir/kelola-bukti-muat/${row.original.id}`)}
-            className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={`px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${row.original.statusOrder < 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             Kelola Bukti Muat
           </button>
           <button
-            disabled={!row.original.buktiMuat} // Disable button if buktiMuat is null
+            disabled={row.original.statusOrder < 3}
             onClick={() => router.push(`/order/sopir/kelola-bukti-bongkar/${row.original.id}`)}
-            className={`px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${!row.original.buktiMuat ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${row.original.statusOrder < 3 ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             Kelola Bukti Bongkar
           </button>
         </div>
+
       ),
-    },    
+    },
   ];
 
-    return (
-        <>
-            <Drawer userRole='userRole'>
-            <div className="container mx-auto p-4" data-theme="winter">
-                <h2 className="text-2xl font-bold mb-2">Order Anda</h2>
-                <DataTable
-                    data={orderItems}
-                    columns={columns}
-                    loading={loading}
-                    NoDataComponent={CustomNoDataComponent}
-                />
-            </div>
-            </Drawer>
-            <Footer />
-        </>
-    );
-    
+  return (
+    <>
+      <Drawer userRole='userRole'>
+        <div className="container mx-auto p-4" data-theme="winter">
+          <h2 className="text-2xl font-bold mb-2">Order Anda</h2>
+          <DataTable
+            data={orderItems}
+            columns={columns}
+            loading={loading}
+            NoDataComponent={CustomNoDataComponent}
+          />
+        </div>
+      </Drawer>
+      <Footer />
+    </>
+  );
+
 };
 
 export default ViewAllOrderItemsPage;
