@@ -60,7 +60,10 @@ const PenawaranHargaPage = () => {
                 const clientsArray: Klien[] = kliensData.content;
                 console.log('Clients Array:', clientsArray);
 
-                const mergedData = clientsArray.map((klien: Klien) => ({
+                // Filter out clients that do not have a penawaranHarga
+                const filteredClients = clientsArray.filter((klien: Klien) => klien.penawaranHarga);
+
+                const mergedData = filteredClients.map((klien: Klien) => ({
                     klienId: klien.id,
                     klienName: klien.companyName,
                     penawaranHargaCreatedAt: klien.penawaranHarga.penawaranHargaCreatedAt,
@@ -70,9 +73,9 @@ const PenawaranHargaPage = () => {
 
                 setPenawaranHarga(mergedData);
             })
-            .catch(error => console.error('Fetching error:', error))
+            .catch(error => setError('Fetching error: ', error.message))
             .finally(() => setLoading(false));
-    }, []);
+    }, [penawaranHarga]);
 
     const columns = useMemo(() => [
         {
