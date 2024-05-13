@@ -15,8 +15,47 @@ const DaftarPurchaseOrderPage = () => {
     const [userRole, setUserRole] = useState('');
     const router = useRouter();
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
     const [orderData, setOrderData] = useState([]); // State to hold truck data
     var columns: any[] = []
+    
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        setUserRole(role || '');
+
+        if (role !== 'KLIEN' && role !== 'KARYAWAN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini')
+        }
+
+        const fetchData = async () => {
+            try {
+                if (idUser && token) {
+                    if (role == "KLIEN") {
+                        const data = await getOrderByKlien(idUser, token);
+                        setOrderData(data);
+                    } else if (role == "KARYAWAN") {
+                        const data = await getAllOrder(token);
+                        setOrderData(data);
+                    }
+                } else {
+                    throw new Error('Pengguna tidak ditemukan');
+                }
+            } catch (error: any) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData(); // Call fetchData function when component mounts
+    }, []);
+
+    const formatPrice = (price: number): string => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+    };
 
     if (userRole == "KLIEN") {
         const columnsKlien = [
@@ -39,6 +78,7 @@ const DaftarPurchaseOrderPage = () => {
             {
                 Header: 'Total Biaya Pengiriman',
                 accessor: 'totalBiayaPengiriman',
+                Cell: ({ value }) => formatPrice(value)
             },
             {
                 Header: 'Action',
@@ -68,6 +108,7 @@ const DaftarPurchaseOrderPage = () => {
             {
                 Header: 'Total Biaya Pengiriman',
                 accessor: 'totalBiayaPengiriman',
+                Cell: ({ value }) => formatPrice(value)
             },
             {
                 Header: 'Action',
@@ -77,34 +118,6 @@ const DaftarPurchaseOrderPage = () => {
         ];
         columns = columnsKaryawan
     }
-
-    useEffect(() => {
-        if (!isLoggedIn) {
-            router.push('/login');
-        }
-        const role = Cookies.get('role');
-        setUserRole(role || '');
-
-        const fetchData = async () => {
-            try {
-                if (idUser && token) {
-                    if (role == "KLIEN") {
-                        const data = await getOrderByKlien(idUser, token);
-                        setOrderData(data);
-                    } else {
-                        const data = await getAllOrder(token);
-                        setOrderData(data);
-                    }
-                } else {
-                    throw new Error('User not found');
-                }
-            } catch (error: any) {
-                setError(error.message);
-            }
-        };
-
-        fetchData(); // Call fetchData function when component mounts
-    }, []);
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
@@ -118,7 +131,7 @@ const DaftarPurchaseOrderPage = () => {
                             {error ? (
                                 <div>{error}</div>
                             ) : (
-                                <DataTable columns={columns} data={orderData} btnText="Buat Order Baru" type="order"/>
+                                <DataTable columns={columns} data={orderData} btnText="Buat Order Baru" type="order" loading={loading}/>
                             )}
                         </div>
                     </div>

@@ -30,7 +30,7 @@ const UpdateTrukPage = () => {
         if (role === 'ADMIN') {
             setUserRole(role);
         } else {
-            setError('You are not allowed to access this page');
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])

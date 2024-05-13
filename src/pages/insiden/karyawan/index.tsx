@@ -26,25 +26,31 @@ const CustomNoDataComponent = () => (
 const KaryawanInsidenIndexPage = () => {
     const [insidens, setInsidens] = useState<InsidenRow[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const router = useRouter();
     const isLoggedIn = Cookies.get('isLoggedIn');
-    const userRole = Cookies.get('role');
+    const [userRole, setUserRole] = useState('');
 
     useEffect(() => {
-        if (!isLoggedIn || userRole !== 'KARYAWAN') {
+        if (!isLoggedIn) {
             router.push('/login');
-            return;
         }
-        getAllInsidens()
-            .then(data => {
-                setInsidens(data);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Fetching error:', error);
-                setLoading(false);
-            });
-
+        const role = Cookies.get('role');
+        setUserRole(role || '');
+        if (role === 'KARYAWAN') {
+            getAllInsidens()
+                .then(data => {
+                    setInsidens(data);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    console.error('Fetching error:', error);
+                    setLoading(false);
+                    setError(error.message)
+                });
+        } else {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
+        }
     }, [isLoggedIn, userRole, router]);
 
     const columns = [
@@ -62,7 +68,7 @@ const KaryawanInsidenIndexPage = () => {
                     year: 'numeric',
                     hour: '2-digit',
                     minute: '2-digit',
-                    hour12: false, 
+                    hour12: false,
                 });
                 return formattedDate;
             },
@@ -96,19 +102,39 @@ const KaryawanInsidenIndexPage = () => {
 
     return (
         <>
-            
-            <Drawer userRole={userRole}>
-            <main className="flex flex-col items-center justify-between" data-theme="winter">
-                    <h2 className="text-2xl font-bold mb-4 mt-6">Laporan Insiden</h2>
-                <DataTable
-                    data={insidens}
-                    columns={columns}
-                    loading={loading}
-                    NoDataComponent={CustomNoDataComponent}
-                />
+            <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
+                <Drawer userRole={userRole}>
+                    <div className="flex flex-col justify-center items-center mih-h-screen p-8">
+                        <h1 className="text-3xl font-bold text-center ">Laporan Insiden</h1>
+                    </div>
+
+                    <div className="flex flex-col gap-6 mx-4 my-4 ">
+                        <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
+                            <div className="overflow-x-auto w-full">
+                                {error ? (
+                                    <div>{error}</div>
+                                ) : (
+                                    <>
+                                        {insidens ? ( // Check if insiden is empty
+                                            <DataTable
+                                                data={insidens}
+                                                columns={columns}
+                                                loading={loading}
+                                            />
+                                        ) : (
+                                            <DataTable
+                                                data={[]}
+                                                columns={columns}
+                                                loading={loading}
+                                            />
+                                        )}
+                                    </>)}
+                            </div>
+                        </div>
+                    </div>
+                </Drawer>
+                <Footer />
             </main>
-            </Drawer>
-            <Footer />
         </>
     );
 };
