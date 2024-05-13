@@ -22,10 +22,9 @@ const CreateTrukPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'ADMIN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'ADMIN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -106,14 +105,14 @@ const CreateTrukPage = () => {
                 {error ? (
                     <div className="mx-auto my-auto">Error: {error}</div>
                 ) : (
-                    <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+                    <div className="flex flex-col lg:flex-row  justify-center items-center gap-x-16  gap-y-16 mx-auto my-auto px-12 py-12">
                         <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                             <div className="modal-box">
-                                <h3 className="font-bold text-lg">Create</h3>
-                                <p className="py-4">Are you sure your data is correct?</p>
+                                <h3 className="font-bold text-lg">Tambah</h3>
+                                <p className="py-4">Apakah Anda yakin data yang dimasukkan sudah benar?</p>
                                 <div className="modal-action">
-                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Cancel</button>
-                                    <button className="btn btn-success" onClick={() => { handleCreate(); document.getElementById('my_modal_5').close(); }}>Create</button>
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_5').close()}>Batal</button>
+                                    <button className="btn btn-success" onClick={() => { handleCreate(); document.getElementById('my_modal_5').close(); }}>Tambah</button>
                                 </div>
 
                             </div>
@@ -204,7 +203,7 @@ const CreateTrukPage = () => {
                                     </table>
                                     <div className="flex flex-row justify-center align-middle">
                                         <button onClick={() => document.getElementById('my_modal_5').showModal()}
-                                            className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" type="submit">Create</button>
+                                            className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg flex flex-grow" type="submit">Tambah</button>
                                     </div>
 
 

@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
-import Navbar from '@/app/components/common/navbar';
 import Footer from '@/app/components/common/footer';
 import DataTable from '@/app/components/common/datatable/DataTable';
 import { getInsidensBySopir } from '@/pages/api/insiden/getInsidensBySopir';
 import Drawer from '@/app/components/common/drawer';
+import { format } from 'date-fns';
+import idLocale from 'date-fns/locale/id';
 
 interface InsidenRow {
     id: string;
     createdAt: string;
     kategori: string;
+    orderItem?: {
+        id: string;
+        rute: Array<{
+            source: string;
+            destination: string;
+        }>;
+    };
 }
 
 const CustomNoDataComponent = () => (
@@ -22,37 +30,46 @@ const CustomNoDataComponent = () => (
 const IndexPage = () => {
     const [insidens, setInsidens] = useState<InsidenRow[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const router = useRouter();
-    const sopirId = Cookies.get('idUser');
+    const isLoggedIn = Cookies.get('isLoggedIn');
+    const [userRole, setUserRole] = useState('');
+    var sopirId;
 
     useEffect(() => {
-        if (sopirId) {
-            getInsidensBySopir(sopirId)
-                .then(data => {
-                    const activeInsidens = data.filter(insiden => !insiden.deleted);
-                    setInsidens(activeInsidens);
-                    setLoading(false);
-                })
-                .catch(error => {
-                    console.error('Fetching error:', error);
-                    setLoading(false);
-                });
-        } else {
+        if (!isLoggedIn) {
             router.push('/login');
         }
+        const role = Cookies.get('role');
+        setUserRole(role || '');
+        if (role === 'SOPIR') {
+            sopirId = Cookies.get('idUser');
+            if (sopirId) {
+                getInsidensBySopir(sopirId)
+                    .then(data => {
+                        const activeInsidens = data.filter(insiden => !insiden.deleted);
+                        setInsidens(activeInsidens);
+                        setLoading(false);
+                    })
+                    .catch(error => {
+                        console.error('Fetching error:', error);
+                        setLoading(false);
+                        setError(error.message)
+                    });
+            } else {
+                setError('ID tidak ditemukan');
+            }
+        } else {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
+        }
+
     }, [sopirId, router]);
 
 
     const columns = [
         {
             Header: 'Tanggal Pembuatan',
-            accessor: row => new Date(row.updatedAt || row.createdAt).toLocaleString('id-ID', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-            }),
+            accessor: row => format(new Date(row.updatedAt || row.createdAt), 'dd MMMM yyyy, HH:mm', { locale: idLocale }),
             Cell: ({ value }) => value,
         },
         {
@@ -62,6 +79,12 @@ const IndexPage = () => {
         {
             Header: 'Status',
             accessor: 'status',
+        },
+        {
+            Header: 'Rute',
+            accessor: (row: InsidenRow) => row.orderItem && row.orderItem.rute.length > 0
+                ? `${row.orderItem.rute[0].source} to ${row.orderItem.rute[0].destination}`
+                : 'N/A',
         },
         {
             Header: 'Actions',
@@ -79,23 +102,46 @@ const IndexPage = () => {
 
     return (
         <>
-            <Drawer userRole='userRole'>
-            <main className="flex flex-col items-center justify-between" data-theme="winter">
-                    <h2 className="text-2xl font-bold mb-4">Laporan Insiden Anda</h2>
-                <DataTable
-                    data={insidens}
-                    columns={columns}
-                    loading={loading}
-                    NoDataComponent={CustomNoDataComponent}
-                    btnText="Buat Laporan" onClick={() => router.push(`/insiden/sopir/create`)}
-                    type='insiden'
-                />
+            <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
+                <Drawer userRole={userRole}>
+                    <div className="flex flex-col justify-center items-center mih-h-screen p-8">
+                        <h1 className="text-3xl font-bold text-center ">Laporan Insiden Anda</h1>
+                    </div>
+
+                    <div className="flex flex-col gap-6 mx-4 my-4 ">
+                        <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
+                            <div className="overflow-x-auto w-full">
+                                {error ? (
+                                    <div>{error}</div>
+                                ) : (
+                                    <>
+                                        {insidens ? ( // Check if insiden is empty
+                                            <DataTable
+                                                data={insidens}
+                                                columns={columns}
+                                                loading={loading}
+                                                btnText="Buat Laporan" onClick={() => router.push(`/insiden/sopir/create`)}
+                                                type='insiden'
+                                            />
+                                        ) : (
+                                            <DataTable
+                                                data={[]}
+                                                columns={columns}
+                                                loading={loading}
+                                                btnText="Buat Laporan" onClick={() => router.push(`/insiden/sopir/create`)}
+                                                type='insiden'
+                                            />
+                                        )}
+                                    </>)}
+                            </div>
+                        </div>
+                    </div>
+                </Drawer>
+                <Footer />
             </main>
-            </Drawer>
-            <Footer />
         </>
     );
-    
+
 };
 
 export default IndexPage;
