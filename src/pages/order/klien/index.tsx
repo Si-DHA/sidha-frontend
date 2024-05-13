@@ -109,6 +109,7 @@ const ViewAllOrdersPage: React.FC = () => {
         {
             Header: 'Tanggal Pengiriman',
             accessor: 'tanggalPengiriman',
+            Cell: ({ value }) => value.split(' ')[0],
         },
         {
             Header: 'Kelola',

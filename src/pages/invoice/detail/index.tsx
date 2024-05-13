@@ -182,31 +182,26 @@ const InvoiceDetailPage = () => {
                   <DataTable columns={columns} data={[]} type="invoice" />)}
               </>)}
 
-              <div className="flex flex-col justify-center items-center bg-slate-50 rounded-2xl mx-auto my-auto p-4 align-middle">
+              <div className="flex flex-col justify-center items-center bg-slate-50 mb-7 rounded-2xl mx-auto my-auto p-4 align-middle">
                 <h1 className="text-[24px] text-slate-900 font-bold ">Status Invoice</h1>
                 <div className="overflow-x-auto">
                   <table className="table items-center align-middle">
-                    {/* head */}
-
                     <tbody>
-                      {/* row 1 */}
                       <tr>
                         <td className="font-bold">Status</td>
                         <td className="">{status}</td>
                       </tr>
-                      {/* row 2 */}
                       <tr>
                         <td className="font-bold">Total DP</td>
                         <td className="">{(rawData.totalPrice * 0.6).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
                       </tr>
-                      {/* row 3 */}
-                      <tr>
-                        <td className="font-bold">Total Harga</td>
-                        <td >{(rawData.totalPrice * 1).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
-                      </tr>
                       <tr>
                         <td className="font-bold">Total Pelunasan</td>
                         <td >{(rawData.totalPrice * 0.4).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
+                      </tr>
+                      <tr>
+                        <td className="font-bold">Total Harga</td>
+                        <td >{(rawData.totalPrice * 1).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
                       </tr>
                     </tbody>
                   </table>
