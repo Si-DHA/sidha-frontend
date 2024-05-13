@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/app/constant/constant";
-import { ConfirmOrder } from "@/pages/order/model";
+import { ConfirmOrder } from "@/app/components/model";
 
 
 export const confirmOrder = async (confirmOrder: ConfirmOrder, token: string): Promise<any> => {
@@ -15,9 +15,10 @@ export const confirmOrder = async (confirmOrder: ConfirmOrder, token: string): P
         });
 
         const responseData = await response.json();
+        // console.log("responseData:", responseData);
 
         if (response.ok) {
-            return responseData['content'];
+            return responseData;
         } else {
             throw new Error(responseData.message);
         }

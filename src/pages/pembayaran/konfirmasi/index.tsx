@@ -29,10 +29,9 @@ const KonfirmasiPembayaranPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'KARYAWAN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'KARYAWAN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -98,8 +97,10 @@ const KonfirmasiPembayaranPage = () => {
                 </div>
                 {error ? (
                     <div className="mx-auto my-auto">Error: {error}</div>
+                ) : invoiceData === null ? (
+                    <div className="mx-auto my-auto">Loading..</div>
                 ) : invoiceData && (
-                    <div className="flex flex-row gap-y-12 gap-x-12 justify-center mx-auto my-auto">
+                    <div className="flex flex-col lg:flex-row  justify-center items-center gap-x-16  gap-y-16 mx-auto my-auto px-12 py-12">
                         <style jsx>{`
                             .image-container {
                                 padding-top:10px;
@@ -120,15 +121,14 @@ const KonfirmasiPembayaranPage = () => {
 
                         <dialog id="my_modal_tolak" className="modal modal-bottom sm:modal-middle">
                             <div className="modal-box">
-                                <h3 className="font-bold text-lg mb-5">Tolak</h3>
+                                <h3 className="font-bold text-lg mb-5">Tolak Pembyaran</h3>
                                 <label className="input input-bordered flex items-center gap-2">
                                     <input required id="alasanPenolakan" type="text" className="grow" placeholder="Masukkan alasan penolakan" />
                                 </label>
                                 <div className="modal-action">
-                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_tolak').close()}>Cancel</button>
+                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_tolak').close()}>Batal</button>
                                     <button className="btn btn-error" onClick={() => { handleKonfirmasi(false); document.getElementById('my_modal_tolak').close(); }}>Tolak</button>
                                 </div>
-
                             </div>
                         </dialog>
 

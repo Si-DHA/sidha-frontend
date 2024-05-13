@@ -3,16 +3,16 @@ import Footer from "@/app/components/common/footer"
 import Cookies from 'js-cookie';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Order, OrderItem, Rute } from "../model";
-import { tipeBarang, tipeTruk } from "../data";
+import { Order, OrderItem, Rute } from "../../../app/components/model";
+import { tipeBarang, tipeTruk } from "../../../app/components/data";
 import { getPossibleRute } from "@/pages/api/order/getPossibleRute";
 
 const CreatePurchaseOrderPage = () => {
 
-    var userId = Cookies.get('userId');
+    var userId = Cookies.get('idUser');
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
-    const [possibleRute, setPossibleRute] = useState([] as string[][]);
+    const [possibleRute, setPossibleRute] = useState([] as string[]);
     const [error, setError] = useState('' as string);
     const router = useRouter();
 
@@ -34,7 +34,9 @@ const CreatePurchaseOrderPage = () => {
                 setError(error.message);
             }
         }
-        fetchData();
+        if (possibleRute.length === 0) {
+            fetchData();
+        }
     },)
 
     const [order, setOrder] = useState<Order>({
@@ -43,6 +45,8 @@ const CreatePurchaseOrderPage = () => {
         orderItems: []
     } as Order
     );
+
+
 
 
     const [orderItem, setOrderItem] = useState([
@@ -61,6 +65,13 @@ const CreatePurchaseOrderPage = () => {
             ]
         } as OrderItem
     ]);
+
+    // useEffect(() => {
+    //     if (router.query.order !== undefined) {
+    //         setOrder(JSON.parse(router.query.order as string));
+    //         setOrderItem(JSON.parse(router.query.order as string).orderItems);
+    //     }
+    // });
 
     const handleAddOrderItem = () => {
         setOrderItem([...orderItem, {
@@ -151,7 +162,6 @@ const CreatePurchaseOrderPage = () => {
         order.orderItems = orderItem;
         const validationResult = validateOrder();
         if (validationResult === true) {
-            console.log(order);
             router.push({
                 pathname: '/order/create/detail',
                 query: { order: JSON.stringify(order) }
@@ -203,16 +213,18 @@ const CreatePurchaseOrderPage = () => {
                                 <span className="label-text">Rute Pengiriman<span className="text-s text-red-500">*</span></span>
 
                             </div> : null}
-                            <select className="select select-bordered grow" onChange={(e) => handleOnChangeSourceAndDestination(e, orderItemIndex, ruteIndex)}>
+                            <select className="select select-bordered grow" onChange={(e) => handleOnChangeSourceAndDestination(e, orderItemIndex, ruteIndex)} defaultValue={orderItem[orderItemIndex].rute[ruteIndex].source !== '' ? `${orderItem[orderItemIndex].rute[ruteIndex].source} - ${orderItem[orderItemIndex].rute[ruteIndex].destination}` : undefined}>
                                 <option disabled selected>Pilih satu</option>
                                 {possibleRute.map((rute, index) => (
-                                    <option key={index}>{rute[0]} - {rute[1]}</option>
+                                    <option key={index}>
+                                        {rute}
+                                    </option>
                                 ))}
                             </select>
                         </div>
                         <div className="flex flex-row gap-4 ">
-                            <input type="text" className="input input-bordered grow" placeholder="Alamat Penjemputan" onChange={(e) => handleOnChangeAlamatPenjemputan(e, orderItemIndex, ruteIndex)} />
-                            <input type="text" className="input input-bordered grow" placeholder="Alamat Pengiriman" onChange={(e) => handleOnChangeAlamatPengiriman(e, orderItemIndex, ruteIndex)} />
+                            <input type="text" className="input input-bordered grow" placeholder="Alamat Penjemputan" onChange={(e) => handleOnChangeAlamatPenjemputan(e, orderItemIndex, ruteIndex)} defaultValue={orderItem[orderItemIndex].rute[ruteIndex].alamatPenjemputan}></input>
+                            <input type="text" className="input input-bordered grow" placeholder="Alamat Pengiriman" onChange={(e) => handleOnChangeAlamatPengiriman(e, orderItemIndex, ruteIndex)} defaultValue={orderItem[orderItemIndex].rute[ruteIndex].alamatPengiriman}></input>
                         </div>
                     </label>
                     {ruteIndex > 0 && (
@@ -234,17 +246,19 @@ const CreatePurchaseOrderPage = () => {
                         <span className="label-text">Tipe Barang<span className="text-s text-red-500">*</span></span>
 
                     </div>
-                    <select required className="select select-bordered" onChange={(e) => handleOnChangeTipeBarang(e, index)}>
+                    <select required className="select select-bordered" onChange={(e) => handleOnChangeTipeBarang(e, index)} defaultValue={orderItem[index].tipeBarang !== '' ? orderItem[index].tipeBarang : undefined}>
                         <option disabled selected>Pilih satu</option>
-                        {tipeBarang.map((tipe, index) => (
-                            <option key={index}>{tipe}</option>
+                        {tipeBarang.map((tipe, idx) => (
+                            <option key={idx}>
+                                {tipe}
+                            </option>
                         ))}
                     </select>
                 </label>
                 <div className="form-control w-full">
                     <label className="label cursor-pointer">
                         <span className="label-text">Barang rentan pecah belah (fragile)?<span className="text-s text-red-500">*</span></span>
-                        <input type="checkbox" className="checkbox checkbox-primary" onChange={(e) => handleOnChangeIsPecahBelah(e, index)} />
+                        <input type="checkbox" className="checkbox checkbox-primary" onChange={(e) => handleOnChangeIsPecahBelah(e, index)} defaultChecked={orderItem[index].isPecahBelah} />
                     </label>
                 </div>
                 <label className="form-control w-full">
@@ -252,10 +266,12 @@ const CreatePurchaseOrderPage = () => {
                         <span className="label-text">Tipe Truk<span className="text-s text-red-500">*</span></span>
 
                     </div>
-                    <select className="select select-bordered" required onChange={(e) => handleOnChangeTipeTruk(e, index)}>
+                    <select className="select select-bordered" required onChange={(e) => handleOnChangeTipeTruk(e, index)} defaultValue={orderItem[index].tipeTruk !== '' ? orderItem[index].tipeTruk : undefined}>
                         <option disabled selected>Pilih satu</option>
                         {tipeTruk.map((tipe, index) => (
-                            <option key={index}>{tipe}</option>
+                            <option key={index} >
+                                {tipe}
+                            </option>
                         ))}
                     </select>
                 </label>
@@ -263,12 +279,11 @@ const CreatePurchaseOrderPage = () => {
                     <div className="label">
                         <span className="label-text">Keterangan</span>
                     </div>
-                    <textarea className="textarea textarea-bordered h-24" placeholder="Keterangan" onChange={(e) => handleOnChangeKeterangan(e, index)}>{orderItem[index].keterangan}</textarea>
+                    <textarea className="textarea textarea-bordered h-24" placeholder="Keterangan" onChange={(e) => handleOnChangeKeterangan(e, index)} defaultValue={orderItem[index].keterangan}></textarea>
                 </label>
                 {orderItem[index].rute.map((_, ruteIndex) => (
                     <RuteOrderForm key={ruteIndex} ruteIndex={ruteIndex} orderItemIndex={index} />
                 ))}
-                <div className="btn w-full" onClick={() => handleAddRute(index)}>Tambah Rute</div>
                 {index > 0 && (
                     <div className="btn btn-error w-full" onClick={() => handleRemoveOrderItem(index)}>Hapus Order Item</div>
                 )}

@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import { getInsidenById } from '@/pages/api/insiden/getInsidenById'
 import { getBuktiFoto } from '@/pages/api/insiden/getBuktiFoto'
 import { deleteInsiden } from '@/pages/api/insiden/deleteInsiden'
-import Image from 'next/image';
-import Navbar from "@/app/components/common/navbar";
 import Footer from "@/app/components/common/footer";
 import SuccessAlert from '@/app/components/common/SuccessAlert';
 import FailAlert from '@/app/components/common/FailAlert';
@@ -77,24 +75,17 @@ const InsidenDetailPage = () => {
 
   return (
     <main className="flex flex-col items-center justify-between" data-theme="winter">
-      <Drawer userRole='sopir'>
+      <Drawer userRole='userRole'>
         {alert}
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">
             <h3 className="text-xl text-center font-bold mb-2">Detail Laporan Insiden</h3>
           </div>
           <dl>
-          {insiden.orderItem && (
-              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">ID</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.id}
-                </dd>
-              </div>
-            )}
             {insiden.orderItem && (
-              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Asal - Tujuan</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.rute[0].source} to {insiden.orderItem.rute[0].destination}
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{insiden.orderItem.rute[0].source} - {insiden.orderItem.rute[0].destination}
                 </dd>
               </div>
             )}

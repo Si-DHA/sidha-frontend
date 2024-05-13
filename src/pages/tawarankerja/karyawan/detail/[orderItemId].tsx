@@ -17,13 +17,29 @@ const KaryawanDetailPage = () => {
   const router = useRouter();
   const { orderItemId } = router.query;
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+  const [error, setError] = useState('');
+
+  var isLoggedIn = Cookies.get('isLoggedIn');
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/login');
+    }
+    const role = Cookies.get('role');
+    setUserRole(role || '');
+    if (role !== 'KARYAWAN') {
+      setError('Anda tidak diperbolehkan mengakses halaman ini');
+    }
+
+  }, [isLoggedIn, router])
+
+  useEffect(() => {
+    setUserRole(Cookies.get('role') || 'defaultRole');
     const confirmedId = localStorage.getItem(`confirmedSopir-${orderItemId}`);
     if (confirmedId) {
       setConfirmationStatus(true);
       setSelectedSopirId(confirmedId);
-      // Optionally, also fetch and set the sopir details if needed
     }
 
     if (orderItemId) {
@@ -62,7 +78,7 @@ const KaryawanDetailPage = () => {
   };
 
   return (
-    <Drawer userRole="karyawan">
+    <Drawer userRole={userRole}>
       <main className="flex flex-col items-center justify-between" data-theme="winter">
         {alert.show && (alert.type === 'success' ? <SuccessAlert message={alert.message} /> : <FailAlert message={alert.message} />)}
         {orderItemDetails ? (
@@ -81,7 +97,7 @@ const KaryawanDetailPage = () => {
               </div>
             </div>
             <div className="mt-4">
-              <h3 className="text-xl mb-1 font-semibold">Select Sopir for this Order</h3>
+              <h3 className="text-xl mb-2 mt-2 font-semibold">Select Sopir for this Order</h3>
               <select
                 value={selectedSopirId}
                 onChange={(e) => setSelectedSopirId(e.target.value)}
@@ -97,16 +113,16 @@ const KaryawanDetailPage = () => {
               </select>
               <button
                 onClick={handleConfirmSopir}
-                className="btn btn-primary"
+                className="btn btn-primary mb-4"
                 disabled={confirmationStatus || !selectedSopirId}
               >
                 Confirm Sopir
               </button>
               {confirmedSopir && (
                 <p className="text-green-500 mt-2 mb-4">
-                <strong>{confirmedSopir.sopir.name}</strong> dari <strong>{confirmedSopir.lokasi}</strong> telah dikonfirmasi untuk pekerjaan ini.
-              </p>
-              
+                  <strong>{confirmedSopir.sopir.name}</strong> dari <strong>{confirmedSopir.lokasi}</strong> telah dikonfirmasi untuk pekerjaan ini.
+                </p>
+
               )}
             </div>
           </>
