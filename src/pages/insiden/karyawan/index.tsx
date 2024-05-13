@@ -120,12 +120,14 @@ const KaryawanInsidenIndexPage = () => {
                                                 data={insidens}
                                                 columns={columns}
                                                 loading={loading}
+                                                type='insiden'
                                             />
                                         ) : (
                                             <DataTable
                                                 data={[]}
                                                 columns={columns}
                                                 loading={loading}
+                                                type='insiden'
                                             />
                                         )}
                                     </>)}
