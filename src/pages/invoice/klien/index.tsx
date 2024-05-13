@@ -11,6 +11,7 @@ const InvoiceKlienPage: React.FC = () => {
     const router = useRouter();
     const [error, setError] = useState('');
     const [klienData, setKlienData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
@@ -20,10 +21,9 @@ const InvoiceKlienPage: React.FC = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'KARYAWAN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'KARYAWAN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -35,6 +35,8 @@ const InvoiceKlienPage: React.FC = () => {
                 setKlienData(klienDataResponse['content']);
             } catch (error: any) {
                 setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -96,12 +98,14 @@ const InvoiceKlienPage: React.FC = () => {
                                     {klienData ? ( // Check if klienData is empty
                                         <DataTable 
                                             columns={columns} 
-                                            data={klienData} 
+                                            data={klienData}
+                                            loading={loading} 
                                         />
                                     ) : (
                                         <DataTable 
                                             columns={columns} 
                                             data={[]} 
+                                            loading={loading}
                                         />
                                     )}
                                 </>)}

@@ -29,10 +29,9 @@ const KonfirmasiPembayaranPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'KARYAWAN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'KARYAWAN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])

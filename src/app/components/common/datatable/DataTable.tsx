@@ -11,12 +11,12 @@ interface DataTableProps {
   onClick?: () => void;
   type?: string;
   biayaPengiriman?: any;
-  loading: boolean;
+  loading?: boolean;
 }
 
 const DataTable: React.FC<DataTableProps> = ({
-  data,
-  columns,
+  data = [],
+  columns = [],
   btnText,
   onClick,
   type,
@@ -53,6 +53,16 @@ const DataTable: React.FC<DataTableProps> = ({
   );
 
   const renderTableHeader = () => {
+    if (loading) {
+      return (
+        <tr className='text-center'>
+          <td colSpan={columns.length + 1} className="text-sm font-semibold pt-3">
+            <span className="loading loading-spinner loading-lg"></span>
+          </td>
+        </tr>
+      );
+    }
+
     return headerGroups.map((headerGroup, index) => (
       <tr {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: '#f2f2f2' }} key={index} >
         <th style={{ textAlign: 'center' }}>No</th> {/* Add table header for numbering */}
@@ -76,20 +86,17 @@ const DataTable: React.FC<DataTableProps> = ({
 
   const RenderTableBody = () => {
     if (loading) {
-      return (
-        <tr className='text-center'>
-          <td colSpan={columns.length + 1} className="text-sm font-semibold pt-3">
-            <span className="loading loading-spinner loading-md"></span>
-          </td>
-        </tr>
-      );
+      return;
     }
-    
+
     if (!data || data.length === 0) {
       return (
         <tr className='text-center'>
-          <td colSpan={columns.length + 1} className="text-sm font-semibold pt-3">
-            Data tidak ditemukan
+          <td
+            colSpan={columns.length + 1}
+            className="text-base font-semibold pt-5"
+          >
+            {type && type != '' ? `Belum terdapat data ${type}` : 'Data tidak ditemukan'}
           </td>
         </tr>
       );
@@ -121,9 +128,7 @@ const DataTable: React.FC<DataTableProps> = ({
           {...row.getRowProps()}
           style={{ borderBottom: '1px solid black' }}
           onClick={() => {
-            if (type === 'truk') {
-              handleRowClick(row.original.idTruk);
-            } else if (type === 'user') {
+            if (type === 'user') {
               handleRowClickUser(row.original.id);
             } else if (type === "kontrak") {
               handleRowClickKontrak(row.original.userId);
@@ -149,6 +154,10 @@ const DataTable: React.FC<DataTableProps> = ({
   };
 
   const RenderTableFooterPurchaseOrder = (biayaPengiriman: any) => {
+    if (loading) {
+      return;
+    }
+
     return (
       <tfoot>
         <tr>
@@ -163,7 +172,7 @@ const DataTable: React.FC<DataTableProps> = ({
   return (
     <div style={{ marginBottom: '20px', fontSize: '13px' }} className="overflow-x-auto">
       {/* Search input */}
-      {type != "order" && type != "checkout" &&
+      {type != "checkout" &&
         data && data.length > 0 &&
         <div style={{ float: 'left', marginBottom: '10px' }}>
           <div style={{ position: 'relative' }}>
@@ -188,11 +197,13 @@ const DataTable: React.FC<DataTableProps> = ({
             </span>
           </div>
         </div>}
-      {btnText && onClick &&
+      {!loading && btnText && onClick &&
         <div style={{ float: 'right', marginBottom: '15px' }}>
           <button className="btn btn-primary" onClick={onClick}>{btnText}</button>
         </div>
+
       }
+
       <table className="table table-xs" {...getTableProps()} style={{ borderCollapse: 'separate', width: '100%', borderSpacing: '10 10px', marginBottom: '20px' }}>
         <thead>{renderTableHeader()}</thead>
         <tbody {...getTableBodyProps()}>{RenderTableBody()}</tbody>

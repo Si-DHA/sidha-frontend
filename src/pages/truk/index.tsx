@@ -11,6 +11,7 @@ const TrukPage: React.FC = () => {
     const router = useRouter();
     const [error, setError] = useState('');
     const [trukData, setTrukData] = useState([]); // State to hold truck data
+    const [loading, setLoading] = useState(true);
 
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
@@ -20,10 +21,9 @@ const TrukPage: React.FC = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'ADMIN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'ADMIN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -32,11 +32,14 @@ const TrukPage: React.FC = () => {
         const fetchData = async () => {
             try {
                 const trukDataResponse = await viewAllTruk();
-                if (trukDataResponse) {
-                    setTrukData(trukDataResponse['content']);
+                const trukData = trukDataResponse['content']
+                if (trukData) {
+                    setTrukData(trukData);
                 }
             } catch (error: any) {
                 setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -108,18 +111,19 @@ const TrukPage: React.FC = () => {
                                 <div>{error}</div>
                             ) : (
                                 <>
-                                    {trukData ? ( // Check if trukData is empty
-                                        <DataTable columns={columns} data={trukData} btnText="Tambah truk" onClick={createTruk} type="truk" />
-                                    ) : (
-                                        <DataTable columns={columns} data={[]} btnText="Tambah truk" onClick={createTruk} type="truk" />
-                                    )}
+                                    <DataTable 
+                                            columns={columns} 
+                                            data={trukData} 
+                                            btnText="Tambah truk" 
+                                            onClick={createTruk}
+                                            loading={loading}
+                                            type='truk' />
                                 </>)}
                         </div>
                     </div>
                 </div>
             </Drawer>
             <Footer />
-
         </main>
     );
 }

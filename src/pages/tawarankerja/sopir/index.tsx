@@ -11,9 +11,6 @@ import { getOrderByOrderItem } from '@/pages/api/order/getOrderByOrderItem';
 const OrderItemsIndexPage = () => {
     const [orderItems, setOrderItems] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [location, setLocation] = useState('');
-    const [selectedOfferId, setSelectedOfferId] = useState('');
-    const sopirId = Cookies.get('idUser');
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
     const [error, setError] = useState('');
@@ -23,10 +20,9 @@ const OrderItemsIndexPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'SOPIR') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'SOPIR') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -60,7 +56,7 @@ const OrderItemsIndexPage = () => {
                 ).then(mergedOrderItems => {
                     setOrderItems(mergedOrderItems);
                 }).catch(error => {
-                    console.error('Fetching additional data error:', error);
+                    setError('Fetching additional data error: ' + error.message);
                 }).finally(() => {
                     setLoading(false);
                 });
@@ -72,7 +68,7 @@ const OrderItemsIndexPage = () => {
             console.error('Fetching error:', error);
             setLoading(false);
         });
-    }, []);    
+    }, []);
 
     const handleDetailClick = (id, hasAccepted) => {
         const detailUrl = hasAccepted ? `/tawarankerja/sopir/detail/${id}/accept` : `/tawarankerja/sopir/detail/${id}`;
@@ -85,12 +81,14 @@ const OrderItemsIndexPage = () => {
         { Header: 'Mudah Pecah', accessor: 'isPecahBelah', Cell: ({ value }) => value ? 'Yes' : 'No' },
         { Header: 'Harga', accessor: 'price', Cell: ({ value }) => value !== 'N/A' ? `Rp${parseInt(value).toLocaleString('id-ID')}` : 'N/A' },
         { Header: 'Tipe Truk', accessor: 'tipeTruk' },
-        { Header: 'Tanggal Pengiriman', accessor: 'tanggalPengiriman', 
-        Cell: ({ value }) => {
-            // Extract date part (format: "03-05-2024 12:00:00") and return only the date
-            const dateOnly = value.split(' ')[0];
-            return dateOnly || 'N/A';
-        }},
+        {
+            Header: 'Tanggal Pengiriman', accessor: 'tanggalPengiriman',
+            Cell: ({ value }) => {
+                // Extract date part (format: "03-05-2024 12:00:00") and return only the date
+                const dateOnly = value.split(' ')[0];
+                return dateOnly || 'N/A';
+            }
+        },
         {
             Header: 'Details',
             accessor: 'id',
@@ -104,27 +102,34 @@ const OrderItemsIndexPage = () => {
             ),
         },
     ];
-    
 
     return (
-        <>
-            <div className="flex flex-col h-screen justify-between" data-theme="winter">
-                <Drawer userRole='userRole'>
-                    <div className="overflow-auto">
-                        <h2 className="text-center text-2xl font-bold mb-2 mt-6">Tawaran Kerja</h2>
-                        <div className="mx-auto w-full max-w-4xl p-4">
-                            <DataTable
-                                data={orderItems}
-                                columns={columns}
-                                loading={loading}
-                                NoDataComponent={() => <div>No available order items</div>}
-                            />
+        <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
+            <Drawer userRole={userRole}>
+                <div className="flex flex-col justify-center items-center mih-h-screen p-8">
+                    <h1 className="text-3xl font-bold text-center ">Tawaran Kerja</h1>    
+                </div>
+
+                <div className="flex flex-col gap-6 mx-4 my-4 ">
+                    <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
+                        <div className="overflow-x-auto w-full">
+                            {error ? (
+                                <div>{error}</div>
+                            ) : (
+                                <>
+                                    <DataTable
+                                        data={orderItems}
+                                        columns={columns}
+                                        loading={loading}
+                                        type='tawaran kerja'
+                                    />
+                                </>)}
                         </div>
                     </div>
-                </Drawer>
-                <Footer />
-            </div>
-        </>
+                </div>
+            </Drawer>
+            <Footer />
+        </main>
     );
 };
 

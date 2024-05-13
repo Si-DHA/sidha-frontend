@@ -18,6 +18,7 @@ const PurchaseOrderDetail = () => {
     const [orderItems, setOrderItems] = useState<any[]>([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const router = useRouter();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -26,6 +27,10 @@ const PurchaseOrderDetail = () => {
 
         const role = Cookies.get('role');
         setUserRole(role || '');
+
+        if (role !== 'KLIEN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini')
+        }
 
         if (router.query.order === undefined) {
             router.push('/order/create');
@@ -40,13 +45,15 @@ const PurchaseOrderDetail = () => {
         const fetchData = async () => {
             try {
                 if (!token) {
-                    throw new Error('Token not found');
+                    throw new Error('Token tidak ditemukan');
                 }
                 const response = await getOrderDetailBeforeCheckout(order, token);
                 setOrderItems(response.data);
                 setTotalPrice(response.totalPrice);
             } catch (error: any) {
                 setError(error.message);
+            } finally {
+                setLoading(false);
             }
         }
         if (order !== null && orderItems.length === 0) {
@@ -91,6 +98,10 @@ const PurchaseOrderDetail = () => {
         }
     }
 
+    const formatPrice = (price: number): string => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+    };
+
     const columns = [
         {
             Header: 'Tipe Barang',
@@ -111,6 +122,7 @@ const PurchaseOrderDetail = () => {
         {
             Header: 'Biaya Pengiriman',
             accessor: 'biayaPengiriman',
+            Cell: ({ value }) => formatPrice(value),
         }
     ]
 
@@ -139,7 +151,7 @@ const PurchaseOrderDetail = () => {
                             {error ? (
                                 <div>{error}</div>
                             ) : (
-                                <DataTable columns={columns} data={orderItems} btnText="Buat Order Baru" type="checkout" biayaPengiriman={totalPrice} />
+                                <DataTable columns={columns} data={orderItems} btnText="Buat Order Baru" type="checkout" loading={loading} biayaPengiriman={formatPrice(totalPrice)} />
                             )}
                         </div>
                     </div>

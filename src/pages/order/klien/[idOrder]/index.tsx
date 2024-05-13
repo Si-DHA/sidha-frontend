@@ -57,6 +57,20 @@ const OrderItemPage = () => {
     console.log("idOrder:", idOrder);
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        setUserRole(role || '');
+        if (role === 'KLIEN') {
+            setCompanyName(Cookies.get('companyName') || '')
+        } else {
+            setError('Anda tidak diperbolehkan mengakses halaman ini')
+        }
+    }, [])
 
     useEffect(() => {
         const fetchKlien = async () => {
@@ -72,9 +86,6 @@ const OrderItemPage = () => {
                 const currentKlien = content.find(klien =>
                     klien.orders.some(order => order.id === idOrder)
                 );
-                if (currentKlien && currentKlien.companyName) {
-                    setCompanyName(currentKlien.companyName);
-                }
             } catch (error) {
                 console.error(error);
             }
@@ -82,13 +93,6 @@ const OrderItemPage = () => {
         fetchKlien();
     }, [idOrder]);
 
-    useEffect(() => {
-        if (!isLoggedIn) {
-            router.push('/login');
-        }
-        const role = Cookies.get('role');
-        setUserRole(role || '');
-    },)
 
     const fetchOrderItem = async () => {
         setLoading(true);
@@ -170,22 +174,46 @@ const OrderItemPage = () => {
     ];
 
     return (
-        <main className="flex min-h-screen flex-col " data-theme="winter">
+        <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
             <Drawer userRole={userRole}>
-                <div className="flex-1 py-6 px-4">
-                    <div className="container mx-auto">
-                        <h1 className="text-3xl font-bold mt-1 mb-5" style={{ color: '#2d3254' }}>Order Item {companyName} </h1>
-                        <DataTable
-                            columns={columns}
-                            data={orderItem}
-                            progressPending={loading}
-                            noDataComponent={<CustomNoDataComponent />}
-                        />
+                <div className="flex flex-col justify-center items-center mih-h-screen p-8">
+                    <h1 className="text-3xl font-bold text-center ">Order Item {companyName} </h1>
+                </div>
+
+                <div className="flex flex-col gap-6 mx-4 my-4 ">
+                    <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
+                        <div className="overflow-x-auto w-full">
+                            {error ? (
+                                <div>{error}</div>
+                            ) : (
+                                <>
+                                    <DataTable
+                                        columns={columns}
+                                        data={orderItem}
+                                        loading={loading} />
+                                </>)}
+                        </div>
                     </div>
                 </div>
-                <Footer />
             </Drawer>
+            <Footer />
         </main>
+        // <main className="flex min-h-screen flex-col " data-theme="winter">
+        //     <Drawer userRole={userRole}>
+        //         <div className="flex-1 py-6 px-4">
+        //             <div className="container mx-auto">
+        //                 <h1 className="text-3xl font-bold mt-1 mb-5" style={{ color: '#2d3254' }}>Order Item {companyName} </h1>
+        //                 <DataTable
+        //                     columns={columns}
+        //                     data={orderItem}
+        //                     progressPending={loading}
+        //                     noDataComponent={<CustomNoDataComponent />}
+        //                 />
+        //             </div>
+        //         </div>
+        //         <Footer />
+        //     </Drawer>
+        // </main>
     );
 };
 

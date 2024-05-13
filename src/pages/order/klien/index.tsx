@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import DataTable from "@/app/components/common/datatable/DataTable";
 import { useRouter } from 'next/router';
@@ -33,6 +32,20 @@ const ViewAllOrdersPage: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+        const role = Cookies.get('role');
+        setUserRole(role || '');
+        if (role === 'KLIEN') {
+            setCompanyName(Cookies.get('companyName') || '')
+        } else {
+            setError('Anda tidak diperbolehkan mengakses halaman ini')
+        }
+    }, [])
 
     useEffect(() => {
         const fetchKlien = async () => {
@@ -44,9 +57,6 @@ const ViewAllOrdersPage: React.FC = () => {
                 const { content } = await response.json();
                 setKlien(content);
                 const loggedInKlien = content.find(klien => klien.id === Cookies.get('idUser'));
-                if (loggedInKlien && loggedInKlien.orders) {
-                    setCompanyName(loggedInKlien.companyName || '');
-                }
             } catch (error) {
                 console.error(error);
             }
@@ -54,13 +64,6 @@ const ViewAllOrdersPage: React.FC = () => {
         fetchKlien();
     }, []);
 
-    useEffect(() => {
-        if (!isLoggedIn) {
-            router.push('/login');
-        }
-        const role = Cookies.get('role');
-        setUserRole(role || '');
-    }, [])
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -123,21 +126,29 @@ const ViewAllOrdersPage: React.FC = () => {
     ];
 
     return (
-        <main className="flex min-h-screen flex-col " data-theme="winter">
+        <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
             <Drawer userRole={userRole}>
-                <div className="flex-1 py-6 px-4">
-                    <div className="container mx-auto">
-                        <h1 className="text-3xl font-bold mt-1 mb-5" style={{ color: '#2d3254' }}>Order {companyName} </h1>
-                        <DataTable
-                            columns={columns}
-                            data={orders}
-                            progressPending={loading}
-                            noDataComponent={<CustomNoDataComponent />}
-                        />
+                <div className="flex flex-col justify-center items-center mih-h-screen p-8">
+                    <h1 className="text-3xl font-bold text-center ">Order {companyName} </h1>
+                </div>
+
+                <div className="flex flex-col gap-6 mx-4 my-4 ">
+                    <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
+                        <div className="overflow-x-auto w-full">
+                            {error ? (
+                                <div>{error}</div>
+                            ) : (
+                                <>
+                                    <DataTable
+                                        columns={columns}
+                                        data={orders}
+                                        loading={loading} />
+                                </>)}
+                        </div>
                     </div>
                 </div>
-                <Footer />
             </Drawer>
+            <Footer />
         </main>
     );
 

@@ -24,10 +24,9 @@ const TrukDetailPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'ADMIN' || role === 'SOPIR' || role === 'KARYAWAN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'ADMIN' && role !== 'SOPIR' && role !== 'KARYAWAN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])

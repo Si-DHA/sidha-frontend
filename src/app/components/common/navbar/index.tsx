@@ -66,11 +66,10 @@ const LogoutButton = () => {
                 </div>
             </div>
             <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-64">
-                <li className='flex flex-row'>
-                    <Link className="justify-between" href="/profile">
+                <li>
+                    <Link className="justify-between flex flex-row" href="/profile">
                         Profile
                     </Link>
-
                 </li>
                 <li><button className='text-error' onClick={handleModal}>Logout</button></li>
             </ul>
