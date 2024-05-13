@@ -1,7 +1,5 @@
 import Footer from "@/app/components/common/footer";
 import DataTable from "@/app/components/common/datatable/DataTable";
-import { viewInvoiceKlien } from "../api/invoice/viewInvoiceKlien";
-import { viewInvoice } from "../api/invoice/viewInvoice";
 import { viewAllKlien } from "../../api/user/viewKlien";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -95,7 +93,7 @@ const InvoiceKlienPage: React.FC = () => {
                                 <div>{error}</div>
                             ) : (
                                 <>
-                                    {klienData ? ( // Check if trukData is empty
+                                    {klienData ? ( // Check if klienData is empty
                                         <DataTable 
                                             columns={columns} 
                                             data={klienData} 

@@ -68,9 +68,9 @@ const IndexPage = () => {
         },
         {
             Header: 'Rute',
-            accessor: (row: InsidenRow) => row.orderItem && row.orderItem.rute.length > 0 
+            accessor: (row: InsidenRow) => row.orderItem && row.orderItem.rute.length > 0
                 ? `${row.orderItem.rute[0].source} to ${row.orderItem.rute[0].destination}`
-                : 'N/A', 
+                : 'N/A',
         },
         {
             Header: 'Actions',
@@ -89,22 +89,22 @@ const IndexPage = () => {
     return (
         <>
             <Drawer userRole='userRole'>
-            <main className="flex flex-col items-center justify-between" data-theme="winter">
-                    <h2 className="text-2xl font-bold mb-4 mt-6">Laporan Insiden Anda</h2>
-                <DataTable
-                    data={insidens}
-                    columns={columns}
-                    loading={loading}
-                    NoDataComponent={CustomNoDataComponent}
-                    btnText="Buat Laporan" onClick={() => router.push(`/insiden/sopir/create`)}
-                    type='insiden'
-                />
-            </main>
+                <main className="flex flex-col items-center justify-between" data-theme="winter">
+                    <h1 className="text-3xl font-bold text-center mb-4 mt-6">Laporan Insiden Anda</h1>
+                    <DataTable
+                        data={insidens}
+                        columns={columns}
+                        loading={loading}
+                        NoDataComponent={CustomNoDataComponent}
+                        btnText="Buat Laporan" onClick={() => router.push(`/insiden/sopir/create`)}
+                        type='insiden'
+                    />
+                </main>
             </Drawer>
             <Footer />
         </>
     );
-    
+
 };
 
 export default IndexPage;

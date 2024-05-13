@@ -205,7 +205,7 @@ const DetailOrderPage = () => {
                         <DataTable
                             columns={columns}
                             data={orderItem}
-                            progressPending={loading}
+                            loading={loading}
                             noDataComponent={<CustomNoDataComponent />}
                         />
                     </div>

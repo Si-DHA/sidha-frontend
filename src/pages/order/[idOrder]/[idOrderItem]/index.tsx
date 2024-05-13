@@ -324,7 +324,7 @@ const OrderItemDetailPage = () => {
                       </div>
                       <div className="timeline-end timeline-box mb-5">
                         {history.createdBy && history.createdBy !== '' &&
-                          <span className="font-bold">{history.createdBy}:{' '}</span>
+                          <span><span className="font-bold">{history.createdBy}</span><span>:{' '}</span></span>
                         }
                         {history.description}
                       </div>

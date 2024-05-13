@@ -98,7 +98,7 @@ const ViewAllOrderItemsPage: React.FC = () => {
     {
       Header: 'Pecah Belah',
       accessor: 'isPecahBelah',
-      Cell: ({ value }) => (value ? 'Ya' : 'Bukan'),
+      Cell: ({ value }) => (value ? 'Ya' : 'Tidak'),
     },
     {
       Header: 'Tipe Barang',
@@ -127,7 +127,7 @@ const ViewAllOrderItemsPage: React.FC = () => {
       ),
     },
     {
-      Header: 'Bukti Bongkar Muat',
+      Header: 'Bukti Muat Bongkar',
       Cell: ({ row }) => (
         <div className="flex justify-center space-x-4">
           <button
