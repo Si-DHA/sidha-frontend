@@ -71,43 +71,15 @@ const PenawaranHargaItemPage = () => {
         const loggedInKlien = content.find(klien => klien.id === Cookies.get('idUser'));
         if (loggedInKlien && loggedInKlien.penawaranHarga) {
           setIdPenawaranHarga(loggedInKlien.penawaranHarga.idPenawaranHarga);
+        } else {
+          setError('Anda belum memiliki penawaran harga');
         }
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
+        setError(error.message);
       }
     };
-
-
     fetchKliens();
   }, []);
-
-  useEffect(() => {
-    if (idPenawaranHarga) {
-      (async () => {
-        setLoading(true);
-        try {
-          const fetchUrl = `/api/viewAllPenawaranHargaItem?idPenawaranHarga=${idPenawaranHarga}`;
-          const response = await fetch(fetchUrl);
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to fetch data');
-          }
-
-          const data: PenawaranHargaItem[] = await response.json();
-          setItems(data);
-        } catch (error) {
-          console.error('Failed to fetch Penawaran Harga items:', error);
-        } finally {
-          setLoading(false);
-        }
-      })();
-    }
-  }, [idPenawaranHarga]);
-
-  const formatCurrency = (value: number) => {
-    return `Rp${new Intl.NumberFormat('id-ID').format(value)}`;
-  };
 
   const fetchItems = async () => {
     setLoading(true);
@@ -133,14 +105,8 @@ const PenawaranHargaItemPage = () => {
     }
   }, [idPenawaranHarga]);
 
-  const handlePriceChange = (itemId: string, priceType: keyof PenawaranHargaItem, newValue: number) => {
-    const updatedValue = Math.max(0, newValue);
-
-    setItems(currentItems =>
-      currentItems.map(item =>
-        item.id === itemId ? { ...item, [priceType]: updatedValue } : item
-      )
-    );
+  const formatCurrency = (value: number) => {
+    return `Rp${new Intl.NumberFormat('id-ID').format(value)}`;
   };
 
   const columns = [
@@ -210,6 +176,8 @@ const PenawaranHargaItemPage = () => {
       ) : formatCurrency(row.original.fusoPrice),
     }
   ];
+
+  console.log("id " + idPenawaranHarga);
 
   return (<main className={`flex min-h-screen flex-col items-center justify-between ${inter.className}`} data-theme="cmyk">
     <Drawer userRole={userRole}>

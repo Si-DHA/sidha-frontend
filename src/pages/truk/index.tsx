@@ -37,7 +37,7 @@ const TrukPage: React.FC = () => {
                     setTrukData(trukData);
                 }
             } catch (error: any) {
-                setError(error.message);
+                setError(`Gagal memuat data truk ${error.message ? ` : ${error.message}` : ''}`);
             } finally {
                 setLoading(false);
             }

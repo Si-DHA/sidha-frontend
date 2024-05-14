@@ -48,7 +48,7 @@ const InvoiceListPage: React.FC = () => {
                     }
                 }
             } catch (error: any) {
-                setError(error.message);
+                setError(`Gagal memuat invoice ${error.message ? ` : ${error.message}` : ''}`);
             } finally {
                 setLoading(false);
             }
@@ -80,8 +80,8 @@ const InvoiceListPage: React.FC = () => {
                         status: status,
                         orderId: orderId
                     });
-                } catch (error) {
-                    console.error(`Error fetching order ID for invoice ${item.idInvoice}:`, error);
+                } catch (error:any) {
+                    console.error(`Gagal memuat order ID untuk invoice ${item.idInvoice} ${error.message ? ` : ${error.message}` : ''}`);
                     mappedData.push({
                         idInvoice: item.idInvoice,
                         totalDp: item.totalDp ? item.totalDp.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }) : '',

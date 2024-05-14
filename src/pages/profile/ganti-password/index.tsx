@@ -106,7 +106,7 @@ export default function ProfilePage() {
       if (currentPassword === "" || newPassword === "") {
         setIsLoading(false);
         setAlert(
-          <FailAlert key={Date.now()} message="Semua kolom harus diisi !" />
+          <FailAlert key={Date.now()} message="Semua kolom harus diisi!" />
         );
         return;
       }
@@ -121,7 +121,7 @@ export default function ProfilePage() {
       if (newPassword !== confirmNewPassword) {
         setIsLoading(false);
         setAlert(
-          <FailAlert key={Date.now()} message="Kombinasi password baru tidak sesuai !" />
+          <FailAlert key={Date.now()} message="Kombinasi password baru tidak sesuai!" />
         );
         return;
       }

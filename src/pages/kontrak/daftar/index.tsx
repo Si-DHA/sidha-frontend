@@ -35,7 +35,7 @@ const DaftarKontrakPage: React.FC = () => {
           setKontrakData(kontrakDataResponse['content']);
         }
       } catch (error: any) {
-        setError(error.message);
+        setError(`Gagal memuat kontrak ${error.message ? ` : ${error.message}` : ''}`);
       } finally {
         setLoading(false);
       }

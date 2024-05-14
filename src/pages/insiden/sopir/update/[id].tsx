@@ -51,6 +51,9 @@ const UpdateInsidenPage = () => {
       }).catch(error => {
         console.error('Failed to fetch insiden details:', error);
         setAlert(<FailAlert message="Failed to load insiden details." />);
+        setTimeout(() => {
+          setAlert(null);
+        }, 3000)
       });
     }
 
@@ -61,6 +64,9 @@ const UpdateInsidenPage = () => {
       }).catch(error => {
         console.error('Fetching error:', error);
         setAlert(<FailAlert message="Failed to load order items." />);
+        setTimeout(() => {
+          setAlert(null);
+        }, 3000)
       });
     }
   }, [id]);
