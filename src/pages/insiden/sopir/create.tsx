@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { createInsiden } from '@/pages/api/insiden/createInsiden'
-import Navbar from "@/app/components/common/navbar";
 import Footer from "@/app/components/common/footer";
 import SuccessAlert from "@/app/components/common/SuccessAlert";
 import FailAlert from "@/app/components/common/FailAlert";
@@ -28,8 +27,7 @@ const CreateInsidenPage = () => {
                     setOrderItems(data.content);
                 })
                 .catch(error => {
-                    console.error('Fetching error:', error);
-                    setError('Error fetching order items');
+                    setError(`Gagal memuat order item ${error.message ? ` : ${error.message}` : ''}`);
                 });
         }
     }, [sopirId]);
@@ -38,7 +36,7 @@ const CreateInsidenPage = () => {
         e.preventDefault();
         // Make sure all the required fields are filled out
         if (!sopirId || !selectedOrderItem) {
-            setError('Please make sure all fields are filled out correctly.');
+            setError(`Pastikan semua field terisi dengan benar`);
             return;
         }
         // Create a new FormData object
@@ -53,11 +51,16 @@ const CreateInsidenPage = () => {
         }
         try {
             const response = await createInsiden(formData);
-            setAlert(<SuccessAlert message="Insiden created successfully." />);
-            router.push(`/insiden/sopir/detail/${response.id}`);
-        } catch (error) {
-            setError(error.message); // Make sure error.message is not undefined
-            setAlert(<FailAlert message={error.message || 'Unknown error occurred'} />);
+            setAlert(<SuccessAlert message="Insiden berhasil dibentuk" />);
+            setTimeout(() => {
+                router.push(`/insiden/sopir/detail/${response.id}`);
+            }, 3000);
+        } catch (error:any) {
+            setError(`Gagal membentuk insiden ${error.message ? ` : ${error.message}` : ''}`);
+            setAlert(<FailAlert message={`Gagal membentuk insiden ${error.message ? ` : ${error.message}` : ''}`} />);
+            setTimeout(() => {
+                setAlert(null);
+            }, 3000);
         }
     };
     

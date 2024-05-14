@@ -60,9 +60,8 @@ const InvoiceDetailPage = () => {
         } else {
           setStatus('Lunas'); // If all conditions are met
         }
-
       } catch (error: any) {
-        setError(error.message);
+        setError(`Gagal memuat invoice ${error.message ? ` : ${error.message}` : ''}`);
       } finally {
         setLoading(false)
       }
@@ -74,13 +73,6 @@ const InvoiceDetailPage = () => {
   let totalDp = 0;
   let totalPrice = 0;
   let totalSisa = 0;
-
-
-  const formatDate = (dateTimeString: any) => {
-    const date = new Date(dateTimeString); // Convert datetime string to Date object
-    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return date.toLocaleDateString('en-GB', options);
-  }
 
   const mapInvoiceData = (data) => {
     const mappedData = data.orderItems

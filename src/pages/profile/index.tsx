@@ -1,11 +1,7 @@
 import Footer from "@/app/components/common/footer";
-import Navbar from "@/app/components/common/navbar";
 import { BASE_URL } from "@/app/constant/constant";
 import { Inter } from "next/font/google";
-
 const inter = Inter({ subsets: ["latin"] });
-
-import Image from "next/image";
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import Cookies from "js-cookie";
@@ -62,8 +58,6 @@ export default function ProfilePage() {
       })
       .then(data => setUserData(data.content))
       .catch(error => console.error('Fetch error:', error));
-
-
   };
 
   if (!userData) {

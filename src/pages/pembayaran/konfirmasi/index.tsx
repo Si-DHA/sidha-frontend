@@ -121,14 +121,35 @@ const KonfirmasiPembayaranPage = () => {
 
                         <dialog id="my_modal_tolak" className="modal modal-bottom sm:modal-middle">
                             <div className="modal-box">
-                                <h3 className="font-bold text-lg mb-5">Tolak Pembyaran</h3>
-                                <label className="input input-bordered flex items-center gap-2">
-                                    <input required id="alasanPenolakan" type="text" className="grow" placeholder="Masukkan alasan penolakan" />
-                                </label>
-                                <div className="modal-action">
-                                    <button className="btn mr-2" onClick={() => document.getElementById('my_modal_tolak').close()}>Batal</button>
-                                    <button className="btn btn-error" onClick={() => { handleKonfirmasi(false); document.getElementById('my_modal_tolak').close(); }}>Tolak</button>
-                                </div>
+                                <h3 className="font-bold text-lg mb-5">Tolak Pembayaran</h3>
+                                <form onSubmit={(e) => {
+                                    e.preventDefault(); // Prevent default form submission
+                                    const rejectionReason = e.target.elements.alasanPenolakan.value.trim(); // Accessing the input directly from the form
+                                    if (rejectionReason) { // Only proceed if there's a non-empty, non-whitespace rejection reason
+                                        handleKonfirmasi(false);
+                                        document.getElementById('my_modal_tolak').close();
+                                    }
+                                }}>
+                                    <label className="input input-bordered flex items-center gap-2">
+                                        <input
+                                            required
+                                            id="alasanPenolakan"
+                                            type="text"
+                                            className="grow"
+                                            placeholder="Masukkan alasan penolakan"
+                                            name="alasanPenolakan"
+                                        />
+                                    </label>
+                                    <div className="modal-action">
+                                        <button type="button" className="btn mr-2" onClick={() => document.getElementById('my_modal_tolak').close()}>
+                                            Batal
+                                        </button>
+                                        <button type="submit" className="btn btn-error">
+                                            Tolak
+                                        </button>
+                                    </div>
+                                </form>
+
                             </div>
                         </dialog>
 

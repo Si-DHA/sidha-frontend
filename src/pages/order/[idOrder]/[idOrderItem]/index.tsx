@@ -192,15 +192,23 @@ const OrderItemDetailPage = () => {
           <dialog id="modal_tolak" className="modal modal-bottom sm:modal-middle">
             <div className="modal-box">
               <h3 className="font-bold text-lg mb-5">Tolak Order Item</h3>
-              <label className="input input-bordered flex items-center gap-2">
-                <input
-                  value={rejectionReason} onChange={e => setRejectionReason(e.target.value)}
-                  required id="alasanPenolakan" type="text" className="grow" placeholder="Masukkan alasan penolakan" />
-              </label>
-              <div className="modal-action">
-                <button className="btn mr-2" onClick={() => document.getElementById('modal_tolak')?.close()}>Batal</button>
-                <button className="btn btn-error" onClick={() => { handleConfirmAnswer(false); document.getElementById('modal_tolak')?.close(); }}>Tolak</button>
-              </div>
+              <form onSubmit={(e) => {
+                e.preventDefault(); // Prevents the default form submission behavior
+                if (rejectionReason.trim()) { // Checks if rejectionReason is not just whitespace
+                  handleConfirmAnswer(false);
+                  document.getElementById('modal_tolak')?.close();
+                }
+              }}>
+                <label className="input input-bordered flex items-center gap-2">
+                  <input
+                    value={rejectionReason} onChange={e => setRejectionReason(e.target.value)}
+                    required id="alasanPenolakan" type="text" className="grow" placeholder="Masukkan alasan penolakan" />
+                </label>
+                <div className="modal-action">
+                  <button className="btn mr-2" onClick={() => document.getElementById('modal_tolak')?.close()}>Batal</button>
+                  <button type="submit" className="btn btn-error">Tolak</button>
+                </div>
+              </form>
             </div>
           </dialog>
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -347,8 +355,7 @@ const OrderItemDetailPage = () => {
             </div>
 
             <div className=" flex flex-col px-4 py-5 sm:px-6 flex justify-center gap-4">
-              {orderItemData['content']['statusOrder'] == 0 && userRole === 'KARYAWAN' &&
-
+              {orderItemData['content']['statusOrder'] === 0 && userRole === 'KARYAWAN' &&
                 <div className='flex flex-col gap-2'>
                   <h3 className='text-lg font-bold text-center'>Konfirmasi Order</h3>
                   <div className='flex flex-row gap-4'>

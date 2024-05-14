@@ -73,7 +73,7 @@ const ViewAllOrderItemsPage: React.FC = () => {
         const data = await response.json();
         setOrderItems(data);
       } catch (error) {
-        console.error('Error fetching order items:', error);
+        setError(`Gagal memuat order ${error.message ? ` : ${error.message}` : ''}`);
       } finally {
         setLoading(false);
       }

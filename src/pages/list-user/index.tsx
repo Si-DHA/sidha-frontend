@@ -51,7 +51,7 @@ const ListUserPage: React.FC = () => {
                     setUserData(userDataResponse['content']);
                 }
             } catch (error: any) {
-                setError(error.message);
+                setError(`Gagal memuat data pengguna ${error.message ? ` : ${error.message}` : ''}`);
             } finally {
                 setLoading(false);
             }

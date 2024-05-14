@@ -104,7 +104,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
 
     const router = useRouter();
-    const handleRowClick = (idTruk: any) => {
+    const handleRowClickTruk = (idTruk: any) => {
       router.push(`/truk/detail?id=${idTruk}`);
     };
 

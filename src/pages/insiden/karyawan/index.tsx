@@ -41,12 +41,12 @@ const KaryawanInsidenIndexPage = () => {
             getAllInsidens()
                 .then(data => {
                     setInsidens(data);
-                    setLoading(false);
                 })
                 .catch(error => {
                     console.error('Fetching error:', error);
+                    setError(`Gagal memuat insiden ${error.message ? ` : ${error.message}` : ''}`)
+                }).finally(() =>{
                     setLoading(false);
-                    setError(error.message)
                 });
         } else {
             setError('Anda tidak diperbolehkan mengakses halaman ini');
@@ -120,12 +120,14 @@ const KaryawanInsidenIndexPage = () => {
                                                 data={insidens}
                                                 columns={columns}
                                                 loading={loading}
+                                                type='insiden'
                                             />
                                         ) : (
                                             <DataTable
                                                 data={[]}
                                                 columns={columns}
                                                 loading={loading}
+                                                type='insiden'
                                             />
                                         )}
                                     </>)}

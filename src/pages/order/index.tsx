@@ -81,9 +81,16 @@ const DaftarPurchaseOrderPage = () => {
                 Cell: ({ value }) => formatPrice(value)
             },
             {
-                Header: 'Action',
+                Header: 'Detail',
                 accessor: 'action',
-                Cell: <div className="btn btn-primary btn-xs" >Detail</div>
+                Cell: 
+                <div className="flex justify-center space-x-4">
+                    <button
+                        className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        Detail
+                    </button>
+                </div>
             }
         ];
         columns = columnsKlien
@@ -111,9 +118,16 @@ const DaftarPurchaseOrderPage = () => {
                 Cell: ({ value }) => formatPrice(value)
             },
             {
-                Header: 'Action',
+                Header: 'Detail',
                 accessor: 'action',
-                Cell: <div className="btn btn-primary btn-xs" >Detail</div>
+                Cell: 
+                <div className="flex justify-center space-x-4">
+                    <button
+                        className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        Detail
+                    </button>
+                </div>
             }
         ];
         columns = columnsKaryawan
