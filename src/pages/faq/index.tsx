@@ -74,9 +74,15 @@ const FAQAdminPage = () => {
         try {
             await updateFAQOrder(newOrderObj);
             setAlert(<SuccessAlert message="Urutan FAQ berhasil diperbarui!" />);
+            setTimeout(() => {
+                setAlert(null);
+            }, 3000);
         } catch (error) {
             console.error("Failed to update FAQ order:", error);
             setAlert(<FailAlert message="Maaf, terjadi kesalahan saat memperbarui urutan FAQ. Silakan coba lagi nanti." />);
+            setTimeout(() => {
+                setAlert(null);
+            }, 3000);
         }
     };
 

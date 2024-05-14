@@ -44,13 +44,13 @@ const InsidenDetailPage = () => {
     }
     try {
       await deleteInsiden(id.toString());
-      setAlert(<SuccessAlert message="Incident deleted successfully" />);
+      setAlert(<SuccessAlert message="Berhasil menghapus insiden" />);
       setTimeout(() => {
         router.push('/insiden/sopir');
       }, 3000);
     } catch (error) {
       console.error('Error deleting the incident:', error);
-      setAlert(<FailAlert message="Error deleting the incident." />);
+      setAlert(<FailAlert message="Gagal menghapus insiden" />);
       setTimeout(() => {
         setAlert(null);
       }, 3000)

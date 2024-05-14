@@ -131,12 +131,16 @@ const CreatePenawaranHargaItemPage = () => {
             }
 
             // Redirect to the Penawaran Harga details page
-            router.push(`/penawaranharga/${idPenawaranHarga}`);
-            setAlert(<SuccessAlert message="Penawaran Harga Item is created successfully" />);
-
+            setAlert(<SuccessAlert message="Penawaran Harga Item berhasil dibentuk" />);
+            setTimeout(() => {
+                router.push(`/penawaranharga/${idPenawaranHarga}`);
+            }, 3000);
         } catch (error: any) {
             console.error('Error creating Penawaran Harga Item:', error);
-            setAlert(<FailAlert message={error.message || 'Failed to create Penawaran Harga Item'} />);
+            setAlert(<FailAlert message={error.message || 'Gagal membentuk Penawaran Harga Item'} />);
+            setTimeout(() => {
+                setAlert(null);
+            }, 3000);
         }
     };
 
