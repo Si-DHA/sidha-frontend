@@ -266,6 +266,14 @@ const OrderItemDetailPage = () => {
                             >
                                 Kembali
                             </button>
+                            {orderItemData['content']['statusOrder'] === 0 &&
+                                <button
+                                    onClick={() => router.push(`/order/edit/${idOrder}/${idOrderItem}`)}
+                                    className="btn btn-primary"
+                                >
+                                    Perbarui
+                                </button>
+                            }
                         </div>
 
                     </div>

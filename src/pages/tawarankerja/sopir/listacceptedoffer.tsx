@@ -35,13 +35,15 @@ const AcceptedOrderItemsIndexPage = () => {
         const data = await getTawaranKerjaAccepted();
         if (data && Array.isArray(data)) {
           // Filter to include only those items accepted by the logged-in driver
-          const filteredData = data.filter(tawaran => tawaran.sopir?.id === sopirId).map(tawaran => ({
-            ...tawaran.orderItem,
-            source: tawaran.orderItem.rute?.[0]?.source ?? 'N/A',
-            destination: tawaran.orderItem.rute?.[0]?.destination ?? 'N/A',
-            isPecahBelah: tawaran.orderItem.isPecahBelah ?? false,
-            price: tawaran.orderItem.price ?? 'N/A',
-          }));
+          const filteredData = data
+            .filter(tawaran => tawaran.sopir?.id === sopirId && tawaran.orderItem.statusOrder >= 0)
+            .map(tawaran => ({
+              ...tawaran.orderItem,
+              source: tawaran.orderItem.rute?.[0]?.source ?? 'N/A',
+              destination: tawaran.orderItem.rute?.[0]?.destination ?? 'N/A',
+              isPecahBelah: tawaran.orderItem.isPecahBelah ?? false,
+              price: tawaran.orderItem.price ?? 'N/A',
+            }));
 
           // Fetching additional data for each order item
           let completedCount = 0;
