@@ -62,7 +62,7 @@ const DataTable: React.FC<DataTableProps> = ({
         </tr>
       );
     }
-
+    
     return headerGroups.map((headerGroup, index) => (
       <tr {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: '#f2f2f2' }} key={index} >
         <th style={{ textAlign: 'center' }}>No</th> {/* Add table header for numbering */}
@@ -71,24 +71,25 @@ const DataTable: React.FC<DataTableProps> = ({
             {column.render('Header')}
             {column.isSorted ? ( // Check if the column is sorted
               column.isSortedDesc ? ( // Check if the column is sorted in descending order
-                <span>&darr;</span> // Display down arrow
-              ) : (
-                <span>&uarr;</span> // Display up arrow
-              )
+              <span>&darr;</span> // Display down arrow
             ) : (
-              <span>&nbsp;</span> // Display empty space if not sorted
-            )}
+              <span>&uarr;</span> // Display up arrow
+            )
+          ) : (
+            <span>&nbsp;</span> // Display empty space if not sorted
+          )}
           </th>
         ))}
       </tr>
     ));
   };
-
+  
   const RenderTableBody = () => {
+    const router = useRouter();
     if (loading) {
-      return;
+      return null;
     }
-
+    
     if (!data || data.length === 0) {
       return (
         <tr className='text-center'>
@@ -103,7 +104,6 @@ const DataTable: React.FC<DataTableProps> = ({
     }
 
 
-    const router = useRouter();
     const handleRowClickTruk = (idTruk: any) => {
       router.push(`/truk/detail?id=${idTruk}`);
     };
