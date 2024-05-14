@@ -46,9 +46,6 @@ const CreatePurchaseOrderPage = () => {
     } as Order
     );
 
-
-
-
     const [orderItem, setOrderItem] = useState([
         {
             isPecahBelah: false,
@@ -65,13 +62,6 @@ const CreatePurchaseOrderPage = () => {
             ]
         } as OrderItem
     ]);
-
-    // useEffect(() => {
-    //     if (router.query.order !== undefined) {
-    //         setOrder(JSON.parse(router.query.order as string));
-    //         setOrderItem(JSON.parse(router.query.order as string).orderItems);
-    //     }
-    // });
 
     const handleAddOrderItem = () => {
         setOrderItem([...orderItem, {
