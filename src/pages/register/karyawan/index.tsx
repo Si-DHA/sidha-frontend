@@ -109,7 +109,7 @@ export default function RegisterPage() {
       if (data.statusCode == 201) {
         setIsLoading(false);
 
-        setAlert(<SuccessAlert key={Date.now()} message="Akun Karyawan berhasil dibuat !" />);
+        setAlert(<SuccessAlert key={Date.now()} message="Akun Karyawan berhasil dibuat!" />);
         setTimeout(() => {
           router.push('/list-user?role=karyawan');
           

@@ -93,7 +93,7 @@ const UpdateKontrakPage = () => {
         setTimeout(() => { setAlert(null) }, 3000)
       }
     } else {
-      setAlert(<FailAlert key={Date.now()} message="Harap unggah dokumen terlebih dahulu !" />)
+      setAlert(<FailAlert key={Date.now()} message="Harap unggah dokumen terlebih dahulu!" />)
       setTimeout(() => { setAlert(null) }, 3000)
     }
   }

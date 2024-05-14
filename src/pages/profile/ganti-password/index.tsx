@@ -121,7 +121,7 @@ export default function ProfilePage() {
       if (newPassword !== confirmNewPassword) {
         setIsLoading(false);
         setAlert(
-          <FailAlert key={Date.now()} message="Kombinasi password baru tidak sesuai !" />
+          <FailAlert key={Date.now()} message="Kombinasi password baru tidak sesuai!" />
         );
         return;
       }
