@@ -49,13 +49,13 @@ const IndexPage = () => {
                     .then(data => {
                         const activeInsidens = data.filter(insiden => !insiden.deleted);
                         setInsidens(activeInsidens);
-                        setLoading(false);
                     })
                     .catch(error => {
-                        console.error('Fetching error:', error);
-                        setLoading(false);
-                        setError(error.message)
-                    });
+                        setError(`Gagal memuat insiden ${error.message ? ` : ${error.message}` : ''}`)
+                    }).finally(() => {
+                        setLoading(false)
+                    }
+                );
             } else {
                 setError('ID tidak ditemukan');
             }

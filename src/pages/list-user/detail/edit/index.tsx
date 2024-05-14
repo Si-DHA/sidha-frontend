@@ -185,13 +185,13 @@ export default function ProfilePage() {
       } else {
         setIsLoading(false);
         setAlert(<FailAlert key={Date.now()} message={`${data.message}`} />);
+        setTimeout(() => {setAlert(null)}, 3000);
       }
 
     } catch (error) {
       setIsLoading(false);
-
       setAlert(<FailAlert key={Date.now()} message={`${error.message}`} />);
-
+      setTimeout(() => {setAlert(null)}, 3000);
     }
   }
 

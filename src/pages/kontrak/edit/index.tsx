@@ -33,7 +33,7 @@ const UpdateKontrakPage = () => {
       const file = event.target.files[0];
       const fileSize = file.size / 1024 / 1024; // in MB
       if (fileSize > 10) {
-        event.target.files= null;
+        event.target.files = null;
         event.target.value = '';
         setAlert(<FailAlert key={Date.now()} message="Ukuran file harus kurang dari 10 MB" />);
       } else {
@@ -82,14 +82,19 @@ const UpdateKontrakPage = () => {
         if (response.statusCode == 200) {
           setAlert(<SuccessAlert key={Date.now()} message="Kontrak berhasil diubah" />)
           setTimeout(() => {
-            router.push('/kontrak?id='+id)}, 2000);
+            router.push('/kontrak?id=' + id)
+          }, 2000);
         } else {
           setAlert(<FailAlert key={Date.now()} message="Ada kesalahan dalam menggunggah Dokumen" />)
+          setTimeout(() => { setAlert(null) }, 3000)
         }
-      } catch (error) {
+      } catch (error:any) {
+        setAlert(<FailAlert key={Date.now()} message={error.message} />)
+        setTimeout(() => { setAlert(null) }, 3000)
       }
-    } else{
-      setAlert(<FailAlert key={Date.now()} message="Harap unggah dokumen terlebih dahulu !" />)
+    } else {
+      setAlert(<FailAlert key={Date.now()} message="Harap unggah dokumen terlebih dahulu!" />)
+      setTimeout(() => { setAlert(null) }, 3000)
     }
   }
 

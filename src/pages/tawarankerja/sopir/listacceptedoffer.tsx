@@ -70,7 +70,7 @@ const AcceptedOrderItemsIndexPage = () => {
           console.error('Invalid format for order items:', data);
         }
       } catch (error: any) {
-        setError('Fetching error: ' + error.message);
+        setError(`Gagal memuat tawaran kerja ${error.message ? ` : ${error.message}` : ''}`);
       } finally {
         setLoading(false);
       }
