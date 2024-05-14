@@ -22,6 +22,9 @@ const CreatePurchaseOrderPage = () => {
         }
         const role = Cookies.get('role');
         setUserRole(role || '');
+        if (role !== 'KLIEN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
+        }
 
         const fetchData = async () => {
             try {
