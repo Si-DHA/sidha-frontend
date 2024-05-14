@@ -154,8 +154,9 @@ const PenawaranHargaItemPage = () => {
       setItems(items.filter(item => item.idPenawaranHargaItem !== itemId));
       setIsDeleteModalVisible(false);
       setAlert(<SuccessAlert message="Harga rute berhasil dihapus" />);
+      fetchItems();
       setTimeout(() => {
-        window.location.reload()
+        setAlert(null);
       }, 3000);
       // Close the modal on successful deletion
     } catch (error) {

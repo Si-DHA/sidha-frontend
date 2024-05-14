@@ -77,14 +77,22 @@ const CreatePenawaranHarga = () => {
                 const idPenawaranHarga = responseData.idPenawaranHarga;
                 
                 setAlert(<SuccessAlert message="Penawaran Harga berhasil dibuat." />);
+                setTimeout(() => {
+                    setAlert(null);
+                }, 3000);
                 router.push(`/penawaranharga/${idPenawaranHarga}/create`);
             } else {
                 const error = await response.json();
                 setAlert(<FailAlert message="Anda sudah memiliki penawaran untuk klien ini." />);
-
+                setTimeout(() => {
+                    setAlert(null);
+                }, 3000);
             }
         } catch (error) {
-            setAlert(<FailAlert message="An error occurred while submitting the form." />);
+            setAlert(<FailAlert message="Gagagl membentuk penawaran harga" />);
+            setTimeout(() => {
+                setAlert(null);
+            }, 3000);
             console.error('Submit error:', error);
         }
     };

@@ -48,7 +48,7 @@ const TrukDetailPage = () => {
     const handleDelete = async (id: any) => {
         try {
             const trukDataResponse = await deleteTrukById(id);
-            setAlert(<SuccessAlert message="Dtata truk berhasil dihapus" />);
+            setAlert(<SuccessAlert message="Data truk berhasil dihapus" />);
             setTimeout(() => {
                 router.push(`/truk`); // Redirect to /truk after 3000ms
             }, 3000);
