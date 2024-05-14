@@ -54,6 +54,7 @@ const DaftarKontrakPage: React.FC = () => {
     Header: 'No. HP', accessor: 'phone',
   }, {
     Header: 'Tanggal Terbit', accessor: 'createdAt',
+    Cell: ({ value }) => formatDate(value)
   }, {
     Header: 'Actions',
     accessor: 'kontrakUrl', // Use 'id' or any unique identifier for each row
@@ -65,6 +66,13 @@ const DaftarKontrakPage: React.FC = () => {
     ),
   }
   ];
+
+  const formatDate = (date) => {
+    const dateObj = new Date(date);
+    const formattedDate = `${dateObj.getDate().toString().padStart(2, '0')}-${(dateObj.getMonth() + 1).toString().padStart(2, '0')}-${dateObj.getFullYear()}`;
+    const formattedTime = `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}:${dateObj.getSeconds().toString().padStart(2, '0')}`;
+    return `${formattedDate} ${formattedTime}`;
+  };
 
 
   return (<main className={`flex min-h-screen flex-col items-center justify-between ${inter.className}`} data-theme="cmyk">
@@ -81,14 +89,14 @@ const DaftarKontrakPage: React.FC = () => {
             ) : (
               <>
                 {kontrakData ? (
-                  <DataTable 
-                    columns={columns} 
+                  <DataTable
+                    columns={columns}
                     data={kontrakData}
                     loading={loading}
                     type="kontrak" />) : (
-                  <DataTable 
-                    columns={columns} 
-                    data={[]} 
+                  <DataTable
+                    columns={columns}
+                    data={[]}
                     loading={loading}
                     type="kontrak" />)}
               </>)}

@@ -62,11 +62,13 @@ const TrukDetailPage = () => {
     const handleUpdate = (id: any) => {
         router.push(`/truk/update?id=${id}`);
     };
-    const formatDate = (dateTimeString: any) => {
-        const date = new Date(dateTimeString); // Convert datetime string to Date object
-        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        return date.toLocaleDateString('en-GB', options);
-    }
+    const formatDate = (date) => {
+        const dateObj = new Date(date);
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        const year = dateObj.getFullYear();
+        return `${day}-${month}-${year}`;
+    };
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="cmyk">

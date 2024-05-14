@@ -70,6 +70,7 @@ const DaftarPurchaseOrderPage = () => {
             {
                 Header: 'Tanggal Pengiriman',
                 accessor: 'tanggalPengiriman',
+                Cell: ({ value }) => value.split(' ')[0],
             },
             {
                 Header: 'Jumlah Order Item',
@@ -107,6 +108,7 @@ const DaftarPurchaseOrderPage = () => {
             {
                 Header: 'Tanggal Pengiriman',
                 accessor: 'tanggalPengiriman',
+                Cell: ({ value }) => value.split(' ')[0],
             },
             {
                 Header: 'Jumlah Order Item',

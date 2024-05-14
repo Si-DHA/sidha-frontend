@@ -193,7 +193,7 @@ const Featured = () => <section className="relative py-20">
                                 </div>
                                 <div>
                                     <h4 className="text-blue-900">
-                                        CDD (L: 4.4 m, W: 2.0 m, H: 1.9 m)
+                                        CDD (14 - 20 kubik)
                                     </h4>
                                 </div>
                             </div>
@@ -207,7 +207,7 @@ const Featured = () => <section className="relative py-20">
                                 </div>
                                 <div>
                                     <h4 className="text-blue-900">
-                                        CDD Long (L: 5.4 m, W: 3.0 m, H: 2.9 m)
+                                        CDD Long (22 - 28 kubik)
                                     </h4>
                                 </div>
                             </div>
@@ -221,7 +221,7 @@ const Featured = () => <section className="relative py-20">
                                 </div>
                                 <div>
                                     <h4 className="text-blue-900">
-                                        Wingbox (L: 5.9 m, W: 3.5 m, H: 3.4 m)
+                                    Fuso (28 - 36 kubik)
                                     </h4>
                                 </div>
                             </div>
@@ -235,7 +235,7 @@ const Featured = () => <section className="relative py-20">
                                 </div>
                                 <div>
                                     <h4 className="text-blue-900">
-                                        Fuso (L: 6.2 m, W: 3.9 m, H: 3.7 m)
+                                        Wingbox (60 - 80 kubik)
                                     </h4>
                                 </div>
                             </div>

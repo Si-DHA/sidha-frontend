@@ -246,23 +246,6 @@ const PenawaranHargaItemPage = () => {
         />
       ) : formatCurrency(row.original.cddLongPrice),
     },
-
-
-    {
-      Header: 'Harga Wingbox',
-      accessor: 'wingboxPrice',
-      Cell: ({ row }) => row.original.isEditing ? (
-        <input
-          type="number"
-          defaultValue={row.original.wingboxPrice}
-          onBlur={(e) => handlePriceChange(row.original.idPenawaranHargaItem, 'wingboxPrice', parseFloat(e.target.value))}
-          style={{ width: '100px' }}
-          min="0"
-        />
-      ) : formatCurrency(row.original.wingboxPrice),
-    },
-
-
     {
       Header: 'Harga Fuso',
       accessor: 'fusoPrice',
@@ -276,7 +259,19 @@ const PenawaranHargaItemPage = () => {
         />
       ) : formatCurrency(row.original.fusoPrice),
     },
-
+    {
+      Header: 'Harga Wingbox',
+      accessor: 'wingboxPrice',
+      Cell: ({ row }) => row.original.isEditing ? (
+        <input
+          type="number"
+          defaultValue={row.original.wingboxPrice}
+          onBlur={(e) => handlePriceChange(row.original.idPenawaranHargaItem, 'wingboxPrice', parseFloat(e.target.value))}
+          style={{ width: '100px' }}
+          min="0"
+        />
+      ) : formatCurrency(row.original.wingboxPrice),
+    },
     {
       Header: 'Ubah/Hapus',
       accessor: 'actions',
