@@ -145,8 +145,19 @@ const PenawaranHargaItemPage = () => {
         />
       ) : formatCurrency(row.original.cddLongPrice),
     },
-
-
+    {
+      Header: 'Harga Fuso',
+      accessor: 'fusoPrice',
+      Cell: ({ row }) => row.original.isEditing ? (
+        <input
+        type="number"
+        defaultValue={row.original.fusoPrice}
+        onBlur={(e) => handlePriceChange(row.original.idPenawaranHargaItem, 'fusoPrice', parseFloat(e.target.value))}
+        style={{ width: '100px' }}
+        min="0"
+        />
+      ) : formatCurrency(row.original.fusoPrice),
+    },
     {
       Header: 'Harga Wingbox',
       accessor: 'wingboxPrice',
@@ -160,21 +171,6 @@ const PenawaranHargaItemPage = () => {
         />
       ) : formatCurrency(row.original.wingboxPrice),
     },
-
-
-    {
-      Header: 'Harga Fuso',
-      accessor: 'fusoPrice',
-      Cell: ({ row }) => row.original.isEditing ? (
-        <input
-          type="number"
-          defaultValue={row.original.fusoPrice}
-          onBlur={(e) => handlePriceChange(row.original.idPenawaranHargaItem, 'fusoPrice', parseFloat(e.target.value))}
-          style={{ width: '100px' }}
-          min="0"
-        />
-      ) : formatCurrency(row.original.fusoPrice),
-    }
   ];
 
   console.log("id " + idPenawaranHarga);
