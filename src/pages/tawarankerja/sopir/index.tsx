@@ -65,7 +65,7 @@ const OrderItemsIndexPage = () => {
                 setLoading(false);
             }
         }).catch(error => {
-            setError('Fetching error: ' + error.message);
+            setError(`Gagal memuat tawaran kerja ${error.message ? ` : ${error.message}` : ''}`);
             setLoading(false);
         });
     }, []);

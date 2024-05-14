@@ -51,6 +51,9 @@ const InsidenDetailPage = () => {
     } catch (error) {
       console.error('Error deleting the incident:', error);
       setAlert(<FailAlert message="Error deleting the incident." />);
+      setTimeout(() => {
+        setAlert(null);
+      }, 3000)
     }
     finally {
       toggleDeleteConfirmModal(); // Close the modal

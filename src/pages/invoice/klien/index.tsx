@@ -34,7 +34,7 @@ const InvoiceKlienPage: React.FC = () => {
                 const klienDataResponse = await viewAllKlien();
                 setKlienData(klienDataResponse['content']);
             } catch (error: any) {
-                setError(error.message);
+                setError(`Gagal memuat data klien ${error.message ? ` : ${error.message}` : ''}`);
             } finally {
                 setLoading(false);
             }

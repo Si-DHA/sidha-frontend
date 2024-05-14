@@ -89,14 +89,18 @@ export default function RegisterPage() {
       } else {
         setIsLoading(false);
         setAlert(<FailAlert key={Date.now()} message={`${data.message}`} />);
+        setTimeout(() => {
+          setAlert(null);
+        }, 3000); 
       }
 
       console.log(data);
 
     } catch (error) {
       setAlert(<FailAlert key={Date.now()} message={`${error.message}`} />);
-
-
+      setTimeout(() => {
+        setAlert(null);
+      }, 3000); 
     }
   };
 

@@ -87,7 +87,7 @@ const CreateTrukPage = () => {
                 router.push(`/truk`); // Redirect to /truk after 3000ms
             }, 3000);
         } catch (error) {
-            setAlert(<FailAlert message={error.message || "Gagal menambah data truk"} />);
+            setAlert(<FailAlert message={`Gagal menambahkan data truk ${error.message ? ` : ${error.message}` : ''}`} />);
             setTimeout(() => {
                 setAlert(null);
             }, 3000);

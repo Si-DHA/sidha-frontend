@@ -57,9 +57,8 @@ export default function UserDetailPage() {
             setCanEdit(false);
           }
         }
-        
       } catch (error: any) {
-        setError(error.message);
+        setError(`Gagal memuat data pengguna ${error.message ? ` : ${error.message}` : ''}`);
       }
     }
 
