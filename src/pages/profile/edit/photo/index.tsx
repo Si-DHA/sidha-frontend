@@ -131,7 +131,7 @@ export default function ProfilePage() {
     if (document) {
       await updateProfile(document);
     } else {
-      setAlert(<FailAlert key={Date.now()} message="Tolong unggah foto terlebih dahulu !" />);
+      setAlert(<FailAlert key={Date.now()} message="Tolong unggah foto terlebih dahulu!" />);
     }
   }
 

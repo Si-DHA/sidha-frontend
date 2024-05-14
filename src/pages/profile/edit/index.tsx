@@ -166,7 +166,7 @@ export default function ProfilePage() {
       const hasilUpdate = await responseUpdate.json();
       if (hasilUpdate.statusCode == 200) {
         setIsLoading(false);
-        setAlert(<SuccessAlert key={Date.now()} message="Informasi profil berhasil diperbaharui !" />);
+        setAlert(<SuccessAlert key={Date.now()} message="Informasi profil berhasil diperbarui" />);
         Cookies.set('name', name);
         setTimeout(() => {
           router.push('/profile');

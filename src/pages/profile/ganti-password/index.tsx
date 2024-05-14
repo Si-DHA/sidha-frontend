@@ -106,7 +106,7 @@ export default function ProfilePage() {
       if (currentPassword === "" || newPassword === "") {
         setIsLoading(false);
         setAlert(
-          <FailAlert key={Date.now()} message="Semua kolom harus diisi !" />
+          <FailAlert key={Date.now()} message="Semua kolom harus diisi!" />
         );
         return;
       }
