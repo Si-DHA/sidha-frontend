@@ -22,6 +22,9 @@ const CreatePurchaseOrderPage = () => {
         }
         const role = Cookies.get('role');
         setUserRole(role || '');
+        if (role !== 'KLIEN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
+        }
 
         const fetchData = async () => {
             try {
@@ -46,9 +49,6 @@ const CreatePurchaseOrderPage = () => {
     } as Order
     );
 
-
-
-
     const [orderItem, setOrderItem] = useState([
         {
             isPecahBelah: false,
@@ -65,13 +65,6 @@ const CreatePurchaseOrderPage = () => {
             ]
         } as OrderItem
     ]);
-
-    // useEffect(() => {
-    //     if (router.query.order !== undefined) {
-    //         setOrder(JSON.parse(router.query.order as string));
-    //         setOrderItem(JSON.parse(router.query.order as string).orderItems);
-    //     }
-    // });
 
     const handleAddOrderItem = () => {
         setOrderItem([...orderItem, {

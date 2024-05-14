@@ -4,6 +4,13 @@ export interface Order {
     orderItems: OrderItem[];
 }
 
+export interface OrderUpdate {
+    id:string;
+    klienId: string;
+    orderItems: OrderItem[];
+    tanggalPengiriman: any;
+}
+
 export interface OrderItem {
     isPecahBelah: boolean;
     tipeBarang: string;

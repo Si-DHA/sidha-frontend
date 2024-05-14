@@ -31,7 +31,7 @@ const PembayaranPage = () => {
         const role = Cookies.get('role');
         setUserRole(role || '');
         if (role !== 'KLIEN') {
-            setError('Anda tidak diperbolehkan mengakses halaman ini');
+            setError('You are not allowed to access this page');
         }
 
     }, [isLoggedIn, router])
