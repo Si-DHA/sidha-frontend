@@ -51,6 +51,9 @@ const UpdateInsidenPage = () => {
       }).catch(error => {
         console.error('Failed to fetch insiden details:', error);
         setAlert(<FailAlert message="Failed to load insiden details." />);
+        setTimeout(() => {
+          setAlert(null);
+        }, 3000)
       });
     }
 
@@ -61,6 +64,9 @@ const UpdateInsidenPage = () => {
       }).catch(error => {
         console.error('Fetching error:', error);
         setAlert(<FailAlert message="Failed to load order items." />);
+        setTimeout(() => {
+          setAlert(null);
+        }, 3000)
       });
     }
   }, [id]);
@@ -80,11 +86,14 @@ const UpdateInsidenPage = () => {
 
     try {
       await updateInsiden(id, formData);
-      setAlert(<SuccessAlert message="Insiden updated successfully." />);
+      setAlert(<SuccessAlert message="Berhasil memperbarui insiden" />);
       setTimeout(() => router.push(`/insiden/sopir/detail/${id}`), 3000);
     } catch (error) {
       console.error('Error updating insiden:', error);
-      setAlert(<FailAlert message={error.message || "Failed to update insiden."} />);
+      setAlert(<FailAlert message={error.message || "Gagal memperbarui insiden"} />);
+      setTimeout(() => {
+        setAlert(null);
+    }, 3000);
     }
   };
 

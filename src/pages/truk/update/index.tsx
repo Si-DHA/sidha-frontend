@@ -30,7 +30,7 @@ const UpdateTrukPage = () => {
         if (role === 'ADMIN') {
             setUserRole(role);
         } else {
-            setError('You are not allowed to access this page');
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -71,18 +71,22 @@ const UpdateTrukPage = () => {
             const panjangBox = document.getElementById('panjangBox').value;
             const lebarBox = document.getElementById('lebarBox').value;
             const tinggiBox = document.getElementById('tinggiBox').value;
-            const kubikasiBox = document.getElementById('kubikasiBox').value;
             const idSopir = document.getElementById('idSopir').value;
-
+            
+            var kubikasiBox;
+            if (panjangBox !== '' && lebarBox !== '' && tinggiBox != '') {
+                kubikasiBox = (panjangBox * lebarBox * tinggiBox).toFixed(2);
+            }
+            
             // Create POST request body
             const requestBody = {
                 idTruk: id,
                 type,
                 expiredKir,
-                panjangBox: parseInt(panjangBox),
-                lebarBox: parseInt(lebarBox),
-                tinggiBox: parseInt(tinggiBox),
-                kubikasiBox: parseInt(kubikasiBox),
+                panjangBox: panjangBox,
+                lebarBox: lebarBox,
+                tinggiBox: tinggiBox,
+                kubikasiBox: kubikasiBox,
             };
 
             if (licensePlate !== '') {
@@ -187,12 +191,6 @@ const UpdateTrukPage = () => {
                                                 <td>Merk</td>
                                                 <td><label className="input input-bordered flex items-center gap-2">
                                                     <input value={trukData['merk']} onChange={(e) => setTrukData({ ...trukData, merk: e.target.value })} required id="merk" type="text" className="grow" placeholder="Mitsubishi Fe 75" />
-                                                </label></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Kubikasi Box</td>
-                                                <td><label className="input input-bordered flex items-center gap-2">
-                                                    <input value={trukData['kubikasiBox']} onChange={(e) => setTrukData({ ...trukData, kubikasiBox: e.target.value })} required id="kubikasiBox" type="number" className="grow" placeholder="20 (dalam meter kubik)" />
                                                 </label></td>
                                             </tr>
                                             <tr>

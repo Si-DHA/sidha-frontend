@@ -24,10 +24,9 @@ const TrukDetailPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'ADMIN' || role === 'SOPIR' || role === 'KARYAWAN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'ADMIN' && role !== 'SOPIR' && role !== 'KARYAWAN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -49,12 +48,12 @@ const TrukDetailPage = () => {
     const handleDelete = async (id: any) => {
         try {
             const trukDataResponse = await deleteTrukById(id);
-            setAlert(<SuccessAlert message="Truck is deleted successfully" />);
+            setAlert(<SuccessAlert message="Data truk berhasil dihapus" />);
             setTimeout(() => {
                 router.push(`/truk`); // Redirect to /truk after 3000ms
             }, 3000);
         } catch (error: any) {
-            setAlert(<FailAlert message="Error deleting the truck data" />);
+            setAlert(<FailAlert message={`Gagal menghapus truk ${error.message ? ` : ${error.message}` : ''}`} />);
             setTimeout(() => {
                 setAlert(null);
             }, 3000);
@@ -63,11 +62,13 @@ const TrukDetailPage = () => {
     const handleUpdate = (id: any) => {
         router.push(`/truk/update?id=${id}`);
     };
-    const formatDate = (dateTimeString: any) => {
-        const date = new Date(dateTimeString); // Convert datetime string to Date object
-        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        return date.toLocaleDateString('en-GB', options);
-    }
+    const formatDate = (date) => {
+        const dateObj = new Date(date);
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        const year = dateObj.getFullYear();
+        return `${day}-${month}-${year}`;
+    };
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between" data-theme="cmyk">

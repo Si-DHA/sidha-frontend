@@ -27,10 +27,9 @@ const KaryawanDetailPage = () => {
       router.push('/login');
     }
     const role = Cookies.get('role');
-    if (role === 'KARYAWAN') {
-      setUserRole(role);
-    } else {
-      setError('You are not allowed to access this page');
+    setUserRole(role || '');
+    if (role !== 'KARYAWAN') {
+      setError('Anda tidak diperbolehkan mengakses halaman ini');
     }
 
   }, [isLoggedIn, router])
@@ -81,7 +80,9 @@ const KaryawanDetailPage = () => {
   return (
     <Drawer userRole={userRole}>
       <main className="flex flex-col items-center justify-between" data-theme="winter">
-        {alert.show && (alert.type === 'success' ? <SuccessAlert message={alert.message} /> : <FailAlert message={alert.message} />)}
+        {alert.show && (alert.type === 'success' ?
+          <SuccessAlert message={alert.message} />
+          : <FailAlert message={alert.message} />)}
         {orderItemDetails ? (
           <>
             <div className="flex-1 pr-4 max-w-lg">

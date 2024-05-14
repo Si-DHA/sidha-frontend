@@ -2,17 +2,16 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { viewUserById } from '@/pages/api/user/viewUserById';
-import Navbar from '@/app/components/common/navbar';
 import { Inter } from "next/font/google";
 import Footer from "@/app/components/common/footer";
-import Image from "next/image";
-import Link from 'next/link';
 import Cookies from "js-cookie";
 import Drawer from '@/app/components/common/drawer';
 import { BASE_URL } from '@/app/constant/constant';
 import { deleteUser } from '@/pages/api/user/deleteUser';
 import SuccessAlert from '@/app/components/common/SuccessAlert';
 import FailAlert from '@/app/components/common/FailAlert';
+import { viewTrukByIdsopir } from "../../api/truk/viewTrukByIdSopir";
+import Link from 'next/link';
 
 const inter = Inter({ subsets: ["latin"] });
 export default function UserDetailPage() {
@@ -26,6 +25,8 @@ export default function UserDetailPage() {
   const [alert, setAlert] = useState(null);
   const [shouldRedirect, setShouldRedirect] = useState(false);
   const [canEdit, setCanEdit] = useState(true);
+  const [trukData, setTrukData] = useState(null);
+
 
   var isLoggedIn = Cookies.get('isLoggedIn');
   const role = Cookies.get('role');
@@ -35,7 +36,7 @@ export default function UserDetailPage() {
     if (!isLoggedIn) {
       router.push('/login');
     }
-    if(role == 'KLIEN' || role == 'SOPIR') {
+    if (role == 'KLIEN' || role == 'SOPIR') {
       setShouldRedirect(true);
       router.push('/404');
     }
@@ -49,20 +50,27 @@ export default function UserDetailPage() {
         const userDataResponse = await viewUserById(id);
         setImageUrl(BASE_URL + `/image/file/${id}`);
         setUserData(userDataResponse['content']);
-        if(role == 'ADMIN'){
+        if (role == 'ADMIN') {
           setCanEdit(true);
-        } 
-        if(userDataResponse['content'].role == 'ADMIN' || userDataResponse['content'].role == 'SOPIR' || userDataResponse['content'].role == 'KARYAWAN'){
-          if(role != 'ADMIN'){
+        }
+        if (userDataResponse['content'].role == 'ADMIN' || userDataResponse['content'].role == 'SOPIR' || userDataResponse['content'].role == 'KARYAWAN') {
+          if (role != 'ADMIN') {
             setCanEdit(false);
           }
         }
-        
+        if (userDataResponse['content'].role == 'SOPIR') {
+          try {
+            const trukDataResponse = await viewTrukByIdsopir(userDataResponse['content'].id);
+            setTrukData(trukDataResponse['content']);
+          } catch (error: any) {
+            setError(`Gagal memuat data truk ${error.message ? ` : ${error.message}` : ''}`);
+            setTrukData(null);
+          }
+        }
       } catch (error: any) {
-        setError(error.message);
+        setError(`Gagal memuat data pengguna ${error.message ? ` : ${error.message}` : ''}`);
       }
     }
-
 
     fetchData();
   }, [])
@@ -70,16 +78,19 @@ export default function UserDetailPage() {
   async function handleDeleteAccount() {
     const response = await deleteUser(id);
     if (response.statusCode == 200) {
+      setAlert(<SuccessAlert message="Akun berhasil dihapus" />);
       setTimeout(() => {
         router.reload();
       }, 3000);
-      setAlert(<SuccessAlert message="Akun berhasil dihapus" />);
     } else {
       setAlert(<FailAlert message={response.message || "Gagal Menghapus Akun"} />);
+      setTimeout(() => {
+        setAlert(null);
+    }, 3000);
     }
   }
 
-  if(shouldRedirect){
+  if (shouldRedirect) {
     return null;
   }
   if (!userData) {
@@ -126,10 +137,9 @@ export default function UserDetailPage() {
                 <div className="badge badge-success">{userData.role}</div>
                 {userData.isDeleted && <div className="badge badge-error">Akun dihapus</div>}
                 <div className="flex flex-col  items-center pt-8 flex-wrap gap-y-4">
-
                   <div className="card-actions" text-xs>
-                  { canEdit &&  !userData.isDeleted &&   <button className="btn btn-md btn-warning "
-                    onClick={() => router.push(`/list-user/detail/edit?id=${id}`) }
+                    {canEdit && !userData.isDeleted && <button className="btn btn-md btn-warning "
+                      onClick={() => router.push(`/list-user/detail/edit?id=${id}`)}
                     >
                       Edit Akun
                     </button>}
@@ -144,11 +154,9 @@ export default function UserDetailPage() {
               </div>
             </div>
             <div className="card w-96 bg-base-100 shadow-md">
-
               <div className="card-body ">
                 <h1 className="font-bold text-[20px]">Data Diri</h1>
                 <table className="table text-left" >
-
                   <tbody>
                     <tr>
                       <td className="font-semibold">Nama Lengkap</td>
@@ -176,11 +184,8 @@ export default function UserDetailPage() {
                     </tr>
                   </tbody>
                 </table>
-
-                <h1 className="font-bold text-[20px]  pt-12">Kontak</h1>
-
+                <h1 className="font-bold text-[20px]  pt-5">Kontak</h1>
                 <table className="table text-left">
-
                   <tbody>
                     <tr>
                       <td className="font-semibold">Email</td>
@@ -192,6 +197,27 @@ export default function UserDetailPage() {
                     </tr>
                   </tbody>
                 </table>
+                {userData.role === 'SOPIR' && trukData &&
+                  <>
+                    <h1 className="font-bold text-[20px] pt-5">Truk</h1>
+                    <table className="table text-left">
+                      <tbody>
+                        <tr>
+                          <td className="font-semibold">Plat</td>
+                          <td>
+                            <Link href={`/truk/detail/?id=${trukData['idTruk']}`} style={{ textDecoration: 'underline' }}>
+                              {trukData['licensePlate']}
+                            </Link>
+                          </td>
+                        </tr>
+                        <tr className="">
+                          <td className="font-semibold">Tipe</td>
+                          <td>{trukData.type}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </>
+                }
               </div>
             </div>
           </div>

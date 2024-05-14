@@ -32,7 +32,7 @@ const PenawaranHargaPage = () => {
     const [penawaranHarga, setPenawaranHarga] = useState<PenawaranHargaRow[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-
+    const [error, setError] = useState('');
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
 
@@ -42,6 +42,9 @@ const PenawaranHargaPage = () => {
         }
         const role = Cookies.get('role');
         setUserRole(role || '');
+        if (role !== 'KARYAWAN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
+        }
     },)
 
 
@@ -57,7 +60,10 @@ const PenawaranHargaPage = () => {
                 const clientsArray: Klien[] = kliensData.content;
                 console.log('Clients Array:', clientsArray);
 
-                const mergedData = clientsArray.map((klien: Klien) => ({
+                // Filter out clients that do not have a penawaranHarga
+                const filteredClients = clientsArray.filter((klien: Klien) => klien.penawaranHarga);
+
+                const mergedData = filteredClients.map((klien: Klien) => ({
                     klienId: klien.id,
                     klienName: klien.companyName,
                     penawaranHargaCreatedAt: klien.penawaranHarga.penawaranHargaCreatedAt,
@@ -67,9 +73,9 @@ const PenawaranHargaPage = () => {
 
                 setPenawaranHarga(mergedData);
             })
-            .catch(error => console.error('Fetching error:', error))
+            .catch(error => setError('Fetching error: ', error.message))
             .finally(() => setLoading(false));
-    }, []);
+    }, [penawaranHarga]);
 
     const columns = useMemo(() => [
         {
@@ -80,19 +86,27 @@ const PenawaranHargaPage = () => {
         {
             Header: 'Tanggal Pembuatan',
             accessor: 'penawaranHargaCreatedAt',
-            Cell: ({ value }) => new Date(value).toLocaleDateString(),
+            Cell: ({ value }) => new Date(value).toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }),
         },
-        // {
-        //     Header: 'Date Updated',
-        //     accessor: 'penawaranHargaUpdatedAt',
-        //     Cell: ({ value }) => new Date(value).toLocaleDateString(),
-        // },
+        {
+            Header: 'Terakhir Diubah',
+            accessor: 'penawaranHargaUpdatedAt',
+            Cell: ({ value }) => new Date(value).toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }),
+        },
         {
             Header: 'Rute',
             accessor: 'idPenawaranHarga',
             Cell: ({ value }) => (
                 <button
-                    onClick={() => router.replace(`/penawaranharga/${value}`)}
+                    onClick={() => router.push(`/penawaranharga/${value}`)}
                     className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                     Lihat Daftar Rute
@@ -102,22 +116,28 @@ const PenawaranHargaPage = () => {
     ], [router]);
 
     return (
-        <main className={`flex min-h-screen flex-col`} data-theme="winter">
+        <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
             <Drawer userRole={userRole}>
-                <div className="flex-1 py-6 px-4">
-                    <div className="container mx-auto">
-                        <div className="text-center lg:text-left">
-                            <h1 className="text-3xl font-bold">Daftar Penawaran Harga</h1>
-                            <br />
+                <div className="flex flex-col justify-center items-center mih-h-screen p-8">
+                    <h1 className="text-3xl font-bold text-center ">Daftar Penawaran Harga</h1>
+                </div>
+
+                <div className="flex flex-col gap-6 mx-4 my-4 ">
+                    <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
+                        <div className="overflow-x-auto w-full">
+                            {error ? (
+                                <div>{error}</div>
+                            ) : (
+                                <>
+                                    <DataTable
+                                        data={penawaranHarga}
+                                        columns={columns}
+                                        loading={loading}
+                                        btnText="Tambah Nama Klien" onClick={() => router.push('/penawaranharga/create')}
+                                        type='penawaran harga'
+                                    />
+                                </>)}
                         </div>
-                        <DataTable
-                            data={penawaranHarga}
-                            columns={columns}
-                            loading={loading}
-                            NoDataComponent={CustomNoDataComponent}
-                            btnText="Tambah Nama Klien" onClick={() => router.push('/penawaranharga/create')}
-                            type='penawaranHarga'
-                        />
                     </div>
                 </div>
             </Drawer>

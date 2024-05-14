@@ -109,7 +109,7 @@ export default function RegisterPage() {
       if (data.statusCode == 201) {
         setIsLoading(false);
 
-        setAlert(<SuccessAlert key={Date.now()} message="Akun Karyawan berhasil dibuat !" />);
+        setAlert(<SuccessAlert key={Date.now()} message="Akun Karyawan berhasil dibuat!" />);
         setTimeout(() => {
           router.push('/list-user?role=karyawan');
           
@@ -117,14 +117,18 @@ export default function RegisterPage() {
       } else {
         setIsLoading(false);
         setAlert(<FailAlert key={Date.now()} message={`${data.message}`} />);
+        setTimeout(() => {
+          setAlert(null);
+        }, 3000); 
       }
 
       console.log(data);
 
     } catch (error: any) {
       setAlert(<FailAlert key={Date.now()} message={`${error.message}`} />);
-
-
+      setTimeout(() => {
+        setAlert(null);
+      }, 3000); 
     }
   };
 

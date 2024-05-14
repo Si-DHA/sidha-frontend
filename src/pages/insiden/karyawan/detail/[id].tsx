@@ -25,10 +25,9 @@ const KaryawanInsidenDetailPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'KARYAWAN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'KARYAWAN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -58,13 +57,16 @@ const KaryawanInsidenDetailPage = () => {
     const handleUpdateStatus = async () => {
         try {
             await updateStatus(id as string, selectedStatus);
-            setAlert(<SuccessAlert message="Insiden status updated successfully" />);
+            setAlert(<SuccessAlert message="Status insiden berhasil diperbarui" />);
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
         } catch (error) {
             console.error('Error updating status:', error);
-            setAlert(<FailAlert message="Error updating insiden status" />);
+            setAlert(<FailAlert message="Status insiden gagal diperbarui" />);
+            setTimeout(() => {
+                setAlert(null);
+            }, 3000);
         }
     };
 
