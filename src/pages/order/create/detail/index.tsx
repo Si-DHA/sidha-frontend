@@ -30,6 +30,9 @@ const PurchaseOrderDetail = () => {
 
         const role = Cookies.get('role');
         setUserRole(role || '');
+        if (role !== 'KLIEN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
+        }
 
         if (role !== 'KLIEN') {
             setError('Anda tidak diperbolehkan mengakses halaman ini')
