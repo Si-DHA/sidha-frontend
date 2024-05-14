@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import DataTable from "@/app/components/common/datatable/DataTable";
-import { FiEdit } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import Drawer from '@/app/components/common/drawer';
@@ -47,7 +46,22 @@ const CustomNoDataComponent = () => (
 const ViewAllOrderItemsPage: React.FC = () => {
   const router = useRouter();
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  var isLoggedIn = Cookies.get('isLoggedIn');
+  const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/login');
+    }
+    const role = Cookies.get('role');
+    setUserRole(role || '');
+    if (role !== 'SOPIR') {
+      setError('Anda tidak diperbolehkan mengakses halaman ini');
+    }
+
+  }, [isLoggedIn, router])
 
   useEffect(() => {
     const fetchOrderItems = async () => {
@@ -98,7 +112,7 @@ const ViewAllOrderItemsPage: React.FC = () => {
     {
       Header: 'Pecah Belah',
       accessor: 'isPecahBelah',
-      Cell: ({ value }) => (value ? 'Ya' : 'Bukan'),
+      Cell: ({ value }) => (value ? 'Ya' : 'Tidak'),
     },
     {
       Header: 'Tipe Barang',
@@ -127,45 +141,57 @@ const ViewAllOrderItemsPage: React.FC = () => {
       ),
     },
     {
-      Header: 'Bukti Bongkar Muat',
+      Header: 'Bukti Muat Bongkar',
       Cell: ({ row }) => (
         <div className="flex justify-center space-x-4">
           <button
             disabled={row.original.statusOrder < 1}
             onClick={() => router.push(`/order/sopir/kelola-bukti-muat/${row.original.id}`)}
-            className="px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={`px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${row.original.statusOrder < 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             Kelola Bukti Muat
           </button>
           <button
-            disabled={row.original.statusOrder < 3} 
+            disabled={row.original.statusOrder < 3}
             onClick={() => router.push(`/order/sopir/kelola-bukti-bongkar/${row.original.id}`)}
-            className={`px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${!row.original.buktiMuat ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${row.original.statusOrder < 3 ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             Kelola Bukti Bongkar
           </button>
         </div>
+
       ),
-    },    
+    },
   ];
 
-    return (
-        <>
-            <Drawer userRole='userRole'>
-            <div className="container mx-auto p-4" data-theme="winter">
-                <h2 className="text-2xl font-bold mb-2">Order Anda</h2>
-                <DataTable
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between" data-theme="winter">
+      <Drawer userRole={userRole}>
+        <div className="flex flex-col justify-center items-center mih-h-screen p-8">
+          <h1 className="text-3xl font-bold text-center ">Order Anda</h1>
+        </div>
+
+        <div className="flex flex-col gap-6 mx-4 my-4 ">
+          <div className="flex flex-col gap-4 justify-center items-center mih-h-screen p-8 border rounded-lg shadow-md">
+            <div className="overflow-x-auto w-full">
+              {error ? (
+                <div>{error}</div>
+              ) : (
+                <>
+                  <DataTable
                     data={orderItems}
                     columns={columns}
                     loading={loading}
-                    NoDataComponent={CustomNoDataComponent}
-                />
+                  />
+                </>)}
             </div>
-            </Drawer>
-            <Footer />
-        </>
-    );
-    
+          </div>
+        </div>
+      </Drawer>
+      <Footer />
+    </main>
+  );
+
 };
 
 export default ViewAllOrderItemsPage;

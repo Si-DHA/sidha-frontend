@@ -158,7 +158,7 @@ const UpdateInsidenPage = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="buktiFoto" className="block text-sm font-medium text-gray-700">Upload Bukti</label>
+              <label htmlFor="buktiFoto" className="block text-sm font-medium text-gray-700">Unggah Bukti</label>
               <input
                 id="buktiFoto"
                 type="file"
