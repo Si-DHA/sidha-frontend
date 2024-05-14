@@ -72,7 +72,7 @@ const SopirDetailPage = () => {
             const sopirId = Cookies.get('idUser');
             await acceptTawaranKerja(orderItemId.toString(), sopirId, lokasi);
             setAlert({ show: true, message: 'Tawaran kerja berhasil diterima', type: 'success' });
-            router.replace(`/tawarankerja/sopir/detail/${orderItemId}/accept`);
+            router.push(`/tawarankerja/sopir/detail/${orderItemId}/accept`);
         } catch (error) {
             console.error('Error accepting job offer:', error);
             setAlert({ show: true, message: 'Gagal menerima tawaran kerja', type: 'fail' });

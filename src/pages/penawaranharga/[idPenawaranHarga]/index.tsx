@@ -129,8 +129,9 @@ const PenawaranHargaItemPage = () => {
         const response = await updatePenawaranHargaItem(bodyData);
         toggleEdit(item.idPenawaranHargaItem); // Exit editing mode for the item regardless of success or failure
         setAlert(<SuccessAlert message="Harga rute berhasil diubah" />);
+        fetchItems();
         setTimeout(() => {
-          window.location.reload();
+          setAlert(null);
         }, 3000);
       } catch (error: any) {
         setError(`Failed to update item: ${error instanceof Error ? error.message : 'An unknown error occurred'}`);
