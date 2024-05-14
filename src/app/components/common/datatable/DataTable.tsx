@@ -11,9 +11,18 @@ interface DataTableProps {
   onClick?: () => void;
   type?: string;
   biayaPengiriman?: any;
+  loading?: boolean;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, type, biayaPengiriman }) => {
+const DataTable: React.FC<DataTableProps> = ({
+  data = [],
+  columns = [],
+  btnText,
+  onClick,
+  type,
+  biayaPengiriman,
+  loading = false
+}) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -44,6 +53,16 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
   );
 
   const renderTableHeader = () => {
+    if (loading) {
+      return (
+        <tr className='text-center'>
+          <td colSpan={columns.length + 1} className="text-sm font-semibold pt-3">
+            <span className="loading loading-spinner loading-lg"></span>
+          </td>
+        </tr>
+      );
+    }
+
     return headerGroups.map((headerGroup, index) => (
       <tr {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: '#f2f2f2' }} key={index} >
         <th style={{ textAlign: 'center' }}>No</th> {/* Add table header for numbering */}
@@ -66,8 +85,26 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
   };
 
   const RenderTableBody = () => {
+    if (loading) {
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      return (
+        <tr className='text-center'>
+          <td
+            colSpan={columns.length + 1}
+            className="text-base font-semibold pt-5"
+          >
+            {type && type != '' ? `Belum terdapat data ${type}` : 'Data tidak ditemukan'}
+          </td>
+        </tr>
+      );
+    }
+
+
     const router = useRouter();
-    const handleRowClick = (idTruk: any) => {
+    const handleRowClickTruk = (idTruk: any) => {
       router.push(`/truk/detail?id=${idTruk}`);
     };
 
@@ -91,9 +128,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
           {...row.getRowProps()}
           style={{ borderBottom: '1px solid black' }}
           onClick={() => {
-            if (type === 'truk') {
-              handleRowClick(row.original.idTruk);
-            } else if (type === 'user') {
+            if (type === 'user') {
               handleRowClickUser(row.original.id);
             } else if (type === "kontrak") {
               handleRowClickKontrak(row.original.userId);
@@ -104,21 +139,18 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
           key={index}>
           <td style={{ textAlign: 'center' }}>{index + 1}</td> {/* Add table cell for numbering */}
           {row.cells.map((cell: any, index: any) => {
-            if (cell.column.id === 'expiredKir' || cell.column.id === 'createdAt') { // Replace 'datetimeColumn' with the actual ID of your datetime column
-              const date = new Date(cell.value); // Convert datetime string to Date object
-              const options: any = { day: '2-digit', month: '2-digit', year: 'numeric' };
-              const formattedDate = date.toLocaleDateString('en-GB', options); // Format date to string (e.g., 'MM/DD/YYYY')
-              return <td style={{ textAlign: 'center' }} {...cell.getCellProps()} key={index} >{formattedDate}</td>; // Render formatted date
-            } else {
-              return <td style={{ textAlign: 'center' }}{...cell.getCellProps()} key={index} >{cell.render('Cell')}</td>; // Render other cells as usual
-            }
+            return <td style={{ textAlign: 'center' }}{...cell.getCellProps()} key={index} >{cell.render('Cell')}</td>; // Render other cells as usual
           })}
         </tr>
       );
     });
   };
 
-  const RenderTableFooterPurchaseOrder = (biayaPengiriman:any) => {
+  const RenderTableFooterPurchaseOrder = (biayaPengiriman: any) => {
+    if (loading) {
+      return;
+    }
+
     return (
       <tfoot>
         <tr>
@@ -133,93 +165,101 @@ const DataTable: React.FC<DataTableProps> = ({ data, columns, btnText, onClick, 
   return (
     <div style={{ marginBottom: '20px', fontSize: '13px' }} className="overflow-x-auto">
       {/* Search input */}
-      {type != "order" && type != "checkout"  && <div style={{ float: 'left', marginBottom: '10px' }}>
-        <div style={{ position: 'relative' }}>
-          <input
-            value={globalFilter || ''}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Cari..."
-            style={{
-              padding: '0.5rem 1rem',
-              border: '1px solid #ccc',
-              borderRadius: '5px'
-            }}
-          />
-          <span style={{
-            position: 'absolute',
-            top: '50%',
-            right: '10px',
-            transform: 'translateY(-50%)',
-            color: '#999'
-          }}>
-            <FontAwesomeIcon icon={faSearch} />
-          </span>
-        </div>
-      </div>}
-      {btnText && onClick &&
+      {type != "checkout" &&
+        data && data.length > 0 &&
+        <div style={{ float: 'left', marginBottom: '10px' }}>
+          <div style={{ position: 'relative' }}>
+            <input
+              value={globalFilter || ''}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              placeholder="Cari..."
+              style={{
+                padding: '0.5rem 1rem',
+                border: '1px solid #ccc',
+                borderRadius: '5px'
+              }}
+            />
+            <span style={{
+              position: 'absolute',
+              top: '50%',
+              right: '10px',
+              transform: 'translateY(-50%)',
+              color: '#999'
+            }}>
+              <FontAwesomeIcon icon={faSearch} />
+            </span>
+          </div>
+        </div>}
+      {!loading && btnText && onClick &&
         <div style={{ float: 'right', marginBottom: '15px' }}>
           <button className="btn btn-primary" onClick={onClick}>{btnText}</button>
         </div>
+
       }
+
       <table className="table table-xs" {...getTableProps()} style={{ borderCollapse: 'separate', width: '100%', borderSpacing: '10 10px', marginBottom: '20px' }}>
         <thead>{renderTableHeader()}</thead>
         <tbody {...getTableBodyProps()}>{RenderTableBody()}</tbody>
         {type === 'checkout' && RenderTableFooterPurchaseOrder(biayaPengiriman)}
       </table>
-      {/* Pagination */}
-      <div style={{ float: 'left' }}>
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage} style={{ paddingLeft: '5px' }}>
-          {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage} style={{ paddingLeft: '5px' }}>
-          {'>'}
-        </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} style={{ paddingLeft: '5px' }}>
-          {'>>'}
-        </button>{' '}
-        <span style={{ paddingLeft: '5px' }}>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
-        </span>
-        <span>
-          | Go to page:{' '}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{
-              width: '60px',
-              padding: '0.5rem 0.5rem',
-              border: '1px solid #ccc',
-              borderRadius: '5px',
-              height: '30px'
-            }}
-          />
-        </span>{' '}
-      </div>
-      <div style={{ float: 'right' }}>
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
 
-      </div>
+      {data && data.length > 0 &&
+        <div>
+          {/* Pagination */}
+          <div style={{ float: 'left' }}>
+            <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+              {'<<'}
+            </button>{' '}
+            <button onClick={() => previousPage()} disabled={!canPreviousPage} style={{ paddingLeft: '5px' }}>
+              {'<'}
+            </button>{' '}
+            <button onClick={() => nextPage()} disabled={!canNextPage} style={{ paddingLeft: '5px' }}>
+              {'>'}
+            </button>{' '}
+            <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} style={{ paddingLeft: '5px' }}>
+              {'>>'}
+            </button>{' '}
+            <span style={{ paddingLeft: '5px' }}>
+              Page{' '}
+              <strong>
+                {pageIndex + 1} of {pageOptions.length}
+              </strong>{' '}
+            </span>
+            <span>
+              | Go to page:{' '}
+              <input
+                type="number"
+                defaultValue={pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  gotoPage(page);
+                }}
+                style={{
+                  width: '50px',
+                  padding: '0.5rem 0.5rem',
+                  border: '1px solid #ccc',
+                  borderRadius: '5px',
+                  height: '25px'
+                }}
+              />
+            </span>{' '}
+          </div>
+          <div style={{ float: 'right' }}>
+            <select className='rounded-lg'
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+              }}
+            >
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      }
     </div>
   );
 };

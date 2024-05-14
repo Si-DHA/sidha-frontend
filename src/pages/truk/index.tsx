@@ -11,6 +11,7 @@ const TrukPage: React.FC = () => {
     const router = useRouter();
     const [error, setError] = useState('');
     const [trukData, setTrukData] = useState([]); // State to hold truck data
+    const [loading, setLoading] = useState(true);
 
     var isLoggedIn = Cookies.get('isLoggedIn');
     const [userRole, setUserRole] = useState('');
@@ -20,10 +21,9 @@ const TrukPage: React.FC = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'ADMIN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'ADMIN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -32,11 +32,14 @@ const TrukPage: React.FC = () => {
         const fetchData = async () => {
             try {
                 const trukDataResponse = await viewAllTruk();
-                if (trukDataResponse) {
-                    setTrukData(trukDataResponse['content']);
+                const trukData = trukDataResponse['content']
+                if (trukData) {
+                    setTrukData(trukData);
                 }
             } catch (error: any) {
-                setError(error.message);
+                setError(`Gagal memuat data truk ${error.message ? ` : ${error.message}` : ''}`);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -59,13 +62,14 @@ const TrukPage: React.FC = () => {
         {
             Header: 'Expired KIR',
             accessor: 'expiredKir',
+            Cell: ({ value }) => (formatDate(value))
         },
         {
             Header: 'Sopir',
             Cell: ({ row }) => (
                 <>
                     {row.original.sopir ? (
-                        <Link href={`/list-user/detail?id=${row.original.sopir.id}`} style={{textDecoration: 'underline'}}>
+                        <Link href={`/list-user/detail?id=${row.original.sopir.id}`} style={{ textDecoration: 'underline' }}>
                             {row.original.sopir.name}
                         </Link>
                     ) : (
@@ -75,7 +79,7 @@ const TrukPage: React.FC = () => {
             )
         },
         {
-            Header: 'Kelola',
+            Header: 'Detail',
             Cell: ({ row }) => (
                 <div className="flex justify-center space-x-4">
                     <button
@@ -89,8 +93,16 @@ const TrukPage: React.FC = () => {
         },
     ];
 
+    const formatDate = (date) => {
+        const dateObj = new Date(date);
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        const year = dateObj.getFullYear();
+        return `${day}-${month}-${year}`;
+    };
+
     const createTruk = () => {
-        router.push('/truk/create'); 
+        router.push('/truk/create');
     };
 
 
@@ -108,18 +120,19 @@ const TrukPage: React.FC = () => {
                                 <div>{error}</div>
                             ) : (
                                 <>
-                                    {trukData ? ( // Check if trukData is empty
-                                        <DataTable columns={columns} data={trukData} btnText="Tambah truk" onClick={createTruk} />
-                                    ) : (
-                                        <DataTable columns={columns} data={[]} btnText="Tambah truk" onClick={createTruk} />
-                                    )}
+                                    <DataTable
+                                        columns={columns}
+                                        data={trukData}
+                                        btnText="Tambah truk"
+                                        onClick={createTruk}
+                                        loading={loading}
+                                        type='truk' />
                                 </>)}
                         </div>
                     </div>
                 </div>
             </Drawer>
             <Footer />
-
         </main>
     );
 }

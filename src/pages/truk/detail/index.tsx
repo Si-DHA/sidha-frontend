@@ -24,10 +24,9 @@ const TrukDetailPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'ADMIN' || role === 'SOPIR' || role === 'KARYAWAN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'ADMIN' && role !== 'SOPIR' && role !== 'KARYAWAN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -49,12 +48,12 @@ const TrukDetailPage = () => {
     const handleDelete = async (id: any) => {
         try {
             const trukDataResponse = await deleteTrukById(id);
-            setAlert(<SuccessAlert message="Truck is deleted successfully" />);
+            setAlert(<SuccessAlert message="Dtata truk berhasil dihapus" />);
             setTimeout(() => {
                 router.push(`/truk`); // Redirect to /truk after 3000ms
             }, 3000);
         } catch (error: any) {
-            setAlert(<FailAlert message="Error deleting the truck data" />);
+            setAlert(<FailAlert message={`Gagal menghapus truk ${error.message ? ` : ${error.message}` : ''}`} />);
             setTimeout(() => {
                 setAlert(null);
             }, 3000);

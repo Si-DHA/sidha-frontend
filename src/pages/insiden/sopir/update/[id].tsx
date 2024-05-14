@@ -51,6 +51,9 @@ const UpdateInsidenPage = () => {
       }).catch(error => {
         console.error('Failed to fetch insiden details:', error);
         setAlert(<FailAlert message="Failed to load insiden details." />);
+        setTimeout(() => {
+          setAlert(null);
+        }, 3000)
       });
     }
 
@@ -61,6 +64,9 @@ const UpdateInsidenPage = () => {
       }).catch(error => {
         console.error('Fetching error:', error);
         setAlert(<FailAlert message="Failed to load order items." />);
+        setTimeout(() => {
+          setAlert(null);
+        }, 3000)
       });
     }
   }, [id]);
@@ -158,7 +164,7 @@ const UpdateInsidenPage = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="buktiFoto" className="block text-sm font-medium text-gray-700">Upload Bukti</label>
+              <label htmlFor="buktiFoto" className="block text-sm font-medium text-gray-700">Unggah Bukti</label>
               <input
                 id="buktiFoto"
                 type="file"

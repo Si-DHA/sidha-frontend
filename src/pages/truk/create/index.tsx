@@ -22,10 +22,9 @@ const CreateTrukPage = () => {
             router.push('/login');
         }
         const role = Cookies.get('role');
-        if (role === 'ADMIN') {
-            setUserRole(role);
-        } else {
-            setError('You are not allowed to access this page');
+        setUserRole(role || '');
+        if (role !== 'ADMIN') {
+            setError('Anda tidak diperbolehkan mengakses halaman ini');
         }
 
     }, [isLoggedIn, router])
@@ -88,7 +87,7 @@ const CreateTrukPage = () => {
                 router.push(`/truk`); // Redirect to /truk after 3000ms
             }, 3000);
         } catch (error) {
-            setAlert(<FailAlert message={error.message || "Gagal menambah data truk"} />);
+            setAlert(<FailAlert message={`Gagal menambahkan data truk ${error.message ? ` : ${error.message}` : ''}`} />);
             setTimeout(() => {
                 setAlert(null);
             }, 3000);

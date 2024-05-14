@@ -9,12 +9,14 @@ import Drawer from "@/app/components/common/drawer";
 import { confirmOrder } from '@/pages/api/order/confirmOrder';
 import { GrStatusPlaceholder } from 'react-icons/gr';
 import { ConfirmOrder } from '../../../../app/components/model';
+import SuccessAlert from "@/app/components/common/SuccessAlert";
+import FailAlert from "@/app/components/common/FailAlert";
 
 const OrderItemDetailPage = () => {
   const router = useRouter();
   const { idOrder, idOrderItem } = router.query;
   const [error, setError] = useState('');
-  // const [alert, setAlert] = useState(null);
+  const [alert, setAlert] = useState(null);
   const [imageBongkarUrl, setImageBongkarUrl] = useState("");
   const [imageMuatUrl, setImageMuatUrl] = useState("");
   const [orderItemData, setOrderItemData] = useState(null);
@@ -57,10 +59,15 @@ const OrderItemDetailPage = () => {
       if (response["isSuccess"] === false) {
         throw new Error(response["message"]);
       }
-      alert('Order item has been confirmed');
-      router.push(`/order/${newOrderId}`);
+      setAlert(<SuccessAlert message="Order item berhasil ditolak" />);
+      setTimeout(() => {
+        router.push(`/order/${newOrderId}`);
+      }, 3000);
     } catch (error: any) {
-      alert('An error occurred: ' + error.message);
+      setAlert(<FailAlert message={error.message || "Gagal menolak order item"} />);
+      setTimeout(() => {
+        setAlert(null);
+      }, 3000);
     }
   };
 
@@ -178,20 +185,30 @@ const OrderItemDetailPage = () => {
   return (
     <main className="flex flex-col min-h-screen bg-white">
       <Drawer userRole={userRole}>
-        {alert}
+        <div className="flex flex-row px-12 text-[12px]  sm:text-[16px]">
+          {alert}
+        </div>
         <div className="container mx-auto px-4 py-8">
           <dialog id="modal_tolak" className="modal modal-bottom sm:modal-middle">
             <div className="modal-box">
-              <h3 className="font-bold text-lg">Tolak Order</h3>
-              <form >
-                <p>Alasan penolakan :</p>
-                <input type="text" placeholder="Beri alasan penolakan" value={rejectionReason} onChange={e => setRejectionReason(e.target.value)} className="input input-bordered input-error w-full max-w-xs" />
+              <h3 className="font-bold text-lg mb-5">Tolak Order Item</h3>
+              <form onSubmit={(e) => {
+                e.preventDefault(); // Prevents the default form submission behavior
+                if (rejectionReason.trim()) { // Checks if rejectionReason is not just whitespace
+                  handleConfirmAnswer(false);
+                  document.getElementById('modal_tolak')?.close();
+                }
+              }}>
+                <label className="input input-bordered flex items-center gap-2">
+                  <input
+                    value={rejectionReason} onChange={e => setRejectionReason(e.target.value)}
+                    required id="alasanPenolakan" type="text" className="grow" placeholder="Masukkan alasan penolakan" />
+                </label>
+                <div className="modal-action">
+                  <button className="btn mr-2" onClick={() => document.getElementById('modal_tolak')?.close()}>Batal</button>
+                  <button type="submit" className="btn btn-error">Tolak</button>
+                </div>
               </form>
-              <div className="modal-action">
-                <button className="btn mr-2" onClick={() => document.getElementById('modal_tolak')?.close()}>Batal</button>
-                <button className="btn btn-error" onClick={() => { handleConfirmAnswer(false); document.getElementById('modal_tolak')?.close(); }}>Tolak</button>
-              </div>
-
             </div>
           </dialog>
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -323,7 +340,10 @@ const OrderItemDetailPage = () => {
                         </svg>
                       </div>
                       <div className="timeline-end timeline-box mb-5">
-                        <span className="font-bold">{history.createdBy}</span>: {history.description}
+                        {history.createdBy && history.createdBy !== '' &&
+                          <span><span className="font-bold">{history.createdBy}</span><span>:{' '}</span></span>
+                        }
+                        {history.description}
                       </div>
                       {history.id !== orderItemData['content']['orderItemHistories'][orderItemData['content']['orderItemHistories'].length - 1].id && (
                         <hr className="bg-success" />
@@ -335,8 +355,7 @@ const OrderItemDetailPage = () => {
             </div>
 
             <div className=" flex flex-col px-4 py-5 sm:px-6 flex justify-center gap-4">
-              {orderItemData['content']['statusOrder'] == 0 && userRole === 'KARYAWAN' &&
-
+              {orderItemData['content']['statusOrder'] === 0 && userRole === 'KARYAWAN' &&
                 <div className='flex flex-col gap-2'>
                   <h3 className='text-lg font-bold text-center'>Konfirmasi Order</h3>
                   <div className='flex flex-row gap-4'>
@@ -358,7 +377,7 @@ const OrderItemDetailPage = () => {
         </div>
       </Drawer>
       <Footer />
-    </main>
+    </main >
   );
 };
 

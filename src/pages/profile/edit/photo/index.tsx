@@ -112,7 +112,7 @@ export default function ProfilePage() {
 
       const hasilUpdate = await responseUpdate.json();
       if (hasilUpdate.statusCode == 200) {
-        setAlert(<SuccessAlert key={Date.now()} message="Foto Profil berhasil diubah !" />);
+        setAlert(<SuccessAlert key={Date.now()} message="Foto Profil berhasil diubah!" />);
         setTimeout(() => {
           router.push('/profile');
         }, 3000);
@@ -131,7 +131,7 @@ export default function ProfilePage() {
     if (document) {
       await updateProfile(document);
     } else {
-      setAlert(<FailAlert key={Date.now()} message="Tolong unggah foto terlebih dahulu !" />);
+      setAlert(<FailAlert key={Date.now()} message="Tolong unggah foto terlebih dahulu!" />);
     }
   }
 
