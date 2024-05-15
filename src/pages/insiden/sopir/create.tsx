@@ -55,7 +55,7 @@ const CreateInsidenPage = () => {
             setTimeout(() => {
                 router.push(`/insiden/sopir/detail/${response.id}`);
             }, 3000);
-        } catch (error:any) {
+        } catch (error: any) {
             setError(`Gagal membentuk insiden ${error.message ? ` : ${error.message}` : ''}`);
             setAlert(<FailAlert message={`Gagal membentuk insiden ${error.message ? ` : ${error.message}` : ''}`} />);
             setTimeout(() => {
@@ -63,7 +63,7 @@ const CreateInsidenPage = () => {
             }, 3000);
         }
     };
-    
+
 
 
     const handleFileChange = (e) => {
@@ -77,23 +77,6 @@ const CreateInsidenPage = () => {
                     <h2 className="text-2xl font-bold text-center my-6">Lapor Insiden</h2>
                     {alert}
                     <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                            <label htmlFor="orderItem" className="block text-sm font-medium text-gray-700">Order Item:</label>
-                            <select
-                                id="orderItem"
-                                value={selectedOrderItem}
-                                onChange={(e) => setSelectedOrderItem(e.target.value)}
-                                required
-                                className="w-full mt-1 p-2 border-2 rounded-md"
-                            >
-                                <option value="">Select an Order Item</option>
-                                {orderItems.map((item) => (
-                                    <option key={item.orderItem.id} value={item.orderItem.id}>
-                                        {item.orderItem.rute[0].source} - {item.orderItem.rute[0].destination}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
                         <div className="mb-4">
                             <label htmlFor="orderItem" className="block text-sm font-medium text-gray-700">Order Item:</label>
                             <select
@@ -164,9 +147,9 @@ const CreateInsidenPage = () => {
                         </div>
                         <button
                             type="submit"
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mb-4"
+                            className="btn btn-primary"
                         >
-                            Submit
+                            Buat Laporan
                         </button>
                         {error && <p className="text-red-500 text-xs italic mt-4">{error}</p>}
                     </form>
