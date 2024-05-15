@@ -275,9 +275,9 @@ const EditOrderItemPage = () => {
                         <span className="label-text">Keterangan</span>
                     </div>
                     <textarea
-                        value={orderItem[index].keterangan}
-                        className="textarea textarea-bordered h-24" placeholder="Keterangan" 
-                        onChange={(e) => handleOnChangeKeterangan(e, index)} 
+                        className="textarea textarea-bordered h-24 "
+                        placeholder="Keterangan" 
+                        onBlur={(e) => handleOnChangeKeterangan(e, index)} 
                         defaultValue={orderItem[index].keterangan}></textarea>
                 </label>
                 {orderItem[index].rute.map((_: any, ruteIndex: any) => (
