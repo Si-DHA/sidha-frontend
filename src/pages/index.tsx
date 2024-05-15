@@ -23,7 +23,7 @@ const IndexPage = () => {
 
     return (
         <main className={`flex min-h-screen flex-col ${inter.className}`} data-theme="cmyk">
-            <Layout title="Home | Next.js + TypeScript Example">
+            <Layout title="SiDHA">
                 <Visi />
                 <Services />
                 <Featured />
