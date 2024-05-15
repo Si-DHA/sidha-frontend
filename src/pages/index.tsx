@@ -193,7 +193,7 @@ const Featured = () => <section className="relative py-20">
                                 </div>
                                 <div>
                                     <h4 className="text-blue-900">
-                                        CDD (L: 4.4 m, W: 2.0 m, H: 1.9 m)
+                                        CDD (14 - 20 kubik)
                                     </h4>
                                 </div>
                             </div>
@@ -207,7 +207,7 @@ const Featured = () => <section className="relative py-20">
                                 </div>
                                 <div>
                                     <h4 className="text-blue-900">
-                                        CDD Long (L: 5.4 m, W: 3.0 m, H: 2.9 m)
+                                        CDD Long (22 - 28 kubik)
                                     </h4>
                                 </div>
                             </div>
@@ -221,7 +221,7 @@ const Featured = () => <section className="relative py-20">
                                 </div>
                                 <div>
                                     <h4 className="text-blue-900">
-                                        Wingbox (L: 5.9 m, W: 3.5 m, H: 3.4 m)
+                                    Fuso (28 - 36 kubik)
                                     </h4>
                                 </div>
                             </div>
@@ -235,7 +235,7 @@ const Featured = () => <section className="relative py-20">
                                 </div>
                                 <div>
                                     <h4 className="text-blue-900">
-                                        Fuso (L: 6.2 m, W: 3.9 m, H: 3.7 m)
+                                        Wingbox (60 - 80 kubik)
                                     </h4>
                                 </div>
                             </div>
@@ -261,16 +261,17 @@ const Customer = () => <section className="pt-20 pb-48">
                 <div className="px-6">
                     <img
                         alt="..."
-                        src="https://imageio.forbes.com/specials-images/imageserve/603e8af3c4ddcfbbdfa14153/0x0.jpg?format=jpg&crop=918,919,x236,y19,safe&height=416&width=416&fit=bounds"
+                        src="https://media.licdn.com/dms/image/C5603AQHYDPGxJV2OyA/profile-displayphoto-shrink_800_800/0/1602987864563?e=1721260800&v=beta&t=wEe_beC64YFe-Ccz5PXLAFVLJxeONfqgcd9XPd9-zxs"
                         className="shadow-lg rounded-full max-w-full mx-auto"
                         style={{ maxWidth: "120px" }}
                     />
                     <div className="pt-6 text-center">
                         <h5 className="text-xl font-bold">
-                            Ye Guofu
+                            Harun Gunawan
                         </h5>
+                        <p className="text-sm font-semibold">PT IMC Pelita Logistik Tbk</p>
                         <p className="mt-1 text-sm text-blue-900">
-                            PT DHA sudah menjadi kepercayaan perusahaan saya sejak tahun 2017. Kualitas dan harga selalu terdepan.
+                            PT DHA sudah menjadi kepercayaan perusahaan. Jasa dan pelayanan karyawan sangat memuaskan. Tidak pernah kecewa.
                         </p>
                     </div>
                     <div className="pt-2">
@@ -279,8 +280,9 @@ const Customer = () => <section className="pt-20 pb-48">
                                 <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
                                 <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
                                 <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
-                                <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
                                 <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" checked />
+                                <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
+
                             </div>
                         </div>
                     </div>
@@ -290,16 +292,17 @@ const Customer = () => <section className="pt-20 pb-48">
                 <div className="px-6">
                     <img
                         alt="..."
-                        src="https://imageio.forbes.com/specials-images/imageserve/603e8af3c4ddcfbbdfa14153/0x0.jpg?format=jpg&crop=918,919,x236,y19,safe&height=416&width=416&fit=bounds"
+                        src="https://media.licdn.com/dms/image/D5603AQEg8EIFXBibLw/profile-displayphoto-shrink_400_400/0/1669090099709?e=1721260800&v=beta&t=HT8puu1Ha9jYL9EOeyYpq_LAArxwZEXLYqGDF5UL2hI"
                         className="shadow-lg rounded-full max-w-full mx-auto"
                         style={{ maxWidth: "120px" }}
                     />
                     <div className="pt-6 text-center">
                         <h5 className="text-xl font-bold">
-                            Ye Guofu
+                            Muhammad Saktiawan
                         </h5>
+                        <p className="text-sm font-semibold">PT. Bhanda Ghara Reksa</p>
                         <p className="mt-1 text-sm text-blue-900">
-                            PT DHA sudah menjadi kepercayaan perusahaan saya sejak tahun 2017. Kualitas dan harga selalu terdepan.
+                            PT DHA merupakan mitra andalan kami dalam pengiriman barang. Jaminan barang pasti sampai dengan selamat !.
                         </p>
                     </div>
                     <div className="pt-2">
@@ -308,8 +311,9 @@ const Customer = () => <section className="pt-20 pb-48">
                                 <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
                                 <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
                                 <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
-                                <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
                                 <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" checked />
+                                <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
+
                             </div>
                         </div>
                     </div>
@@ -319,14 +323,15 @@ const Customer = () => <section className="pt-20 pb-48">
                 <div className="px-6">
                     <img
                         alt="..."
-                        src="https://imageio.forbes.com/specials-images/imageserve/603e8af3c4ddcfbbdfa14153/0x0.jpg?format=jpg&crop=918,919,x236,y19,safe&height=416&width=416&fit=bounds"
+                        src="https://media.licdn.com/dms/image/C4E03AQFVSZ4dDxmvmw/profile-displayphoto-shrink_800_800/0/1517360130430?e=1721260800&v=beta&t=FpObd1TWx5NMCsS7Kq2XEzjqIOnnnl0z433XtRlPX7k"
                         className="shadow-lg rounded-full max-w-full mx-auto"
                         style={{ maxWidth: "120px" }}
                     />
                     <div className="pt-6 text-center">
                         <h5 className="text-xl font-bold">
-                            Ye Guofu
-                        </h5>
+                            Abdul Aziz
+                        </h5> 
+                         <p className="text-sm font-semibold">PT. Jasa Prima Logistik Bulog</p>
                         <p className="mt-1 text-sm text-blue-900">
                             PT DHA sudah menjadi kepercayaan perusahaan saya sejak tahun 2017. Kualitas dan harga selalu terdepan.
                         </p>
@@ -348,14 +353,16 @@ const Customer = () => <section className="pt-20 pb-48">
                 <div className="px-6">
                     <img
                         alt="..."
-                        src="https://imageio.forbes.com/specials-images/imageserve/603e8af3c4ddcfbbdfa14153/0x0.jpg?format=jpg&crop=918,919,x236,y19,safe&height=416&width=416&fit=bounds"
+                        src="https://media.licdn.com/dms/image/D5603AQGG3sH6j2P-Lg/profile-displayphoto-shrink_400_400/0/1683603835806?e=1721260800&v=beta&t=hUcHFr90fL93AdTS9l3IcqNpxz1yxx3ZBQrqDvdU3Ww"
                         className="shadow-lg rounded-full max-w-full mx-auto"
                         style={{ maxWidth: "120px" }}
                     />
                     <div className="pt-6 text-center">
                         <h5 className="text-xl font-bold">
-                            Ye Guofu
+                            Anggidutomo
                         </h5>
+                        <p className="text-sm font-semibold">PT IMC Pelita Logistik Tbk</p>
+
                         <p className="mt-1 text-sm text-blue-900">
                             PT DHA sudah menjadi kepercayaan perusahaan saya sejak tahun 2017. Kualitas dan harga selalu terdepan.
                         </p>

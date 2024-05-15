@@ -78,12 +78,15 @@ export default function UserDetailPage() {
   async function handleDeleteAccount() {
     const response = await deleteUser(id);
     if (response.statusCode == 200) {
+      setAlert(<SuccessAlert message="Akun berhasil dihapus" />);
       setTimeout(() => {
         router.reload();
       }, 3000);
-      setAlert(<SuccessAlert message="Akun berhasil dihapus" />);
     } else {
       setAlert(<FailAlert message={response.message || "Gagal Menghapus Akun"} />);
+      setTimeout(() => {
+        setAlert(null);
+    }, 3000);
     }
   }
 
