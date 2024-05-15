@@ -209,7 +209,7 @@ const FAQAdminPage = () => {
                                                         ref={provided.innerRef}
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
-                                                        className="bg-white shadow rounded p-4 mb-4 flex justify-between items-start border-2 border-gray-150"
+                                                        className="bg-white shadow rounded-xl p-4 mb-4 flex justify-between items-start border-2 border-gray-150"
                                                     >
                                                         <div>
                                                             <strong className="text-lg">{faq.question}</strong>

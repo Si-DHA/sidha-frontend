@@ -136,9 +136,6 @@ const Drawer = ({ userRole, children }: { userRole: string, children: React.Reac
                   <ul>
                     <li><Link href="/penawaranharga">Daftar Penawaran Harga</Link></li>
                   </ul>
-                  <ul>
-                    <li><Link href="/penawaranharga/create">Tambah Penawaran Baru</Link></li>
-                  </ul>
                 </li>
 
                 <li>
