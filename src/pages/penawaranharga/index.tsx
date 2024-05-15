@@ -133,7 +133,6 @@ const PenawaranHargaPage = () => {
                                         data={penawaranHarga}
                                         columns={columns}
                                         loading={loading}
-                                        btnText="Tambah Nama Klien" onClick={() => router.push('/penawaranharga/create')}
                                         type='penawaran harga'
                                     />
                                 </>)}
