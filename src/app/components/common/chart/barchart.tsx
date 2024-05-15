@@ -11,16 +11,13 @@ export interface ChartProps {
     };
 
   };
-  width: string;
-  height: string;
+
 }
 
-export const BarChart: React.FC<ChartProps> = ({ data, options, width, height }) => {
+export const BarChart: React.FC<ChartProps> = ({ data, options }) => {
   return (
     <Chart
       chartType="Bar"
-      width={width}
-      height={height}
       data={data}
       options={options}
     />
