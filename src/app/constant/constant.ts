@@ -1,4 +1,2 @@
 export const BASE_URL = "https://sidha-backend.site/api"
-// export const BASE_URL = "http://35.239.49.4:10001/api"
-// export const BASE_URL = "http://localhost:8080/api"
 export const WA_URL = "https://wa.me/6285559414940?text=Halo%20Admin,%0A%0ASaya%20ingin%20membuat%20akun%20untuk%20bekerja%20sama%20dengan%20perusahaan%20logistik%20Anda.%20Berikut%20adalah%20informasi%20yang%20diperlukan%20untuk%20proses%20pendaftaran:%0A%0A1.%20Nama%20Lengkap:%0A2.%20Nama%20Perusahaan:%0A3.%20Email:%0A4.%20Nomor%20Telepon:%0A5.%20Alamat%20Perusahaan:%0A6.%20Jenis%20Layanan%20yang%20Dibutuhkan:%0A7.%20Informasi%20Tambahan%20(jika%20ada):%0A%0AMohon%20konfirmasi%20penerimaan%20pesan%20ini%20dan%20informasi%20selanjutnya%20mengenai%20langkah-langkah%20pendaftaran.%0A%0ATerima%20kasih.%0A%0ASalam,%0A[Nama%20Anda]"
